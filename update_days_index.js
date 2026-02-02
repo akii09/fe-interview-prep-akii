@@ -1,0 +1,332 @@
+#!/usr/bin/env node
+
+/**
+ * Script to update the days index page with all HTML files in the days directory
+ * Run this script whenever you add new day files to keep the index up to date
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+// Paths
+const daysDir = './days';
+const indexPath = './days/index.html';
+
+// Read all files in the days directory
+fs.readdir(daysDir, (err, files) => {
+    if (err) {
+        console.error('Error reading days directory:', err);
+        return;
+    }
+
+    // Filter HTML files and exclude the index file
+    const htmlFiles = files.filter(file => 
+        file !== 'index.html' && 
+        file.toLowerCase().endsWith('.html')
+    );
+
+    // Sort files based on day numbers (e.g., 1.html, 2.html, 1-2.html, 2-3.html)
+    const sortedFiles = htmlFiles.sort((a, b) => {
+        // Extract numbers from filenames like "1-2.html" or "3.html"
+        const getNumbers = (filename) => {
+            const match = filename.match(/^(\d+)(?:-(\d+))?\.html$/);
+            if (match) {
+                const start = parseInt(match[1], 10);
+                const end = match[2] ? parseInt(match[2], 10) : start;
+                return { start, end };
+            }
+            return { start: Infinity, end: Infinity };
+        };
+
+        const numsA = getNumbers(a);
+        const numsB = getNumbers(b);
+
+        // Compare by start number first
+        if (numsA.start !== numsB.start) {
+            return numsA.start - numsB.start;
+        }
+        
+        // If start numbers are equal, compare by end number
+        return numsA.end - numsB.end;
+    });
+
+    // Generate HTML list items for each file
+    const listItems = sortedFiles.map(file => {
+        const cleanName = file.replace('.html', '');
+        let displayText = `Day ${cleanName}`;
+        
+        // Format the display text nicely
+        if (cleanName.includes('-')) {
+            const parts = cleanName.split('-');
+            displayText = `Day ${parts[0]}-${parts[1]}`;
+        } else {
+            displayText = `Day ${cleanName}`;
+        }
+        
+        return `                <li class="day-item">
+                    <a href="${file}" class="day-link">${displayText}</a>
+                </li>`;
+    }).join('\n');
+
+    // Create the updated HTML content
+    const newIndexContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Days Index - Dynamic Navigation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .day-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .day-item {
+            padding: 10px 15px;
+            margin: 8px 0;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .day-item:hover {
+            background-color: #e9ecef;
+        }
+        .day-link {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .day-link:hover {
+            text-decoration: underline;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 8px 16px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .back-link:hover {
+            background-color: #5a6268;
+        }
+        .instructions {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #856404;
+        }
+        .dynamic-note {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Days Navigation</h1>
+        
+        <div class="instructions">
+            <strong>Instructions:</strong> This page dynamically navigates through daily learning materials.
+            Files named with the pattern X-Y.html represent content spanning from Day X to Day Y.
+        </div>
+        
+        <div class="dynamic-note">
+            <strong>Auto-generated:</strong> This page automatically detects and lists all day files in the directory.
+            Found ${sortedFiles.length} day file(s): ${sortedFiles.join(', ')}
+        </div>
+        
+        <ul class="day-list" id="dayList">
+${listItems || `                <li style="text-align: center; padding: 20px; color: #6c757d; font-style: italic;">
+                    No day files found in this directory.
+                </li>`}
+        </ul>
+        
+        <a href="../index.html" class="back-link">Back to Main Index</a>
+    </div>
+
+    <script>
+        // Function to dynamically detect and list HTML files in the directory
+        async function populateDayList() {
+            try {
+                // In a static environment, we need to use alternative methods to detect files
+                // Since direct directory listing isn't possible with client-side JS,
+                // we'll implement a solution that works with common filename patterns
+                
+                // First, let's try to detect what files exist by attempting to fetch them
+                const dayList = document.getElementById('dayList');
+                
+                // Common patterns for day files
+                const patterns = [];
+                
+                // Generate possible filenames based on common patterns
+                for (let i = 1; i <= 30; i++) {
+                    patterns.push(\`\${i}.html\`);  // Single day files
+                    
+                    for (let j = i + 1; j <= 30; j++) {
+                        patterns.push(\`\${i}-\${j}.html\`);  // Range files
+                        
+                        if (patterns.length >= 100) break; // Limit to prevent too many requests
+                    }
+                    
+                    if (patterns.length >= 100) break;
+                }
+                
+                // Check for existing files
+                const existingFiles = [];
+                
+                // Since we can't make too many requests due to performance,
+                // let's first check for the known file we already have
+                const knownFiles = [${sortedFiles.map(f => `"${f}"`).join(', ')}];
+                
+                // Check which of the known files actually exist
+                for (const filename of knownFiles) {
+                    try {
+                        const response = await fetch(filename, { method: 'HEAD' });
+                        if (response.ok) {
+                            existingFiles.push(filename);
+                        }
+                    } catch (e) {
+                        // If fetch fails, we'll assume the file exists since it was in our list
+                        existingFiles.push(filename);
+                    }
+                }
+                
+                // If we have existing files, populate the list
+                if (existingFiles.length > 0) {
+                    // Clear existing list
+                    dayList.innerHTML = '';
+                    
+                    existingFiles.forEach(filename => {
+                        const li = document.createElement('li');
+                        li.className = 'day-item';
+                        
+                        const a = document.createElement('a');
+                        a.href = filename;
+                        a.className = 'day-link';
+                        
+                        // Format the display name from the filename
+                        const cleanName = filename.replace('.html', '');
+                        if (cleanName.includes('-')) {
+                            const parts = cleanName.split('-');
+                            a.textContent = \`Day \${parts[0]}-\${parts[1]}\`;
+                        } else {
+                            a.textContent = \`Day \${cleanName}\`;
+                        }
+                        
+                        li.appendChild(a);
+                        dayList.appendChild(li);
+                    });
+                } else {
+                    // If no files found, show a message
+                    dayList.innerHTML = '<li style="text-align: center; padding: 20px; color: #6c757d; font-style: italic;">No day files found in this directory.</li>';
+                }
+                
+                // Add a helper section for adding new files
+                addHelperSection();
+                
+            } catch (error) {
+                console.error('Error populating day list:', error);
+                
+                // Fallback: show the known files
+                const dayList = document.getElementById('dayList');
+                const knownFiles = [${sortedFiles.map(f => `"${f}"`).join(', ')}];
+                
+                if (knownFiles.length > 0) {
+                    dayList.innerHTML = '';
+                    knownFiles.forEach(filename => {
+                        const li = document.createElement('li');
+                        li.className = 'day-item';
+                        
+                        const a = document.createElement('a');
+                        a.href = filename;
+                        a.className = 'day-link';
+                        a.textContent = \`Day \${filename.replace('.html', '')}\`;
+                        
+                        li.appendChild(a);
+                        dayList.appendChild(li);
+                    });
+                } else {
+                    dayList.innerHTML = '<li style="text-align: center; padding: 20px; color: #6c757d; font-style: italic;">No day files found in this directory.</li>';
+                }
+                
+                // Add helper section
+                addHelperSection();
+            }
+        }
+        
+        function addHelperSection() {
+            // Remove any existing helper section
+            const existingHelper = document.getElementById('helper-section');
+            if (existingHelper) existingHelper.remove();
+            
+            // Add a section with instructions for adding new files
+            const helperDiv = document.createElement('div');
+            helperDiv.id = 'helper-section';
+            helperDiv.style.cssText = 'margin-top: 30px; padding: 15px; background-color: #e2e3e5; border-radius: 4px;';
+            helperDiv.innerHTML = \`
+                <h3 style="margin-top: 0;">Adding New Day Files</h3>
+                <p>To expand this collection:</p>
+                <ol>
+                    <li>Create new HTML files in this directory using the naming pattern:</li>
+                    <ul>
+                        <li><code>X.html</code> for single days (e.g., <code>3.html</code>)</li>
+                        <li><code>X-Y.html</code> for day ranges (e.g., <code>3-4.html</code>)</li>
+                    </ul>
+                    <li>Run the update script: <code>node update_days_index.js</code></li>
+                    <li>Or refresh this page to see them listed (if using server-side rendering)</li>
+                </ol>
+                <p>Current files detected in this directory:</p>
+                <ul id="detected-files-list" style="font-family: monospace; color: #495057;">\${[${sortedFiles.map(f => `"${f}"`).join(', ')}].map(f => '<li>' + f + '</li>').join('')}</ul>
+            \`;
+            
+            document.querySelector('.container').appendChild(helperDiv);
+        }
+        
+        // Initialize the page when loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            populateDayList();
+        });
+    </script>
+</body>
+</html>`;
+
+    // Write the updated content to the index file
+    fs.writeFile(indexPath, newIndexContent, (err) => {
+        if (err) {
+            console.error('Error writing index file:', err);
+        } else {
+            console.log(`✓ Successfully updated days index with ${sortedFiles.length} file(s):`);
+            sortedFiles.forEach(file => console.log(`  - ${file}`));
+            console.log('\\nTo update this index again in the future, run: node update_days_index.js');
+        }
+    });
+});

@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Days 1-2: Event Loop & TypeScript Fundamentals | Frontend Interview Prep</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-light: #f8fafc;
+            --bg-dark: #1e293b;
+            --text-light: #0f172a;
+            --text-dark: #f1f5f9;
+            --code-bg: #1e1e1e;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            line-height: 1.6;
+            color: var(--text-light);
+            background: var(--bg-light);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .container {
+            background: #0f172a;
+        }
+
+        body.dark-mode .nav {
+            background: #0f172a;
+            border-bottom-color: #334155;
+        }
+
+        body.dark-mode .section {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        body.dark-mode .concept-box,
+        body.dark-mode .interview-question,
+        body.dark-mode .practice-problem,
+        body.dark-mode .cheat-sheet {
+            background: #0f172a;
+            border-color: #334155;
+        }
+
+        body.dark-mode code {
+            background: #1e1e1e;
+        }
+
+        body.dark-mode .code-block {
+            background: #1e1e1e;
+            border-color: #334155;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: inherit;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-dark);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 2rem 2rem 2rem;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 3px solid var(--primary);
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #64748b;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            height: 8px;
+            border-radius: 4px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .section {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .section h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .section h3 {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .concept-box {
+            background: #f0f9ff;
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .concept-box.warning {
+            background: #fef3c7;
+            border-left-color: var(--warning);
+        }
+
+        .concept-box.danger {
+            background: #fee2e2;
+            border-left-color: var(--danger);
+        }
+
+        .concept-box.success {
+            background: #d1fae5;
+            border-left-color: var(--success);
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #333;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+
+        .interview-question {
+            background: #fef3c7;
+            border: 2px solid var(--warning);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .interview-question h4 {
+            color: var(--warning);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .interview-answer {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--warning);
+        }
+
+        .interview-answer.show {
+            display: block;
+        }
+
+        .reveal-btn {
+            background: var(--warning);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+
+        .reveal-btn:hover {
+            background: #d97706;
+        }
+
+        .practice-problem {
+            background: #dbeafe;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .practice-problem h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group {
+            margin: 1.5rem 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .cheat-sheet {
+            background: #f0fdf4;
+            border: 3px solid var(--success);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .cheat-sheet h3 {
+            color: var(--success);
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        table th,
+        table td {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .analogy {
+            background: #fef3c7;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+            margin: 1.5rem 0;
+            font-style: italic;
+        }
+
+        .diagram {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .diagram-box {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            margin: 0.5rem;
+            font-weight: 600;
+        }
+
+        .arrow {
+            font-size: 2rem;
+            color: var(--primary);
+            margin: 0 1rem;
+        }
+
+        .story-box {
+            background: #fef3c7;
+            border: 2px dashed #f59e0b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .story-box h4 {
+            color: #f59e0b;
+            margin-bottom: 1rem;
+        }
+
+        .key-insight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            font-weight: 500;
+        }
+
+        .completion-tracker {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 200px;
+        }
+
+        body.dark-mode .completion-tracker {
+            background: #1e293b;
+        }
+
+        .completion-tracker h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .completion-stat {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .nav-content {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .container {
+                padding: 80px 1rem 1rem 1rem;
+            }
+
+            .completion-tracker {
+                display: none;
+            }
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+        }
+
+        .highlight {
+            background: linear-gradient(180deg, transparent 60%, #fef08a 60%);
+            padding: 0.2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="logo">🚀 Day 1-2 Learning Hub</div>
+            <div class="nav-links">
+                <a href="#day1">Day 1</a>
+                <a href="#day2">Day 2</a>
+                <a href="#cheatsheet">Cheat Sheet</a>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Days 1-2: Event Loop & TypeScript Fundamentals</h1>
+            <p>Master the foundation that separates junior from senior engineers. These concepts appear in <span class="highlight">95% of senior frontend interviews</span>.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- DAY 1: EVENT LOOP -->
+        <div class="section" id="day1">
+            <h2>📅 Day 1: Event Loop & Execution Context</h2>
+            
+            <div class="concept-box">
+                <p><span class="icon">💡</span><strong>Why This Matters:</strong> Understanding the event loop is like understanding the "brain" of JavaScript. Every interview for senior positions tests this. If you don't get this, you'll fail 80% of async-related questions.</p>
+            </div>
+
+            <h3>🎯 The Big Picture</h3>
+            <p>JavaScript is <strong>single-threaded</strong> but can handle async operations. How? The <strong>Event Loop</strong>.</p>
+
+            <div class="analogy">
+                <strong>🍽️ The Restaurant Analogy:</strong><br>
+                Imagine you're a single waiter (JavaScript's single thread) in a busy restaurant. You can only do ONE thing at a time, but you handle multiple tables efficiently by:<br>
+                • Taking orders (synchronous tasks)<br>
+                • Putting orders in the kitchen (async operations)<br>
+                • Checking if food is ready (event loop)<br>
+                • Serving when ready (callbacks)<br><br>
+                You never sit and wait for the kitchen. You move to the next task and check back later.
+            </div>
+
+            <h3>⚙️ How JavaScript Executes Code</h3>
+
+            <div class="diagram">
+                <div class="diagram-box">Call Stack</div>
+                <span class="arrow">→</span>
+                <div class="diagram-box">Web APIs</div>
+                <span class="arrow">→</span>
+                <div class="diagram-box">Task Queues</div>
+                <span class="arrow">→</span>
+                <div class="diagram-box">Back to Call Stack</div>
+            </div>
+
+            <h3>1️⃣ The Call Stack</h3>
+            <p>Think of it as a <strong>to-do list</strong> that JavaScript follows from top to bottom. Last in, first out (LIFO).</p>
+
+            <div class="code-block">
+function first() {
+    console.log('First');
+}
+
+function second() {
+    first();
+    console.log('Second');
+}
+
+second();
+
+// Output:
+// First
+// Second
+
+// Call Stack Execution:
+// 1. second() pushed
+// 2. first() pushed
+// 3. console.log('First') executed
+// 4. first() popped
+// 5. console.log('Second') executed
+// 6. second() popped
+            </div>
+
+            <div class="concept-box warning">
+                <p><span class="icon">⚠️</span><strong>Common Mistake:</strong> Beginners think JavaScript runs code line-by-line forever. Wrong! Functions get pushed and popped from the call stack.</p>
+            </div>
+
+            <h3>2️⃣ Execution Context</h3>
+            <p>Every time a function runs, JavaScript creates an <strong>Execution Context</strong> with:</p>
+            <ul>
+                <li><strong>Variable Environment:</strong> Where variables live</li>
+                <li><strong>Lexical Environment:</strong> Scope chain reference</li>
+                <li><strong>this binding:</strong> What <code>this</code> refers to</li>
+            </ul>
+
+            <div class="code-block">
+let globalVar = 'I am global';
+
+function outer() {
+    let outerVar = 'I am outer';
+    
+    function inner() {
+        let innerVar = 'I am inner';
+        console.log(globalVar);  // ✅ Can access
+        console.log(outerVar);   // ✅ Can access
+        console.log(innerVar);   // ✅ Can access
+    }
+    
+    inner();
+}
+
+outer();
+
+// Execution Contexts Created:
+// 1. Global Execution Context (globalVar)
+// 2. outer() Execution Context (outerVar)
+// 3. inner() Execution Context (innerVar)
+            </div>
+
+            <h3>3️⃣ The Event Loop</h3>
+            <p>This is where JavaScript's async magic happens. The event loop constantly checks:</p>
+            <ol>
+                <li>Is the call stack empty?</li>
+                <li>Are there tasks in the <strong>Microtask Queue</strong>?</li>
+                <li>Are there tasks in the <strong>Macrotask Queue</strong>?</li>
+            </ol>
+
+            <div class="key-insight">
+                <span class="icon">🎯</span> <strong>CRITICAL RULE:</strong> Microtasks ALWAYS run before Macrotasks. This is the #1 interview trap.
+            </div>
+
+            <h3>Microtasks vs Macrotasks</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Microtasks (Priority Queue)</th>
+                        <th>Macrotasks (Regular Queue)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Promise.then() / catch() / finally()</td>
+                        <td>setTimeout()</td>
+                    </tr>
+                    <tr>
+                        <td>queueMicrotask()</td>
+                        <td>setInterval()</td>
+                    </tr>
+                    <tr>
+                        <td>MutationObserver</td>
+                        <td>setImmediate() [Node.js]</td>
+                    </tr>
+                    <tr>
+                        <td>process.nextTick() [Node.js]</td>
+                        <td>I/O operations</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>🔥 The Interview Question That Breaks 80% of Candidates</h3>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Question 1: What's the output?</h4>
+                <div class="code-block">
+console.log('1');
+
+setTimeout(() => {
+    console.log('2');
+}, 0);
+
+Promise.resolve().then(() => {
+    console.log('3');
+});
+
+console.log('4');
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer1')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer1">
+                    <h4>✅ Correct Answer:</h4>
+                    <div class="code-block">
+// Output:
+// 1
+// 4
+// 3
+// 2
+                    </div>
+                    <h4>📝 Explanation:</h4>
+                    <ol>
+                        <li><code>console.log('1')</code> → Synchronous, runs immediately</li>
+                        <li><code>setTimeout</code> → Goes to Web API, then Macrotask Queue</li>
+                        <li><code>Promise.resolve().then</code> → Goes to Microtask Queue</li>
+                        <li><code>console.log('4')</code> → Synchronous, runs immediately</li>
+                        <li>Call stack is empty → Event loop checks Microtask Queue first</li>
+                        <li><code>console.log('3')</code> → Microtask runs</li>
+                        <li><code>console.log('2')</code> → Macrotask runs last</li>
+                    </ol>
+                    <div class="concept-box danger">
+                        <p><span class="icon">❌</span><strong>Why Candidates Fail:</strong> They think <code>setTimeout(..., 0)</code> runs "immediately" or "after" synchronous code. Wrong! It's a macrotask and runs AFTER all microtasks.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Question 2: Predict the output</h4>
+                <div class="code-block">
+console.log('Start');
+
+setTimeout(() => {
+    console.log('Timeout 1');
+    Promise.resolve().then(() => console.log('Promise 1'));
+}, 0);
+
+setTimeout(() => {
+    console.log('Timeout 2');
+}, 0);
+
+Promise.resolve().then(() => {
+    console.log('Promise 2');
+});
+
+console.log('End');
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer2')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer2">
+                    <h4>✅ Correct Answer:</h4>
+                    <div class="code-block">
+// Output:
+// Start
+// End
+// Promise 2
+// Timeout 1
+// Promise 1
+// Timeout 2
+                    </div>
+                    <h4>📝 Explanation:</h4>
+                    <ol>
+                        <li>Synchronous code runs first: <code>'Start'</code>, <code>'End'</code></li>
+                        <li>Microtasks run: <code>'Promise 2'</code></li>
+                        <li>First macrotask runs: <code>'Timeout 1'</code></li>
+                        <li>New microtask created inside macrotask: <code>'Promise 1'</code> (runs immediately after current macrotask)</li>
+                        <li>Second macrotask runs: <code>'Timeout 2'</code></li>
+                    </ol>
+                    <div class="concept-box success">
+                        <p><span class="icon">💡</span><strong>Key Insight:</strong> When a macrotask creates a microtask, that microtask runs BEFORE the next macrotask. This is called "microtask checkpoints."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-box">
+                <h4>🐛 Real Debugging War Story</h4>
+                <p>A developer at a startup was building a real-time chat app. They used <code>setTimeout</code> to batch messages for better performance. But users complained messages appeared out of order.</p>
+                <p><strong>The Bug:</strong> They didn't understand that <code>setTimeout</code> doesn't guarantee execution order when delays are the same. The event loop processes macrotasks one at a time, but network responses (which create microtasks via Promises) can interrupt.</p>
+                <p><strong>The Fix:</strong> Use <code>Promise.resolve().then()</code> for critical ordering, not <code>setTimeout</code>.</p>
+                <p><strong>Lesson:</strong> Senior engineers know when to use microtasks vs macrotasks based on priority needs.</p>
+            </div>
+
+            <h3>✅ Practice Problems</h3>
+
+            <div class="practice-problem">
+                <h4>Try to predict BEFORE running:</h4>
+                <div class="code-block">
+async function test() {
+    console.log('1');
+    
+    await Promise.resolve();
+    
+    console.log('2');
+}
+
+test();
+
+console.log('3');
+                </div>
+                <p><strong>Think about it:</strong></p>
+                <ul>
+                    <li>What does <code>await</code> do to execution?</li>
+                    <li>When does code after <code>await</code> run?</li>
+                    <li>Is <code>console.log('3')</code> sync or async?</li>
+                </ul>
+                <button class="reveal-btn" onclick="revealAnswer('practice1')">🔓 Show Answer</button>
+                <div class="interview-answer" id="practice1">
+                    <div class="code-block">
+// Output:
+// 1
+// 3
+// 2
+                    </div>
+                    <p><strong>Why?</strong> <code>await</code> pauses function execution and puts the rest in a microtask. Synchronous <code>console.log('3')</code> runs first.</p>
+                </div>
+            </div>
+
+            <h3>📋 Day 1 Completion Checklist</h3>
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can explain what the call stack is</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I understand execution context creation</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I know the difference between microtasks and macrotasks</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can predict event loop execution order</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I solved all practice problems correctly</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- DAY 2: ADVANCED EVENT LOOP + TYPESCRIPT -->
+        <div class="section" id="day2">
+            <h2>📅 Day 2: Event Loop Deep Dive + TypeScript Fundamentals</h2>
+            
+            <div class="concept-box">
+                <p><span class="icon">💡</span><strong>Why This Matters:</strong> Senior engineers don't just know the event loop—they know the edge cases, performance implications, and can debug the trickiest async bugs. Plus, TypeScript is non-negotiable for senior roles.</p>
+            </div>
+
+            <h3>🔬 Advanced Event Loop Concepts</h3>
+
+            <h3>1️⃣ Microtask Starvation</h3>
+            <p>What happens when microtasks keep creating more microtasks?</p>
+
+            <div class="code-block">
+function recursiveMicrotask() {
+    console.log('Microtask running');
+    Promise.resolve().then(recursiveMicrotask);
+}
+
+recursiveMicrotask();
+
+setTimeout(() => {
+    console.log('This will NEVER run!');
+}, 0);
+            </div>
+
+            <div class="concept-box danger">
+                <p><span class="icon">⚠️</span><strong>Starvation Problem:</strong> Microtasks ALWAYS run before macrotasks. If microtasks keep queueing new microtasks, macrotasks will never execute. This can freeze your app!</p>
+            </div>
+
+            <h3>2️⃣ requestAnimationFrame - The Special Case</h3>
+            <p><code>requestAnimationFrame</code> is neither a microtask nor a macrotask. It runs before the next paint.</p>
+
+            <div class="code-block">
+console.log('1');
+
+setTimeout(() => console.log('2'), 0);
+
+requestAnimationFrame(() => console.log('3'));
+
+Promise.resolve().then(() => console.log('4'));
+
+console.log('5');
+
+// Output:
+// 1
+// 5
+// 4
+// 3
+// 2
+
+// Order: Sync → Microtasks → rAF → Macrotasks
+            </div>
+
+            <div class="concept-box success">
+                <p><span class="icon">💡</span><strong>When to Use:</strong></p>
+                <ul>
+                    <li><code>setTimeout</code>: Delayed execution, not time-critical</li>
+                    <li><code>Promise</code>: High-priority async operations</li>
+                    <li><code>requestAnimationFrame</code>: Smooth animations, 60fps updates</li>
+                </ul>
+            </div>
+
+            <h3>3️⃣ Node.js Event Loop Differences</h3>
+            <p>Node.js has additional queues and <code>process.nextTick()</code> which runs BEFORE all other microtasks.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Browser</th>
+                        <th>Node.js</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Microtasks → Macrotasks</td>
+                        <td>nextTick → Microtasks → Macrotasks</td>
+                    </tr>
+                    <tr>
+                        <td>setTimeout / setInterval</td>
+                        <td>setImmediate (runs after I/O)</td>
+                    </tr>
+                    <tr>
+                        <td>No nextTick</td>
+                        <td>process.nextTick() (highest priority)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Question 3: Browser vs Node.js</h4>
+                <div class="code-block">
+Promise.resolve().then(() => console.log('Promise'));
+
+setTimeout(() => console.log('Timeout'), 0);
+
+// In Node.js, also add:
+process.nextTick(() => console.log('NextTick'));
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer3')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer3">
+                    <h4>✅ Browser Output:</h4>
+                    <div class="code-block">
+// Promise
+// Timeout
+                    </div>
+                    <h4>✅ Node.js Output:</h4>
+                    <div class="code-block">
+// NextTick
+// Promise
+// Timeout
+                    </div>
+                    <p><strong>Why?</strong> <code>process.nextTick()</code> runs before ALL microtasks in Node.js. It's the highest priority queue.</p>
+                </div>
+            </div>
+
+            <h3>🎯 TypeScript Fundamentals</h3>
+            <p>Senior roles require TypeScript. Here's why: <strong>Type safety prevents 90% of runtime bugs before they happen.</strong></p>
+
+            <div class="analogy">
+                <strong>🏗️ The Construction Analogy:</strong><br>
+                JavaScript is like building a house without a blueprint. You might finish, but it could collapse.<br>
+                TypeScript is like having architectural plans. You catch structural problems before laying a single brick.
+            </div>
+
+            <h3>1️⃣ Why TypeScript for Senior Engineers?</h3>
+            <ul>
+                <li><strong>Catches bugs at compile time</strong> (not runtime)</li>
+                <li><strong>Self-documenting code</strong> (types show intent)</li>
+                <li><strong>Better IDE support</strong> (autocomplete, refactoring)</li>
+                <li><strong>Scales better</strong> (large codebases stay maintainable)</li>
+            </ul>
+
+            <h3>2️⃣ Basic Types</h3>
+
+            <div class="code-block">
+// Primitives
+let age: number = 30;
+let name: string = "Alice";
+let isActive: boolean = true;
+
+// Arrays
+let numbers: number[] = [1, 2, 3];
+let names: Array&lt;string&gt; = ["Alice", "Bob"];
+
+// Tuples (fixed length, specific types)
+let coordinate: [number, number] = [10, 20];
+
+// Any (avoid this!)
+let anything: any = "bad practice";
+
+// Unknown (safer than any)
+let userInput: unknown = getData();
+if (typeof userInput === "string") {
+    console.log(userInput.toUpperCase()); // ✅ Type guard
+}
+            </div>
+
+            <div class="concept-box warning">
+                <p><span class="icon">⚠️</span><strong>Senior Engineer Rule:</strong> Never use <code>any</code> unless absolutely necessary. It defeats the purpose of TypeScript. Use <code>unknown</code> and type guards instead.</p>
+            </div>
+
+            <h3>3️⃣ Type Inference</h3>
+            <p>TypeScript can infer types, so you don't always need to write them explicitly.</p>
+
+            <div class="code-block">
+// TypeScript infers the type
+let message = "Hello"; // inferred as string
+let count = 42;        // inferred as number
+
+// Explicit typing (when inference isn't obvious)
+let userId: string | number = "abc123";
+            </div>
+
+            <h3>4️⃣ Union Types & Literal Types</h3>
+
+            <div class="code-block">
+// Union types (can be multiple types)
+type Status = "success" | "error" | "loading";
+
+function handleStatus(status: Status) {
+    if (status === "success") {
+        console.log("✅ Success");
+    } else if (status === "error") {
+        console.log("❌ Error");
+    } else {
+        console.log("⏳ Loading");
+    }
+}
+
+handleStatus("success"); // ✅ Valid
+handleStatus("pending"); // ❌ Compile error
+
+// This prevents typos!
+            </div>
+
+            <h3>5️⃣ Function Types</h3>
+
+            <div class="code-block">
+// Function with typed parameters and return type
+function add(a: number, b: number): number {
+    return a + b;
+}
+
+// Arrow function type
+const multiply: (x: number, y: number) => number = (x, y) => x * y;
+
+// Optional parameters
+function greet(name: string, greeting?: string): string {
+    return `${greeting || "Hello"}, ${name}!`;
+}
+
+// Default parameters
+function createUser(name: string, age: number = 18) {
+    return { name, age };
+}
+            </div>
+
+            <h3>6️⃣ Typing Async Functions</h3>
+
+            <div class="code-block">
+// Async functions return Promise
+async function fetchUser(id: string): Promise&lt;User&gt; {
+    const response = await fetch(`/api/users/${id}`);
+    const data = await response.json();
+    return data; // Must be type User
+}
+
+// Type definition
+interface User {
+    id: string;
+    name: string;
+    email: string;
+}
+
+// Using it
+async function displayUser() {
+    try {
+        const user = await fetchUser("123");
+        console.log(user.name); // ✅ TypeScript knows user has .name
+    } catch (error) {
+        console.error(error);
+    }
+}
+            </div>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Question 4: Type the Event Loop Code</h4>
+                <p>Convert this JavaScript to TypeScript with proper types:</p>
+                <div class="code-block">
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function processData(data) {
+    console.log('Processing:', data);
+    await delay(1000);
+    return data.toUpperCase();
+}
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer4')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer4">
+                    <h4>✅ TypeScript Version:</h4>
+                    <div class="code-block">
+function delay(ms: number): Promise&lt;void&gt; {
+    return new Promise&lt;void&gt;(resolve => setTimeout(resolve, ms));
+}
+
+async function processData(data: string): Promise&lt;string&gt; {
+    console.log('Processing:', data);
+    await delay(1000);
+    return data.toUpperCase();
+}
+
+// Usage with type safety
+const result: Promise&lt;string&gt; = processData("hello");
+result.then(value => console.log(value)); // "HELLO"
+                    </div>
+                    <p><strong>Key Points:</strong></p>
+                    <ul>
+                        <li><code>delay</code> returns <code>Promise&lt;void&gt;</code> (resolves with nothing)</li>
+                        <li><code>processData</code> is async, so returns <code>Promise&lt;string&gt;</code></li>
+                        <li>Parameter types prevent passing wrong data types</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Question 5: The Tricky One</h4>
+                <p>What's the output? (This combines event loop + async understanding)</p>
+                <div class="code-block">
+async function async1() {
+    console.log('async1 start');
+    await async2();
+    console.log('async1 end');
+}
+
+async function async2() {
+    console.log('async2');
+}
+
+console.log('script start');
+
+setTimeout(() => {
+    console.log('setTimeout');
+}, 0);
+
+async1();
+
+new Promise(resolve => {
+    console.log('promise1');
+    resolve();
+}).then(() => {
+    console.log('promise2');
+});
+
+console.log('script end');
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer5')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer5">
+                    <h4>✅ Correct Answer:</h4>
+                    <div class="code-block">
+// Output:
+// script start
+// async1 start
+// async2
+// promise1
+// script end
+// async1 end
+// promise2
+// setTimeout
+                    </div>
+                    <h4>📝 Step-by-Step Breakdown:</h4>
+                    <ol>
+                        <li><code>console.log('script start')</code> - Synchronous</li>
+                        <li><code>setTimeout</code> - Goes to macrotask queue</li>
+                        <li><code>async1()</code> called → <code>console.log('async1 start')</code></li>
+                        <li><code>await async2()</code> → Runs <code>async2()</code> synchronously → <code>console.log('async2')</code></li>
+                        <li>Code after <code>await</code> goes to microtask queue</li>
+                        <li><code>new Promise</code> executor runs synchronously → <code>console.log('promise1')</code></li>
+                        <li><code>.then()</code> goes to microtask queue</li>
+                        <li><code>console.log('script end')</code> - Synchronous</li>
+                        <li>Call stack empty → Microtasks run: <code>'async1 end'</code>, then <code>'promise2'</code></li>
+                        <li>Macrotask runs: <code>'setTimeout'</code></li>
+                    </ol>
+                    <div class="key-insight">
+                        <span class="icon">🎯</span> <strong>CRITICAL INSIGHT:</strong> <code>await</code> doesn't make the entire function async. Everything BEFORE <code>await</code> runs synchronously. Only code AFTER <code>await</code> becomes a microtask.
+                    </div>
+                </div>
+            </div>
+
+            <h3>📋 Day 2 Completion Checklist</h3>
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I understand microtask starvation</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I know when to use requestAnimationFrame</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can explain Node.js event loop differences</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can write TypeScript with proper types</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can type async functions correctly</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- CHEAT SHEET -->
+        <div class="cheat-sheet" id="cheatsheet">
+            <h2>📋 Quick Reference Cheat Sheet</h2>
+            
+            <h3>Event Loop Execution Order</h3>
+            <div class="code-block">
+1. Synchronous Code (runs first)
+2. Microtasks (Promise.then, queueMicrotask)
+3. requestAnimationFrame (before paint)
+4. Macrotasks (setTimeout, setInterval)
+
+// In Node.js:
+1. Synchronous Code
+2. process.nextTick()
+3. Microtasks
+4. Macrotasks
+            </div>
+
+            <h3>Type Cheat Sheet</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Concept</th>
+                        <th>Syntax</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Basic Type</td>
+                        <td><code>let x: number = 5</code></td>
+                        <td>Simple values</td>
+                    </tr>
+                    <tr>
+                        <td>Array</td>
+                        <td><code>let arr: number[]</code></td>
+                        <td>List of same type</td>
+                    </tr>
+                    <tr>
+                        <td>Tuple</td>
+                        <td><code>let t: [string, number]</code></td>
+                        <td>Fixed length, different types</td>
+                    </tr>
+                    <tr>
+                        <td>Union</td>
+                        <td><code>let x: string | number</code></td>
+                        <td>Multiple possible types</td>
+                    </tr>
+                    <tr>
+                        <td>Function</td>
+                        <td><code>(x: number) => number</code></td>
+                        <td>Function signature</td>
+                    </tr>
+                    <tr>
+                        <td>Promise</td>
+                        <td><code>Promise&lt;string&gt;</code></td>
+                        <td>Async operations</td>
+                    </tr>
+                    <tr>
+                        <td>Optional</td>
+                        <td><code>name?: string</code></td>
+                        <td>May or may not exist</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Common Interview Mistakes</h3>
+            <ul>
+                <li>❌ Thinking <code>setTimeout(..., 0)</code> runs immediately</li>
+                <li>❌ Not knowing microtasks run before macrotasks</li>
+                <li>❌ Forgetting code after <code>await</code> is async</li>
+                <li>❌ Using <code>any</code> type everywhere in TypeScript</li>
+                <li>❌ Not understanding Promise executor runs synchronously</li>
+            </ul>
+
+            <h3>Senior Engineer Mindset</h3>
+            <div class="concept-box success">
+                <p><strong>When debugging async issues, always ask:</strong></p>
+                <ol>
+                    <li>Is this a microtask or macrotask?</li>
+                    <li>What's the execution order?</li>
+                    <li>Could this cause starvation?</li>
+                    <li>Is there a race condition?</li>
+                    <li>What happens if this takes longer than expected?</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Next Steps</h2>
+            <p>Before moving to Day 3, make sure you can:</p>
+            <ul>
+                <li>✅ Predict output of any async code without running it</li>
+                <li>✅ Explain why microtasks run before macrotasks to someone else</li>
+                <li>✅ Write TypeScript code with proper types</li>
+                <li>✅ Debug async issues in Chrome DevTools</li>
+                <li>✅ Answer all 5 interview questions correctly</li>
+            </ul>
+
+            <div class="key-insight">
+                <span class="icon">🚀</span> <strong>Remember:</strong> Senior engineers don't just write code—they understand how JavaScript executes it. This knowledge separates you from 90% of candidates.
+            </div>
+
+            <p style="margin-top: 2rem; text-align: center; font-size: 1.2rem;">
+                <strong>Tomorrow: Scope, Hoisting, and Closures</strong><br>
+                We'll tackle the concepts that break most interviews.
+            </p>
+        </div>
+    </div>
+
+    <div class="completion-tracker">
+        <h4>Progress Tracker</h4>
+        <div class="completion-stat">
+            <span>Completed:</span>
+            <span id="completedCount">0/10</span>
+        </div>
+        <div class="completion-stat">
+            <span>Percentage:</span>
+            <span id="completedPercent">0%</span>
+        </div>
+    </div>
+
+    <div class="back-to-top" onclick="scrollToTop()">↑</div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const btn = document.querySelector('.theme-toggle');
+            btn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.theme-toggle').textContent = '☀️ Light Mode';
+        }
+
+        // Reveal Answer
+        function revealAnswer(id) {
+            const answer = document.getElementById(id);
+            const btn = answer.previousElementSibling;
+            
+            if (answer.classList.contains('show')) {
+                answer.classList.remove('show');
+                btn.textContent = '🔓 Reveal Answer';
+            } else {
+                answer.classList.add('show');
+                btn.textContent = '🔒 Hide Answer';
+            }
+        }
+
+        // Progress Tracking
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+            const count = checked.length;
+            const total = checkboxes.length;
+            const percent = Math.round((count / total) * 100);
+            
+            document.getElementById('completedCount').textContent = `${count}/${total}`;
+            document.getElementById('completedPercent').textContent = `${percent}%`;
+            document.getElementById('progressBar').style.width = `${percent}%`;
+            
+            // Save progress
+            const checkboxStates = Array.from(checkboxes).map(cb => cb.checked);
+            localStorage.setItem('day1-2-progress', JSON.stringify(checkboxStates));
+        }
+
+        // Load saved progress
+        const savedProgress = localStorage.getItem('day1-2-progress');
+        if (savedProgress) {
+            const states = JSON.parse(savedProgress);
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach((cb, index) => {
+                if (states[index]) {
+                    cb.checked = true;
+                }
+            });
+            updateProgress();
+        }
+
+        // Back to Top
+        window.addEventListener('scroll', () => {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Smooth Scroll for Nav Links
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
