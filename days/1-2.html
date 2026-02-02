@@ -2,7 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Master JavaScript Event Loop and TypeScript fundamentals for senior frontend interviews. Interactive learning with real interview questions.">
+    <meta name="keywords" content="JavaScript, Event Loop, TypeScript, Frontend Interview, Senior Developer, React">
+    <meta name="author" content="Frontend Interview Prep">
+    <meta property="og:title" content="Day 1-2: Event Loop & TypeScript | Frontend Interview Prep">
+    <meta property="og:description" content="Interactive learning module for senior frontend engineers">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <title>Days 1-2: Event Loop & TypeScript Fundamentals | Frontend Interview Prep</title>
     <style>
         * {
@@ -231,10 +239,44 @@
             overflow-x: auto;
             margin: 1rem 0;
             border: 1px solid #333;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.95rem;
-            line-height: 1.5;
+            font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            white-space: pre;
+            position: relative;
         }
+
+        .code-block::before {
+            content: 'JavaScript';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #2563eb;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .code-block.typescript::before {
+            content: 'TypeScript';
+            background: #3178c6;
+        }
+
+        .code-block.output::before {
+            content: 'Output';
+            background: #10b981;
+        }
+
+        /* Syntax highlighting */
+        .code-keyword { color: #c586c0; }
+        .code-function { color: #dcdcaa; }
+        .code-string { color: #ce9178; }
+        .code-comment { color: #6a9955; font-style: italic; }
+        .code-number { color: #b5cea8; }
+        .code-operator { color: #d4d4d4; }
+        .code-variable { color: #9cdcfe; }
 
         code {
             background: #f1f5f9;
@@ -418,6 +460,7 @@
             padding: 1rem;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             min-width: 200px;
+            z-index: 999;
         }
 
         body.dark-mode .completion-tracker {
@@ -436,27 +479,243 @@
             font-weight: 600;
         }
 
+        .timer-display {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: bold;
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .timer-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .timer-btn.start {
+            background: var(--success);
+            color: white;
+        }
+
+        .timer-btn.pause {
+            background: var(--warning);
+            color: white;
+        }
+
+        .timer-btn.reset {
+            background: var(--danger);
+            color: white;
+        }
+
+        .keyboard-shortcuts {
+            background: #f8fafc;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        body.dark-mode .keyboard-shortcuts {
+            background: #1e293b;
+        }
+
+        .keyboard-shortcuts h4 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .shortcut-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.3rem 0;
+        }
+
+        .key {
+            background: var(--primary);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 1.8rem;
             }
 
+            .hero p {
+                font-size: 1rem;
+            }
+
             .nav-content {
                 flex-direction: column;
+                align-items: flex-start;
             }
 
             .nav-links {
                 flex-direction: column;
                 gap: 0.5rem;
+                width: 100%;
+            }
+
+            .nav-links a {
+                padding: 0.5rem;
             }
 
             .container {
-                padding: 80px 1rem 1rem 1rem;
+                padding: 100px 1rem 1rem 1rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .section h3 {
+                font-size: 1.2rem;
             }
 
             .completion-tracker {
                 display: none;
             }
+
+            .code-block {
+                font-size: 0.8rem;
+                padding: 1rem;
+            }
+
+            .diagram-box {
+                display: block;
+                margin: 0.5rem 0;
+            }
+
+            .arrow {
+                display: block;
+                margin: 0.5rem 0;
+                transform: rotate(90deg);
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            table th,
+            table td {
+                padding: 0.5rem;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .interview-question,
+            .practice-problem,
+            .concept-box,
+            .cheat-sheet {
+                padding: 1rem;
+            }
+
+            .back-to-top {
+                bottom: 1rem;
+                left: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .code-block {
+                font-size: 0.75rem;
+            }
+
+            .nav {
+                padding: 0.75rem 1rem;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .nav,
+            .theme-toggle,
+            .reveal-btn,
+            .completion-tracker,
+            .back-to-top,
+            .copy-btn {
+                display: none;
+            }
+
+            .container {
+                padding-top: 1rem;
+            }
+
+            .interview-answer {
+                display: block !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Accessibility */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Focus styles for keyboard navigation */
+        a:focus,
+        button:focus,
+        input:focus {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Loading animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            animation: fadeIn 0.6s ease-out;
         }
 
         .back-to-top {
@@ -486,6 +745,90 @@
             background: linear-gradient(180deg, transparent 60%, #fef08a 60%);
             padding: 0.2rem 0;
         }
+
+        .resource-links {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .resource-links h3 {
+            color: white;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .resource-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .resource-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .resource-card h4 {
+            color: white;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .resource-card a {
+            color: #fef08a;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .resource-card a:hover {
+            text-decoration: underline;
+        }
+
+        .resource-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .copy-btn {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+        }
+
+        .copy-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .copy-btn.copied {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border-color: #10b981;
+        }
     </style>
 </head>
 <body>
@@ -495,6 +838,7 @@
             <div class="nav-links">
                 <a href="#day1">Day 1</a>
                 <a href="#day2">Day 2</a>
+                <a href="#resources">Resources</a>
                 <a href="#cheatsheet">Cheat Sheet</a>
                 <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
             </div>
@@ -1180,6 +1524,122 @@ console.log('script end');
             </div>
         </div>
 
+        <!-- RESOURCES -->
+        <div class="resource-links" id="resources">
+            <h2>📚 Essential Learning Resources</h2>
+            <p>Curated resources from top developers and official documentation. Bookmark these!</p>
+            
+            <h3>🎥 Must-Watch Videos</h3>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">🎬</div>
+                    <h4>Jake Archibald: In The Loop</h4>
+                    <p>The definitive event loop explanation (35 mins)</p>
+                    <a href="https://www.youtube.com/watch?v=cCOL7MC4Pl0" target="_blank">Watch on YouTube →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">🎨</div>
+                    <h4>JavaScript Visualized</h4>
+                    <p>Lydia Hallie's visual guides to JS concepts</p>
+                    <a href="https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif" target="_blank">Read on DEV.to →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">📺</div>
+                    <h4>Philip Roberts: Event Loop</h4>
+                    <p>Classic JSConf talk with live visualization</p>
+                    <a href="https://www.youtube.com/watch?v=8aGhZQkoFbQ" target="_blank">Watch on YouTube →</a>
+                </div>
+            </div>
+
+            <h3>📖 Official Documentation</h3>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">📕</div>
+                    <h4>MDN: Event Loop</h4>
+                    <p>Mozilla's comprehensive guide</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop" target="_blank">Read on MDN →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">📘</div>
+                    <h4>TypeScript Handbook</h4>
+                    <p>Official TypeScript documentation</p>
+                    <a href="https://www.typescriptlang.org/docs/handbook/intro.html" target="_blank">Read on TypeScript.org →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">📙</div>
+                    <h4>JavaScript.info</h4>
+                    <p>Modern JavaScript tutorial with examples</p>
+                    <a href="https://javascript.info/event-loop" target="_blank">Read on JavaScript.info →</a>
+                </div>
+            </div>
+
+            <h3>📚 Books & Deep Dives</h3>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">📗</div>
+                    <h4>You Don't Know JS</h4>
+                    <p>Kyle Simpson's book series (FREE online)</p>
+                    <a href="https://github.com/getify/You-Dont-Know-JS" target="_blank">Read on GitHub →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">🎓</div>
+                    <h4>Matt Pocock's TypeScript</h4>
+                    <p>Advanced TypeScript tutorials</p>
+                    <a href="https://www.totaltypescript.com/" target="_blank">Visit TotalTypeScript →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">🔧</div>
+                    <h4>Node.js Event Loop</h4>
+                    <p>Official Node.js event loop guide</p>
+                    <a href="https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick" target="_blank">Read on Node.js →</a>
+                </div>
+            </div>
+
+            <h3>🛠️ Interactive Tools</h3>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">⚡</div>
+                    <h4>Loupe: Event Loop Visualizer</h4>
+                    <p>See the call stack in action</p>
+                    <a href="http://latentflip.com/loupe/" target="_blank">Try Loupe →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">🎮</div>
+                    <h4>TypeScript Playground</h4>
+                    <p>Test TypeScript code in browser</p>
+                    <a href="https://www.typescriptlang.org/play" target="_blank">Try Playground →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">🔍</div>
+                    <h4>Chrome DevTools</h4>
+                    <p>Debug async code like a pro</p>
+                    <a href="https://developer.chrome.com/docs/devtools/" target="_blank">Learn DevTools →</a>
+                </div>
+            </div>
+
+            <h3>💬 Communities</h3>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">💬</div>
+                    <h4>r/javascript</h4>
+                    <p>Reddit community for JavaScript</p>
+                    <a href="https://www.reddit.com/r/javascript/" target="_blank">Visit Reddit →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">🐦</div>
+                    <h4>JavaScript Twitter</h4>
+                    <p>Follow @addyosmani, @dan_abramov, @lydiahallie</p>
+                    <a href="https://twitter.com/search?q=%23javascript" target="_blank">Explore Twitter →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">📰</div>
+                    <h4>JavaScript Weekly</h4>
+                    <p>Weekly newsletter with latest JS news</p>
+                    <a href="https://javascriptweekly.com/" target="_blank">Subscribe →</a>
+                </div>
+            </div>
+        </div>
+
         <!-- CHEAT SHEET -->
         <div class="cheat-sheet" id="cheatsheet">
             <h2>📋 Quick Reference Cheat Sheet</h2>
@@ -1287,6 +1747,30 @@ console.log('script end');
                 <strong>Tomorrow: Scope, Hoisting, and Closures</strong><br>
                 We'll tackle the concepts that break most interviews.
             </p>
+
+            <div class="keyboard-shortcuts">
+                <h4>⌨️ Keyboard Shortcuts</h4>
+                <div class="shortcut-row">
+                    <span>Toggle Dark Mode</span>
+                    <kbd class="key">D</kbd>
+                </div>
+                <div class="shortcut-row">
+                    <span>Scroll to Top</span>
+                    <kbd class="key">T</kbd>
+                </div>
+                <div class="shortcut-row">
+                    <span>Jump to Resources</span>
+                    <kbd class="key">R</kbd>
+                </div>
+                <div class="shortcut-row">
+                    <span>Jump to Cheat Sheet</span>
+                    <kbd class="key">C</kbd>
+                </div>
+                <div class="shortcut-row">
+                    <span>Start/Pause Timer</span>
+                    <kbd class="key">Space</kbd>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1299,6 +1783,14 @@ console.log('script end');
         <div class="completion-stat">
             <span>Percentage:</span>
             <span id="completedPercent">0%</span>
+        </div>
+        <hr style="margin: 0.75rem 0; border: none; border-top: 1px solid var(--border);">
+        <h4>Study Timer</h4>
+        <div class="timer-display" id="timerDisplay">00:00:00</div>
+        <div class="timer-controls">
+            <button class="timer-btn start" onclick="startTimer()">▶</button>
+            <button class="timer-btn pause" onclick="pauseTimer()">⏸</button>
+            <button class="timer-btn reset" onclick="resetTimer()">↻</button>
         </div>
     </div>
 
@@ -1384,6 +1876,111 @@ console.log('script end');
                 const target = document.querySelector(link.getAttribute('href'));
                 target.scrollIntoView({ behavior: 'smooth' });
             });
+        });
+
+        // Add copy buttons to code blocks
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.code-block').forEach((block, index) => {
+                const button = document.createElement('button');
+                button.className = 'copy-btn';
+                button.innerHTML = '📋 Copy';
+                button.onclick = () => copyCode(block, button);
+                block.style.position = 'relative';
+                block.style.paddingTop = '3rem';
+                block.appendChild(button);
+            });
+        });
+
+        function copyCode(block, button) {
+            const code = block.textContent.replace('📋 Copy', '').replace('✓ Copied!', '').trim();
+            navigator.clipboard.writeText(code).then(() => {
+                button.innerHTML = '✓ Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.innerHTML = '📋 Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Study Timer
+        let timerInterval;
+        let timerSeconds = 0;
+        let timerRunning = false;
+
+        function startTimer() {
+            if (!timerRunning) {
+                timerRunning = true;
+                timerInterval = setInterval(() => {
+                    timerSeconds++;
+                    updateTimerDisplay();
+                    localStorage.setItem('studyTime', timerSeconds);
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            timerRunning = false;
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timerSeconds = 0;
+            updateTimerDisplay();
+            localStorage.setItem('studyTime', 0);
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timerSeconds / 3600);
+            const minutes = Math.floor((timerSeconds % 3600) / 60);
+            const seconds = timerSeconds % 60;
+            
+            const display = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = display;
+        }
+
+        // Load saved timer
+        const savedTime = localStorage.getItem('studyTime');
+        if (savedTime) {
+            timerSeconds = parseInt(savedTime);
+            updateTimerDisplay();
+        }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Don't trigger if user is typing in an input
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            switch(e.key.toLowerCase()) {
+                case 'd':
+                    toggleTheme();
+                    break;
+                case 't':
+                    scrollToTop();
+                    break;
+                case 'r':
+                    document.getElementById('resources').scrollIntoView({ behavior: 'smooth' });
+                    break;
+                case 'c':
+                    document.getElementById('cheatsheet').scrollIntoView({ behavior: 'smooth' });
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    if (timerRunning) {
+                        pauseTimer();
+                    } else {
+                        startTimer();
+                    }
+                    break;
+            }
+        });
+
+        // Auto-save timer when leaving page
+        window.addEventListener('beforeunload', () => {
+            if (timerRunning) {
+                localStorage.setItem('studyTime', timerSeconds);
+            }
         });
     </script>
 </body>
