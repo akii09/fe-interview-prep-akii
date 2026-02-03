@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="robots" content="noindex, nofollow">
     <title>Days Index - Dynamic Navigation</title>
     <style>
         body {
@@ -91,12 +90,15 @@
         
         <div class="dynamic-note">
             <strong>Auto-generated:</strong> This page automatically detects and lists all day files in the directory.
-            Found 1 day file(s): 1-2.html
+            Found 2 day file(s): 1-2.html, 3.html
         </div>
         
         <ul class="day-list" id="dayList">
                 <li class="day-item">
                     <a href="1-2.html" class="day-link">Day 1-2</a>
+                </li>
+                <li class="day-item">
+                    <a href="3.html" class="day-link">Day 3</a>
                 </li>
         </ul>
         
@@ -135,7 +137,7 @@
                 
                 // Since we can't make too many requests due to performance,
                 // let's first check for the known file we already have
-                const knownFiles = ["1-2.html"];
+                const knownFiles = ["1-2.html", "3.html"];
                 
                 // Check which of the known files actually exist
                 for (const filename of knownFiles) {
@@ -188,7 +190,7 @@
                 
                 // Fallback: show the known files
                 const dayList = document.getElementById('dayList');
-                const knownFiles = ["1-2.html"];
+                const knownFiles = ["1-2.html", "3.html"];
                 
                 if (knownFiles.length > 0) {
                     dayList.innerHTML = '';
@@ -199,7 +201,14 @@
                         const a = document.createElement('a');
                         a.href = filename;
                         a.className = 'day-link';
-                        a.textContent = `Day ${filename.replace('.html', '')}`;
+                        // Format the display name from the filename
+                        const cleanName = filename.replace('.html', '');
+                        if (cleanName.includes('-')) {
+                            const parts = cleanName.split('-');
+                            a.textContent = `Day ${parts[0]}-${parts[1]}`;
+                        } else {
+                            a.textContent = `Day ${cleanName}`;
+                        }
                         
                         li.appendChild(a);
                         dayList.appendChild(li);
@@ -235,7 +244,7 @@
                     <li>Or refresh this page to see them listed (if using server-side rendering)</li>
                 </ol>
                 <p>Current files detected in this directory:</p>
-                <ul id="detected-files-list" style="font-family: monospace; color: #495057;">${["1-2.html"].map(f => '<li>' + f + '</li>').join('')}</ul>
+                <ul id="detected-files-list" style="font-family: monospace; color: #495057;">${["1-2.html", "3.html"].map(f => '<li>' + f + '</li>').join('')}</ul>
             `;
             
             document.querySelector('.container').appendChild(helperDiv);
