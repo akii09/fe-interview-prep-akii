@@ -1,0 +1,2402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Deep dive into JavaScript Scope, Hoisting, and Temporal Dead Zone. Master these critical interview concepts with real examples.">
+    <meta name="keywords" content="JavaScript, Scope, Hoisting, TDZ, Temporal Dead Zone, var let const, Frontend Interview">
+    <meta name="author" content="Frontend Interview Prep">
+    <meta property="og:title" content="Day 3: Scope, Hoisting & TDZ | Frontend Interview Prep">
+    <meta property="og:description" content="Complete guide to mastering scope and hoisting for senior frontend interviews">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#3b82f6">
+    <title>Day 3: Scope, Hoisting & TDZ Deep Dive | Frontend Interview Prep</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-light: #f8fafc;
+            --bg-dark: #1e293b;
+            --text-light: #0f172a;
+            --text-dark: #f1f5f9;
+            --code-bg: #1e1e1e;
+            --border: #e2e8f0;
+            --purple-light: #f3e8ff;
+            --purple-medium: #c084fc;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            line-height: 1.6;
+            color: var(--text-light);
+            background: var(--bg-light);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .container {
+            background: #0f172a;
+        }
+
+        body.dark-mode .nav {
+            background: #0f172a;
+            border-bottom-color: #334155;
+        }
+
+        body.dark-mode .section {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        body.dark-mode .concept-box,
+        body.dark-mode .interview-question,
+        body.dark-mode .practice-problem,
+        body.dark-mode .cheat-sheet,
+        body.dark-mode .comparison-table {
+            background: #0f172a;
+            border-color: #334155;
+        }
+
+        body.dark-mode code {
+            background: #1e1e1e;
+        }
+
+        body.dark-mode .code-block {
+            background: #1e1e1e;
+            border-color: #334155;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), var(--purple-medium));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: inherit;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-dark);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 2rem 2rem 2rem;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, var(--primary), var(--purple-medium));
+            border-radius: 16px;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.95;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            height: 8px;
+            border-radius: 4px;
+            margin: 2rem auto;
+            max-width: 600px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .section {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .section h3 {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .section h4 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .concept-box {
+            background: var(--purple-light);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .concept-box.warning {
+            background: #fef3c7;
+            border-left-color: var(--warning);
+        }
+
+        .concept-box.danger {
+            background: #fee2e2;
+            border-left-color: var(--danger);
+        }
+
+        .concept-box.success {
+            background: #d1fae5;
+            border-left-color: var(--success);
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            color: #d4d4d4;
+            padding: 1.5rem;
+            padding-top: 3rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #333;
+            font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            white-space: pre;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: 'JavaScript';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .code-block.typescript::before {
+            content: 'TypeScript';
+            background: #3178c6;
+        }
+
+        .code-block.output::before {
+            content: 'Output';
+            background: #10b981;
+        }
+
+        .code-block.error::before {
+            content: 'Error';
+            background: #ef4444;
+        }
+
+        /* Syntax highlighting colors */
+        .code-keyword { color: #c586c0; }
+        .code-function { color: #dcdcaa; }
+        .code-string { color: #ce9178; }
+        .code-comment { color: #6a9955; font-style: italic; }
+        .code-number { color: #b5cea8; }
+        .code-operator { color: #d4d4d4; }
+        .code-variable { color: #9cdcfe; }
+
+        code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .interview-question {
+            background: #fef3c7;
+            border: 2px solid var(--warning);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .interview-question h4 {
+            color: var(--warning);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            margin-top: 0;
+        }
+
+        .interview-answer {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--warning);
+        }
+
+        .interview-answer.show {
+            display: block;
+        }
+
+        .reveal-btn {
+            background: var(--warning);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+
+        .reveal-btn:hover {
+            background: #d97706;
+        }
+
+        .practice-problem {
+            background: #dbeafe;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .practice-problem h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+
+        .checkbox-group {
+            margin: 1.5rem 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .cheat-sheet {
+            background: #f0fdf4;
+            border: 3px solid var(--success);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .cheat-sheet h3 {
+            color: var(--success);
+            margin-top: 0;
+        }
+
+        .comparison-table {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        table th,
+        table td {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        body.dark-mode table tr:nth-child(even) {
+            background: #1e293b;
+        }
+
+        .analogy {
+            background: #fef3c7;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+            margin: 1.5rem 0;
+            font-style: italic;
+        }
+
+        .diagram {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        body.dark-mode .diagram {
+            background: #1e293b;
+        }
+
+        .diagram-box {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            margin: 0.5rem;
+            font-weight: 600;
+        }
+
+        .arrow {
+            font-size: 2rem;
+            color: var(--primary);
+            margin: 0 1rem;
+        }
+
+        .story-box {
+            background: #fef3c7;
+            border: 2px dashed #f59e0b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .story-box h4 {
+            color: #f59e0b;
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+
+        .key-insight {
+            background: linear-gradient(135deg, #8b5cf6 0%, #c084fc 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            font-weight: 500;
+        }
+
+        .completion-tracker {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 200px;
+            z-index: 999;
+        }
+
+        body.dark-mode .completion-tracker {
+            background: #1e293b;
+        }
+
+        .completion-tracker h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .completion-stat {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+            font-weight: 600;
+        }
+
+        .timer-display {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: bold;
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .timer-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .timer-btn.start {
+            background: var(--success);
+            color: white;
+        }
+
+        .timer-btn.pause {
+            background: var(--warning);
+            color: white;
+        }
+
+        .timer-btn.reset {
+            background: var(--danger);
+            color: white;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+        }
+
+        .highlight {
+            background: linear-gradient(180deg, transparent 60%, #fef08a 60%);
+            padding: 0.2rem 0;
+        }
+
+        .copy-btn {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+        }
+
+        .copy-btn:hover {
+            background: rgba(139, 92, 246, 0.3);
+        }
+
+        .copy-btn.copied {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border-color: #10b981;
+        }
+
+        .visual-example {
+            background: #f8fafc;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        body.dark-mode .visual-example {
+            background: #1e293b;
+        }
+
+        .visual-example h4 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .scope-chain {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .scope-level {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 1rem;
+            position: relative;
+        }
+
+        body.dark-mode .scope-level {
+            background: #0f172a;
+        }
+
+        .scope-level::before {
+            content: attr(data-level);
+            position: absolute;
+            top: -12px;
+            left: 1rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .mistake-box {
+            background: #fee2e2;
+            border-left: 4px solid var(--danger);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .mistake-box h4 {
+            color: var(--danger);
+            margin-top: 0;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero-stats {
+                gap: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .nav-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+                width: 100%;
+            }
+
+            .container {
+                padding: 100px 1rem 1rem 1rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .section h3 {
+                font-size: 1.2rem;
+            }
+
+            .completion-tracker {
+                display: none;
+            }
+
+            .code-block {
+                font-size: 0.8rem;
+                padding: 1rem;
+                padding-top: 3rem;
+            }
+
+            .diagram-box {
+                display: block;
+                margin: 0.5rem 0;
+            }
+
+            .arrow {
+                display: block;
+                margin: 0.5rem 0;
+                transform: rotate(90deg);
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            table th,
+            table td {
+                padding: 0.5rem;
+            }
+
+            .back-to-top {
+                bottom: 1rem;
+                left: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .code-block {
+                font-size: 0.75rem;
+            }
+
+            .nav {
+                padding: 0.75rem 1rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Accessibility */
+        a:focus,
+        button:focus,
+        input:focus {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="logo">🎯 Day 3: Scope Deep Dive</div>
+            <div class="nav-links">
+                <a href="#scope">Scope</a>
+                <a href="#hoisting">Hoisting</a>
+                <a href="#tdz">TDZ</a>
+                <a href="#interview">Interview Q's</a>
+                <a href="#cheatsheet">Cheat Sheet</a>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Day 3: Scope, Hoisting & Temporal Dead Zone</h1>
+            <p>The trinity of concepts that <span class="highlight">breaks 70% of interview candidates</span>. Master these and you'll debug any scope issue in seconds.</p>
+            <div class="hero-stats">
+                <div class="stat-box">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Interview Questions</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">Code Examples</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Real Bugs Fixed</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- WHY THIS MATTERS -->
+        <div class="section">
+            <h2>🎯 Why This Matters for Senior Engineers</h2>
+            
+            <div class="concept-box">
+                <p><span class="icon">💡</span><strong>Critical Reality:</strong> Scope bugs are the #1 cause of production issues in React apps. Understanding scope, hoisting, and TDZ isn't theoretical—it's how you prevent midnight debugging sessions.</p>
+            </div>
+
+            <h3>What Happens in Real Interviews</h3>
+            <p>Senior frontend interviews ALWAYS test these concepts because:</p>
+            <ul>
+                <li><strong>They reveal how deeply you understand JavaScript</strong> - Not just syntax, but execution model</li>
+                <li><strong>They predict debugging ability</strong> - Can you fix strange bugs in production?</li>
+                <li><strong>They test React knowledge</strong> - Closures + hooks = most common React bugs</li>
+                <li><strong>They separate juniors from seniors</strong> - Juniors guess, seniors know</li>
+            </ul>
+
+            <div class="story-box">
+                <h4>💰 Real Interview Story</h4>
+                <p>A candidate with 7 years of experience was interviewing at Stripe. The interviewer asked:</p>
+                <p><em>"Why does this React component always show 0 when you click the button after 3 seconds?"</em></p>
+                <div class="code-block">
+function Counter() {
+    const [count, setCount] = useState(0);
+    
+    const handleClick = () => {
+        setTimeout(() => {
+            setCount(count + 1);  // Always logs 0 + 1
+        }, 3000);
+    };
+    
+    return &lt;button onClick={handleClick}&gt;{count}&lt;/button&gt;;
+}
+                </div>
+                <p><strong>The candidate couldn't explain it.</strong> They got rejected.</p>
+                <p><strong>The answer:</strong> Closure captured the initial <code>count</code> value (0). This is a scope + closure issue.</p>
+                <p><strong>The lesson:</strong> If you don't understand scope deeply, you can't debug React bugs.</p>
+            </div>
+        </div>
+
+        <!-- PART 1: SCOPE -->
+        <div class="section" id="scope">
+            <h2>📦 Part 1: Scope - Where Variables Live</h2>
+
+            <div class="key-insight">
+                <span class="icon">🎯</span> <strong>CORE CONCEPT:</strong> Scope is the set of rules that determines where and how variables can be accessed. Think of it as "variable visibility zones."
+            </div>
+
+            <h3>1️⃣ Lexical Scope (How JavaScript Works)</h3>
+            
+            <p>JavaScript uses <strong>lexical scoping</strong> (also called static scoping). This means scope is determined at <strong>write-time</strong>, not runtime.</p>
+
+            <div class="analogy">
+                <strong>🏢 The Office Building Analogy:</strong><br><br>
+                Imagine a company building:<br>
+                • <strong>Global scope</strong> = Company lobby (everyone can access)<br>
+                • <strong>Function scope</strong> = Department floors (only department members access)<br>
+                • <strong>Block scope</strong> = Individual offices (only people in that office access)<br><br>
+                Variables are like documents. Where you file the document (scope) determines who can read it.
+            </div>
+
+            <h3>2️⃣ The Three Types of Scope</h3>
+
+            <div class="comparison-table">
+                <h4>Scope Types Comparison</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Scope Type</th>
+                            <th>What It Is</th>
+                            <th>Who Can Access</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Global</strong></td>
+                            <td>Outside all functions</td>
+                            <td>Everyone, everywhere</td>
+                            <td><code>var x = 1;</code> (top level)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Function</strong></td>
+                            <td>Inside a function</td>
+                            <td>Only that function + nested functions</td>
+                            <td><code>function() { var x = 1; }</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Block</strong></td>
+                            <td>Inside { } braces</td>
+                            <td>Only inside those braces (let/const only)</td>
+                            <td><code>if (true) { let x = 1; }</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3️⃣ Scope Chain - How JavaScript Finds Variables</h3>
+
+            <p>When JavaScript looks for a variable, it searches in this order:</p>
+
+            <div class="visual-example">
+                <h4>Scope Chain Visualization</h4>
+                <div class="scope-chain">
+                    <div class="scope-level" data-level="3. Global Scope">
+                        <code>let global = "I'm global";</code>
+                        <div class="scope-level" data-level="2. Outer Function Scope">
+                            <code>function outer() { let outerVar = "I'm outer";</code>
+                            <div class="scope-level" data-level="1. Inner Function Scope">
+                                <code>function inner() { let innerVar = "I'm inner";</code><br>
+                                <code>console.log(innerVar);  // ✅ Found here</code><br>
+                                <code>console.log(outerVar);  // ⬆️ Found in parent</code><br>
+                                <code>console.log(global);    // ⬆️⬆️ Found in global</code><br>
+                                <code>}</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block">
+let global = "I'm global";
+
+function outer() {
+    let outerVar = "I'm outer";
+    
+    function inner() {
+        let innerVar = "I'm inner";
+        
+        console.log(innerVar);  // ✅ "I'm inner"
+        console.log(outerVar);  // ✅ "I'm outer" (found in parent)
+        console.log(global);    // ✅ "I'm global" (found in global)
+    }
+    
+    inner();
+    console.log(innerVar);  // ❌ ReferenceError: innerVar is not defined
+}
+
+outer();
+            </div>
+
+            <div class="concept-box warning">
+                <p><span class="icon">⚠️</span><strong>Scope Chain Rule:</strong> JavaScript looks for variables from innermost scope outward. It NEVER looks down or sideways, only UP the chain.</p>
+            </div>
+
+            <h3>4️⃣ Block Scope vs Function Scope</h3>
+
+            <p>This is where <code>let</code>/<code>const</code> differ from <code>var</code>:</p>
+
+            <div class="code-block">
+// Function Scope (var)
+function testVar() {
+    if (true) {
+        var x = 10;  // Function-scoped
+    }
+    console.log(x);  // ✅ 10 - accessible outside the block!
+}
+
+// Block Scope (let/const)
+function testLet() {
+    if (true) {
+        let y = 10;  // Block-scoped
+    }
+    console.log(y);  // ❌ ReferenceError: y is not defined
+}
+            </div>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Interview Question 1: The Classic Loop Bug</h4>
+                <p>What gets logged when you click each button?</p>
+                <div class="code-block">
+for (var i = 0; i &lt; 3; i++) {
+    document.getElementById('btn' + i).addEventListener('click', function() {
+        console.log(i);
+    });
+}
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer1')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer1">
+                    <h4>✅ Answer: All buttons log 3</h4>
+                    <div class="code-block output">
+// Click button 0: 3
+// Click button 1: 3
+// Click button 2: 3
+                    </div>
+                    <h4>📝 Why?</h4>
+                    <ol>
+                        <li><code>var i</code> is function-scoped, not block-scoped</li>
+                        <li>The loop finishes, <code>i</code> becomes 3</li>
+                        <li>All three event listeners share the SAME <code>i</code> variable</li>
+                        <li>When you click, they all read the current value: 3</li>
+                    </ol>
+                    
+                    <h4>✅ Fix #1: Use let (Block Scope)</h4>
+                    <div class="code-block">
+for (let i = 0; i &lt; 3; i++) {  // ✅ let creates new i for each iteration
+    document.getElementById('btn' + i).addEventListener('click', function() {
+        console.log(i);  // Logs 0, 1, 2 correctly
+    });
+}
+                    </div>
+                    
+                    <h4>✅ Fix #2: IIFE (Closure)</h4>
+                    <div class="code-block">
+for (var i = 0; i &lt; 3; i++) {
+    (function(j) {  // Create new scope with IIFE
+        document.getElementById('btn' + j).addEventListener('click', function() {
+            console.log(j);  // Logs 0, 1, 2 correctly
+        });
+    })(i);  // Pass current i as j
+}
+                    </div>
+                    
+                    <div class="key-insight">
+                        <span class="icon">🎯</span> <strong>SENIOR INSIGHT:</strong> This bug appears in React all the time with state updates in loops. If you understand this, you understand 80% of React closure bugs.
+                    </div>
+                </div>
+            </div>
+
+            <h3>5️⃣ Lexical vs Dynamic Scope</h3>
+
+            <p>JavaScript uses <strong>lexical scope</strong>, but some languages use dynamic scope. Here's the difference:</p>
+
+            <div class="code-block">
+let x = 'global';
+
+function outer() {
+    let x = 'outer';
+    inner();
+}
+
+function inner() {
+    console.log(x);  // What gets logged?
+}
+
+outer();
+
+// ✅ Lexical Scope (JavaScript): Logs "global"
+//    (inner looks for x where it was DEFINED)
+//
+// ❌ Dynamic Scope (not JavaScript): Would log "outer"
+//    (inner would look where it was CALLED from)
+            </div>
+
+            <div class="concept-box success">
+                <p><span class="icon">💡</span><strong>Memory Trick:</strong> "Lexical" sounds like "textual" - scope is determined by the TEXT (code structure), not the execution path.</p>
+            </div>
+        </div>
+
+        <!-- PART 2: HOISTING -->
+        <div class="section" id="hoisting">
+            <h2>⬆️ Part 2: Hoisting - The Weird Behavior</h2>
+
+            <div class="key-insight">
+                <span class="icon">🎯</span> <strong>CORE CONCEPT:</strong> Hoisting is JavaScript's behavior of moving declarations to the top of their scope during the compilation phase. But initialization stays in place.
+            </div>
+
+            <div class="analogy">
+                <strong>📋 The Guest List Analogy:</strong><br><br>
+                Imagine you're hosting a party:<br>
+                • <strong>Hoisting</strong> = Adding names to guest list before party starts<br>
+                • <strong>Initialization</strong> = Guests actually arriving<br><br>
+                JavaScript reads your code and creates a "guest list" (declarations) before running any code. But the guests (values) arrive when their line of code executes.
+            </div>
+
+            <h3>1️⃣ How Hoisting Works</h3>
+
+            <p>JavaScript execution happens in two phases:</p>
+            <ol>
+                <li><strong>Creation Phase:</strong> Scan code, find declarations, allocate memory</li>
+                <li><strong>Execution Phase:</strong> Run code line by line</li>
+            </ol>
+
+            <div class="visual-example">
+                <h4>What You Write vs What JavaScript Sees</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <strong>You Write:</strong>
+                        <div class="code-block">
+console.log(x);  // ?
+var x = 5;
+console.log(x);  // ?
+                        </div>
+                    </div>
+                    <div>
+                        <strong>JavaScript Sees:</strong>
+                        <div class="code-block">
+var x;  // Declaration hoisted
+console.log(x);  // undefined
+x = 5;  // Assignment stays
+console.log(x);  // 5
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>2️⃣ Hoisting Rules for Different Declarations</h3>
+
+            <div class="comparison-table">
+                <h4>Hoisting Behavior Comparison</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Declaration Type</th>
+                            <th>Hoisted?</th>
+                            <th>Initialized?</th>
+                            <th>Can Access Before?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>var x</code></td>
+                            <td>✅ Yes</td>
+                            <td>✅ Yes (to undefined)</td>
+                            <td>✅ Yes (returns undefined)</td>
+                        </tr>
+                        <tr>
+                            <td><code>let x</code></td>
+                            <td>✅ Yes</td>
+                            <td>❌ No</td>
+                            <td>❌ No (ReferenceError - TDZ)</td>
+                        </tr>
+                        <tr>
+                            <td><code>const x</code></td>
+                            <td>✅ Yes</td>
+                            <td>❌ No</td>
+                            <td>❌ No (ReferenceError - TDZ)</td>
+                        </tr>
+                        <tr>
+                            <td><code>function foo()</code></td>
+                            <td>✅ Yes</td>
+                            <td>✅ Yes (full function)</td>
+                            <td>✅ Yes (fully works)</td>
+                        </tr>
+                        <tr>
+                            <td><code>const foo = () =></code></td>
+                            <td>✅ Yes (as const)</td>
+                            <td>❌ No</td>
+                            <td>❌ No (ReferenceError - TDZ)</td>
+                        </tr>
+                        <tr>
+                            <td><code>class Foo</code></td>
+                            <td>✅ Yes</td>
+                            <td>❌ No</td>
+                            <td>❌ No (ReferenceError - TDZ)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3️⃣ var Hoisting</h3>
+
+            <div class="code-block">
+console.log(a);  // undefined (hoisted, initialized to undefined)
+var a = 10;
+console.log(a);  // 10
+
+// What JavaScript actually does:
+var a;  // ⬆️ Hoisted to top, initialized to undefined
+console.log(a);  // undefined
+a = 10;  // Assignment stays in place
+console.log(a);  // 10
+            </div>
+
+            <h3>4️⃣ let/const Hoisting</h3>
+
+            <div class="code-block">
+console.log(b);  // ❌ ReferenceError: Cannot access 'b' before initialization
+let b = 20;
+
+console.log(c);  // ❌ ReferenceError: Cannot access 'c' before initialization
+const c = 30;
+
+// What JavaScript actually does:
+// let b;  ⬆️ Hoisted, but NOT initialized (TDZ)
+// const c;  ⬆️ Hoisted, but NOT initialized (TDZ)
+console.log(b);  // ❌ Still in TDZ!
+let b = 20;  // TDZ ends here
+console.log(c);  // ❌ Still in TDZ!
+const c = 30;  // TDZ ends here
+            </div>
+
+            <h3>5️⃣ Function Hoisting</h3>
+
+            <div class="code-block">
+// Function Declaration - Fully hoisted
+sayHi();  // ✅ "Hi!" - Works!
+
+function sayHi() {
+    console.log("Hi!");
+}
+
+// Function Expression - NOT fully hoisted
+sayBye();  // ❌ ReferenceError (if const/let) or TypeError (if var)
+
+const sayBye = function() {
+    console.log("Bye!");
+};
+
+// Arrow Function - Same as function expression
+greet();  // ❌ ReferenceError
+
+const greet = () => {
+    console.log("Hello!");
+};
+            </div>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Interview Question 2: Hoisting Prediction</h4>
+                <p>Predict the output:</p>
+                <div class="code-block">
+var x = 1;
+
+function test() {
+    console.log(x);  // ?
+    var x = 2;
+    console.log(x);  // ?
+}
+
+test();
+console.log(x);  // ?
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer2')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer2">
+                    <h4>✅ Answer:</h4>
+                    <div class="code-block output">
+undefined
+2
+1
+                    </div>
+                    <h4>📝 Explanation:</h4>
+                    <ol>
+                        <li>Inside <code>test()</code>, <code>var x</code> is hoisted to the top of the function</li>
+                        <li>This creates a LOCAL <code>x</code> that shadows the global <code>x</code></li>
+                        <li>First <code>console.log(x)</code> runs before assignment → <code>undefined</code></li>
+                        <li><code>x = 2</code> assigns to the local <code>x</code></li>
+                        <li>Second <code>console.log(x)</code> logs local <code>x</code> → <code>2</code></li>
+                        <li>Outside, global <code>x</code> is still <code>1</code></li>
+                    </ol>
+                    
+                    <h4>What JavaScript Actually Sees:</h4>
+                    <div class="code-block">
+var x = 1;
+
+function test() {
+    var x;  // ⬆️ Hoisted (shadows global x)
+    console.log(x);  // undefined
+    x = 2;
+    console.log(x);  // 2
+}
+
+test();
+console.log(x);  // 1 (global x untouched)
+                    </div>
+                    
+                    <div class="mistake-box">
+                        <h4>❌ Common Mistake</h4>
+                        <p>Candidates think the first log will print <code>1</code> (from global). They forget that <code>var x</code> inside the function creates a NEW variable that shadows the global one.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Interview Question 3: Function Hoisting</h4>
+                <p>What happens here?</p>
+                <div class="code-block">
+foo();  // ?
+
+function foo() {
+    console.log('First');
+}
+
+function foo() {
+    console.log('Second');
+}
+
+foo();  // ?
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer3')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer3">
+                    <h4>✅ Answer:</h4>
+                    <div class="code-block output">
+Second
+Second
+                    </div>
+                    <h4>📝 Why?</h4>
+                    <p>Both function declarations are hoisted, but the second one <strong>overwrites</strong> the first. So by the time any code runs, <code>foo</code> points to the second function.</p>
+                    
+                    <div class="code-block">
+// What JavaScript sees:
+function foo() {
+    console.log('First');
+}
+function foo() {  // ⬆️ This overwrites the first one
+    console.log('Second');
+}
+
+foo();  // "Second"
+foo();  // "Second"
+                    </div>
+                    
+                    <div class="concept-box warning">
+                        <p><span class="icon">⚠️</span><strong>Real-World Impact:</strong> This is why you should NEVER declare the same function twice. Use <code>const</code> with function expressions to prevent accidental overwrites:</p>
+                        <div class="code-block">
+const foo = () => console.log('First');
+const foo = () => console.log('Second');  // ❌ SyntaxError - can't redeclare
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PART 3: TEMPORAL DEAD ZONE -->
+        <div class="section" id="tdz">
+            <h2>⏱️ Part 3: Temporal Dead Zone (TDZ)</h2>
+
+            <div class="key-insight">
+                <span class="icon">🎯</span> <strong>CORE CONCEPT:</strong> The TDZ is the period between entering scope and the variable declaration being executed. During this time, accessing the variable throws a ReferenceError.
+            </div>
+
+            <div class="analogy">
+                <strong>🚦 The Traffic Light Analogy:</strong><br><br>
+                Think of a variable declared with <code>let</code>/<code>const</code> as a traffic light:<br>
+                • <strong>Scope starts</strong> = Light turns on (red)<br>
+                • <strong>TDZ period</strong> = Red light (can't access)<br>
+                • <strong>Declaration executes</strong> = Light turns green<br>
+                • <strong>After declaration</strong> = Green light (can access)<br><br>
+                If you try to access the variable while the light is red (TDZ), you crash (ReferenceError).
+            </div>
+
+            <h3>1️⃣ What is TDZ?</h3>
+
+            <p>The TDZ is JavaScript's way of enforcing that you MUST declare variables before using them.</p>
+
+            <div class="visual-example">
+                <h4>TDZ Timeline</h4>
+                <div class="code-block">
+// TDZ STARTS here for 'x'
+// |
+// | During this time, 'x' exists but cannot be accessed
+// | Accessing it = ReferenceError
+// |
+console.log(x);  // ❌ ReferenceError: Cannot access 'x' before initialization
+// |
+let x = 10;  // ← TDZ ENDS here
+// |
+console.log(x);  // ✅ 10 - Now accessible
+                </div>
+            </div>
+
+            <h3>2️⃣ TDZ Examples</h3>
+
+            <div class="code-block">
+// Example 1: Basic TDZ
+{
+    // TDZ starts
+    console.log(a);  // ❌ ReferenceError
+    let a = 5;  // TDZ ends
+    console.log(a);  // ✅ 5
+}
+
+// Example 2: TDZ with const
+{
+    // TDZ starts
+    const b = getValue();  // ❌ ReferenceError if getValue uses 'c'
+    const c = 10;  // TDZ ends
+}
+
+function getValue() {
+    return c;  // Tries to access c during its TDZ
+}
+
+// Example 3: No TDZ with var
+{
+    console.log(d);  // ✅ undefined (no TDZ)
+    var d = 5;
+    console.log(d);  // ✅ 5
+}
+            </div>
+
+            <h3>3️⃣ Why TDZ Exists</h3>
+
+            <p>The TDZ exists to:</p>
+            <ol>
+                <li><strong>Catch bugs early:</strong> Force you to declare before use</li>
+                <li><strong>Make const work:</strong> const must be initialized when declared</li>
+                <li><strong>Prevent temporal coupling:</strong> Don't depend on hoisting</li>
+                <li><strong>Improve code quality:</strong> More predictable behavior</li>
+            </ol>
+
+            <div class="code-block">
+// Without TDZ (var behavior):
+console.log(name);  // undefined - confusing!
+var name = "Alice";
+
+// With TDZ (let/const behavior):
+console.log(name);  // ReferenceError - clear error!
+let name = "Alice";
+            </div>
+
+            <h3>4️⃣ TDZ in Different Scopes</h3>
+
+            <div class="code-block">
+// Global Scope TDZ
+console.log(global);  // ❌ ReferenceError
+let global = "global";
+
+// Function Scope TDZ
+function test() {
+    console.log(local);  // ❌ ReferenceError
+    let local = "local";
+}
+
+// Block Scope TDZ
+if (true) {
+    console.log(block);  // ❌ ReferenceError
+    let block = "block";
+}
+
+// Loop Scope TDZ
+for (let i = 0; i < 3; i++) {
+    console.log(j);  // ❌ ReferenceError
+    let j = i;
+}
+            </div>
+
+            <h3>5️⃣ typeof and TDZ</h3>
+
+            <p>Even <code>typeof</code> throws an error in TDZ:</p>
+
+            <div class="code-block">
+// Before TDZ - typeof is safe
+console.log(typeof notDeclared);  // ✅ "undefined"
+
+// During TDZ - typeof throws!
+console.log(typeof x);  // ❌ ReferenceError
+let x = 10;
+
+// Compare with var:
+console.log(typeof y);  // ✅ "undefined"
+var y = 20;
+            </div>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Interview Question 4: Tricky TDZ</h4>
+                <p>What happens here?</p>
+                <div class="code-block">
+let x = 10;
+
+function test() {
+    console.log(x);  // ?
+    let x = 20;
+}
+
+test();
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer4')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer4">
+                    <h4>✅ Answer: ReferenceError</h4>
+                    <div class="code-block error">
+ReferenceError: Cannot access 'x' before initialization
+                    </div>
+                    <h4>📝 Why?</h4>
+                    <ol>
+                        <li>Inside <code>test()</code>, there's a <code>let x = 20</code></li>
+                        <li>This creates a LOCAL <code>x</code> that shadows the global <code>x</code></li>
+                        <li>The local <code>x</code> is hoisted to the top of <code>test()</code></li>
+                        <li>But it's in TDZ until <code>let x = 20</code> executes</li>
+                        <li><code>console.log(x)</code> tries to access LOCAL <code>x</code> during its TDZ</li>
+                        <li>Result: ReferenceError</li>
+                    </ol>
+                    
+                    <h4>Visual Breakdown:</h4>
+                    <div class="code-block">
+let x = 10;  // Global x
+
+function test() {
+    // Local x TDZ STARTS here
+    console.log(x);  // ❌ Tries to access local x in TDZ
+    let x = 20;  // Local x TDZ ENDS here
+}
+                    </div>
+                    
+                    <div class="mistake-box">
+                        <h4>❌ Common Mistake</h4>
+                        <p>Candidates think it will log <code>10</code> (from global). They forget that the local <code>let x</code> shadows the global one and is in TDZ.</p>
+                        <p><strong>If you remove <code>let x = 20</code>, then it WOULD log 10.</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Interview Question 5: Class TDZ</h4>
+                <p>Does this work?</p>
+                <div class="code-block">
+const instance = new MyClass();  // ?
+
+class MyClass {
+    constructor() {
+        this.name = "Test";
+    }
+}
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer5')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer5">
+                    <h4>✅ Answer: ReferenceError</h4>
+                    <div class="code-block error">
+ReferenceError: Cannot access 'MyClass' before initialization
+                    </div>
+                    <h4>📝 Why?</h4>
+                    <p>Classes have TDZ just like <code>let</code> and <code>const</code>. You CANNOT use a class before it's declared.</p>
+                    
+                    <h4>Compare with function declarations:</h4>
+                    <div class="code-block">
+// Function Declaration - Works!
+const instance1 = new MyFunction();  // ✅ Works
+
+function MyFunction() {
+    this.name = "Test";
+}
+
+// Class Declaration - Doesn't work!
+const instance2 = new MyClass();  // ❌ ReferenceError
+
+class MyClass {
+    constructor() {
+        this.name = "Test";
+    }
+}
+                    </div>
+                    
+                    <div class="concept-box success">
+                        <p><span class="icon">💡</span><strong>Best Practice:</strong> Always declare classes at the top of your module/file. This makes TDZ a non-issue.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPREHENSIVE INTERVIEW QUESTIONS -->
+        <div class="section" id="interview">
+            <h2>🎯 Comprehensive Interview Questions</h2>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Question 6: The Multi-Layer Bug</h4>
+                <p>What's the output?</p>
+                <div class="code-block">
+var a = 1;
+
+function outer() {
+    console.log(a);  // ?
+    
+    function inner() {
+        console.log(a);  // ?
+        var a = 3;
+        console.log(a);  // ?
+    }
+    
+    inner();
+    console.log(a);  // ?
+}
+
+outer();
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer6')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer6">
+                    <h4>✅ Answer:</h4>
+                    <div class="code-block output">
+1
+undefined
+3
+1
+                    </div>
+                    <h4>📝 Step-by-Step:</h4>
+                    <ol>
+                        <li><code>outer()</code> logs <code>a</code> → Finds global <code>a = 1</code> → Logs <code>1</code></li>
+                        <li><code>inner()</code> called</li>
+                        <li>First log in <code>inner()</code> → <code>var a</code> is hoisted, shadows global → <code>undefined</code></li>
+                        <li><code>a = 3</code> assigned to local <code>a</code></li>
+                        <li>Second log in <code>inner()</code> → Logs local <code>a = 3</code></li>
+                        <li><code>inner()</code> finishes, back to <code>outer()</code></li>
+                        <li>Last log in <code>outer()</code> → Global <code>a</code> is still <code>1</code></li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Question 7: const Gotcha</h4>
+                <p>What happens?</p>
+                <div class="code-block">
+const arr = [1, 2, 3];
+arr.push(4);
+console.log(arr);  // ?
+
+arr = [5, 6, 7];  // ?
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer7')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer7">
+                    <h4>✅ Answer:</h4>
+                    <div class="code-block output">
+[1, 2, 3, 4]  // arr.push works!
+TypeError: Assignment to constant variable  // arr = [...] fails
+                    </div>
+                    <h4>📝 Explanation:</h4>
+                    <p><code>const</code> prevents RE-ASSIGNMENT, not MUTATION.</p>
+                    <ul>
+                        <li><code>arr.push(4)</code> ✅ Mutates the array (allowed)</li>
+                        <li><code>arr = [...]</code> ❌ Reassigns the variable (not allowed)</li>
+                    </ul>
+                    
+                    <div class="code-block">
+const obj = { name: "Alice" };
+
+// ✅ Allowed - mutation
+obj.name = "Bob";
+obj.age = 30;
+
+// ❌ Not allowed - reassignment
+obj = { name: "Charlie" };  // TypeError
+                    </div>
+                    
+                    <div class="concept-box warning">
+                        <p><span class="icon">⚠️</span><strong>Common Misconception:</strong> <code>const</code> does NOT make objects/arrays immutable. Use <code>Object.freeze()</code> for that.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Question 8: Switch Block Scope</h4>
+                <p>What's wrong with this code?</p>
+                <div class="code-block">
+switch (value) {
+    case 1:
+        let name = "Alice";
+        break;
+    case 2:
+        let name = "Bob";  // ?
+        break;
+}
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer8')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer8">
+                    <h4>✅ Answer: SyntaxError</h4>
+                    <div class="code-block error">
+SyntaxError: Identifier 'name' has already been declared
+                    </div>
+                    <h4>📝 Why?</h4>
+                    <p>The entire <code>switch</code> statement is ONE block scope. You can't declare the same <code>let</code> variable twice in the same block.</p>
+                    
+                    <h4>✅ Fix #1: Add Block Scopes</h4>
+                    <div class="code-block">
+switch (value) {
+    case 1: {  // ✅ Create new block
+        let name = "Alice";
+        break;
+    }
+    case 2: {  // ✅ Create new block
+        let name = "Bob";
+        break;
+    }
+}
+                    </div>
+                    
+                    <h4>✅ Fix #2: Use Different Variable Names</h4>
+                    <div class="code-block">
+switch (value) {
+    case 1:
+        let name1 = "Alice";
+        break;
+    case 2:
+        let name2 = "Bob";
+        break;
+}
+                    </div>
+                    
+                    <div class="concept-box success">
+                        <p><span class="icon">💡</span><strong>Best Practice:</strong> Always wrap case blocks in curly braces if you're declaring variables.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Question 9: Closure + Hoisting</h4>
+                <p>Predict the output:</p>
+                <div class="code-block">
+for (var i = 0; i < 3; i++) {
+    setTimeout(function() {
+        console.log(i);
+    }, i * 1000);
+}
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer9')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer9">
+                    <h4>✅ Answer:</h4>
+                    <div class="code-block output">
+// After 0 seconds: 3
+// After 1 second:  3
+// After 2 seconds: 3
+                    </div>
+                    <h4>📝 Why?</h4>
+                    <p>This combines scope + closures:</p>
+                    <ol>
+                        <li><code>var i</code> is function-scoped (or global if at top level)</li>
+                        <li>Loop runs, <code>i</code> becomes 0, 1, 2, then 3</li>
+                        <li>Three setTimeout callbacks are queued (delays: 0ms, 1000ms, 2000ms)</li>
+                        <li>By the time callbacks run, loop is done and <code>i = 3</code></li>
+                        <li>All three closures reference the SAME <code>i</code></li>
+                    </ol>
+                    
+                    <h4>✅ Fix with let:</h4>
+                    <div class="code-block">
+for (let i = 0; i < 3; i++) {  // ✅ let creates new i per iteration
+    setTimeout(function() {
+        console.log(i);  // Logs 0, 1, 2
+    }, i * 1000);
+}
+                    </div>
+                    
+                    <div class="key-insight">
+                        <span class="icon">🎯</span> <strong>CRITICAL INSIGHT:</strong> This is THE classic interview question that combines scope, hoisting, closures, and the event loop. If you understand this, you understand 90% of JavaScript's tricky parts.
+                    </div>
+                </div>
+            </div>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Question 10: Dead Zone in Parameters</h4>
+                <p>Does this work?</p>
+                <div class="code-block">
+function test(a = b, b = 2) {
+    return [a, b];
+}
+
+test();  // ?
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('answer10')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="answer10">
+                    <h4>✅ Answer: ReferenceError</h4>
+                    <div class="code-block error">
+ReferenceError: Cannot access 'b' before initialization
+                    </div>
+                    <h4>📝 Why?</h4>
+                    <p>Parameters are initialized left-to-right. When <code>a = b</code> is evaluated, <code>b</code> hasn't been initialized yet—it's in TDZ!</p>
+                    
+                    <h4>Visual Execution:</h4>
+                    <div class="code-block">
+function test(a = b, b = 2) {
+    // Parameter initialization:
+    // 1. Try to evaluate a = b
+    // 2. b is in TDZ (not yet initialized)
+    // 3. ReferenceError!
+}
+                    </div>
+                    
+                    <h4>✅ This Works:</h4>
+                    <div class="code-block">
+function test(b = 2, a = b) {  // ✅ b initialized first
+    return [a, b];
+}
+
+test();  // [2, 2]
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TYPESCRIPT INTEGRATION -->
+        <div class="section">
+            <h2>🔷 TypeScript Integration</h2>
+
+            <div class="concept-box">
+                <p><span class="icon">💡</span><strong>Good News:</strong> TypeScript follows the same scoping rules as JavaScript. But it adds compile-time checks to catch scope errors before runtime!</p>
+            </div>
+
+            <h3>1️⃣ Block-Scoped Declarations</h3>
+
+            <div class="code-block typescript">
+// TypeScript enforces block scope
+if (true) {
+    let x: number = 10;
+}
+console.log(x);  // ❌ Compile error: Cannot find name 'x'
+
+// Type narrowing in different scopes
+let value: string | number = "hello";
+
+if (typeof value === "string") {
+    // Inside this block, TypeScript knows value is string
+    console.log(value.toUpperCase());  // ✅ No error
+}
+
+console.log(value.toUpperCase());  // ❌ Compile error: Property 'toUpperCase' does not exist on type 'string | number'
+            </div>
+
+            <h3>2️⃣ const Assertions</h3>
+
+            <div class="code-block typescript">
+// Without const assertion
+let arr1 = [1, 2, 3];  // Type: number[]
+
+// With const assertion
+let arr2 = [1, 2, 3] as const;  // Type: readonly [1, 2, 3]
+
+// arr1[0] = 10;  // ✅ Allowed
+// arr2[0] = 10;  // ❌ Compile error: Cannot assign to '0' because it is a read-only property
+
+// Object with const assertion
+const config = {
+    api: "https://api.example.com",
+    timeout: 5000
+} as const;
+
+// config.api = "new";  // ❌ Compile error: Cannot assign to 'api' because it is a read-only property
+            </div>
+
+            <h3>3️⃣ Typing Closures</h3>
+
+            <div class="code-block typescript">
+// Function factory with types
+function createCounter(start: number = 0): () => number {
+    let count: number = start;
+    
+    return function(): number {
+        return ++count;
+    };
+}
+
+const counter1 = createCounter(10);
+console.log(counter1());  // 11
+console.log(counter1());  // 12
+
+// Generic closure
+function createGetter&lt;T&gt;(value: T): () => T {
+    return () => value;
+}
+
+const getString = createGetter&lt;string&gt;("hello");
+const getNumber = createGetter&lt;number&gt;(42);
+
+console.log(getString());  // "hello"
+console.log(getNumber());  // 42
+            </div>
+
+            <h3>4️⃣ Preventing Scope Errors with Types</h3>
+
+            <div class="code-block typescript">
+// TypeScript catches shadowing issues
+let globalVar: string = "global";
+
+function test() {
+    // TypeScript will warn about unused variable
+    let globalVar: string = "local";  // ⚠️ Warning: 'globalVar' shadows outer variable
+    
+    console.log(globalVar);  // "local"
+}
+
+// TypeScript enforces initialization
+const mustBeInitialized: number;  // ❌ Compile error: 'const' declarations must be initialized
+
+let canBeUninitialized: number;  // ✅ OK
+            </div>
+        </div>
+
+        <!-- CHEAT SHEET -->
+        <div class="cheat-sheet" id="cheatsheet">
+            <h2>📋 Quick Reference Cheat Sheet</h2>
+            
+            <h3>var vs let vs const</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>var</th>
+                        <th>let</th>
+                        <th>const</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Scope</strong></td>
+                        <td>Function</td>
+                        <td>Block</td>
+                        <td>Block</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hoisted</strong></td>
+                        <td>✅ Yes (to undefined)</td>
+                        <td>✅ Yes (TDZ)</td>
+                        <td>✅ Yes (TDZ)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Can reassign</strong></td>
+                        <td>✅ Yes</td>
+                        <td>✅ Yes</td>
+                        <td>❌ No</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Can redeclare</strong></td>
+                        <td>✅ Yes</td>
+                        <td>❌ No</td>
+                        <td>❌ No</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Must initialize</strong></td>
+                        <td>❌ No</td>
+                        <td>❌ No</td>
+                        <td>✅ Yes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Creates global property</strong></td>
+                        <td>✅ Yes</td>
+                        <td>❌ No</td>
+                        <td>❌ No</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Access before declaration</strong></td>
+                        <td>✅ undefined</td>
+                        <td>❌ ReferenceError</td>
+                        <td>❌ ReferenceError</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Hoisting Quick Rules</h3>
+            <div class="code-block">
+// var - hoisted and initialized to undefined
+console.log(a);  // undefined
+var a = 1;
+
+// let/const - hoisted but in TDZ
+console.log(b);  // ReferenceError
+let b = 2;
+
+// function declaration - fully hoisted
+greet();  // "Hello!" - works
+function greet() { console.log("Hello!"); }
+
+// function expression - NOT fully hoisted
+sayHi();  // ReferenceError
+const sayHi = () => console.log("Hi!");
+
+// class - hoisted but in TDZ
+new MyClass();  // ReferenceError
+class MyClass {}
+            </div>
+
+            <h3>TDZ Quick Rules</h3>
+            <ul>
+                <li>TDZ applies to: <code>let</code>, <code>const</code>, <code>class</code></li>
+                <li>TDZ starts: When scope begins</li>
+                <li>TDZ ends: When declaration executes</li>
+                <li>During TDZ: Any access throws ReferenceError</li>
+                <li>Even <code>typeof</code> throws in TDZ</li>
+            </ul>
+
+            <h3>Common Interview Traps</h3>
+            <div class="mistake-box">
+                <h4>❌ Top 5 Mistakes</h4>
+                <ol>
+                    <li><strong>Thinking var is block-scoped:</strong> It's function-scoped!</li>
+                    <li><strong>Expecting hoisting with let/const:</strong> They have TDZ!</li>
+                    <li><strong>Thinking const makes objects immutable:</strong> It prevents reassignment, not mutation!</li>
+                    <li><strong>Forgetting shadowing:</strong> Inner scope variables hide outer ones!</li>
+                    <li><strong>Missing closure implications:</strong> Functions remember their scope!</li>
+                </ol>
+            </div>
+
+            <h3>Decision Tree: Which to Use?</h3>
+            <div class="visual-example">
+                <h4>var vs let vs const</h4>
+                <div class="code-block">
+// START
+
+// Will the value change?
+//   ↓
+//  NO  → Use const
+//   ↓
+//  YES → Do you need block scope?
+//         ↓
+//        YES → Use let
+//         ↓
+//        NO  → Still use let (never use var in modern code)
+
+// MODERN RULE: Always use const, change to let if needed, never use var
+            </div>
+            </div>
+        </div>
+
+        <!-- PRACTICE PROBLEMS -->
+        <div class="section">
+            <h2>💪 Practice Problems</h2>
+
+            <h3>Self-Assessment</h3>
+            <p>Can you predict the output WITHOUT running the code? Try these:</p>
+
+            <div class="practice-problem">
+                <h4>Problem 1:</h4>
+                <div class="code-block">
+console.log(x);
+let x = 5;
+                </div>
+                <p><strong>Your answer:</strong> <input type="text" placeholder="Type your prediction" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; width: 100%;"></p>
+            </div>
+
+            <div class="practice-problem">
+                <h4>Problem 2:</h4>
+                <div class="code-block">
+for (let i = 0; i < 3; i++) {
+    setTimeout(() => console.log(i), 0);
+}
+                </div>
+                <p><strong>Your answer:</strong> <input type="text" placeholder="Type your prediction" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; width: 100%;"></p>
+            </div>
+
+            <div class="practice-problem">
+                <h4>Problem 3:</h4>
+                <div class="code-block">
+let a = 1;
+{
+    let a = 2;
+    {
+        let a = 3;
+        console.log(a);
+    }
+    console.log(a);
+}
+console.log(a);
+                </div>
+                <p><strong>Your answer:</strong> <input type="text" placeholder="Type your prediction" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; width: 100%;"></p>
+            </div>
+
+            <div class="practice-problem">
+                <h4>Problem 4:</h4>
+                <div class="code-block">
+function test() {
+    console.log(typeof x);
+    let x = 10;
+}
+test();
+                </div>
+                <p><strong>Your answer:</strong> <input type="text" placeholder="Type your prediction" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; width: 100%;"></p>
+            </div>
+
+            <button class="reveal-btn" onclick="revealAnswer('practiceAnswers')" style="margin-top: 1rem;">🔓 Reveal All Answers</button>
+            <div class="interview-answer" id="practiceAnswers">
+                <h4>✅ Answers:</h4>
+                <ol>
+                    <li><strong>Problem 1:</strong> ReferenceError (TDZ)</li>
+                    <li><strong>Problem 2:</strong> 0, 1, 2 (let creates new i per iteration)</li>
+                    <li><strong>Problem 3:</strong> 3, 2, 1 (each block has its own a)</li>
+                    <li><strong>Problem 4:</strong> ReferenceError (typeof throws in TDZ)</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- COMPLETION CHECKLIST -->
+        <div class="section">
+            <h2>✅ Day 3 Mastery Checklist</h2>
+            
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can explain lexical scope vs dynamic scope</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I understand the scope chain and variable lookup</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I know the difference between function scope and block scope</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can explain hoisting for var, let, const, and functions</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I understand what TDZ is and why it exists</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can fix the classic loop + setTimeout bug</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I know when to use var vs let vs const</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can predict hoisting behavior in complex code</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I answered all 10 interview questions correctly</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can explain scope issues to someone else</span>
+                </label>
+            </div>
+
+            <div class="key-insight" style="margin-top: 2rem;">
+                <span class="icon">🎯</span> <strong>You're ready for Day 4 when:</strong> You can look at any code and immediately identify scope boundaries, predict hoisting behavior, and explain why TDZ errors occur. If you can do this, you're in the top 20% of candidates.
+            </div>
+        </div>
+
+        <!-- NEXT STEPS -->
+        <div class="section">
+            <h2>🚀 Next Steps</h2>
+            
+            <h3>Before Moving to Day 4:</h3>
+            <ol>
+                <li>✅ Complete all checkboxes above</li>
+                <li>✅ Answer all interview questions correctly</li>
+                <li>✅ Practice explaining scope to yourself out loud</li>
+                <li>✅ Debug 5 real scope bugs (create them if needed)</li>
+                <li>✅ Write one blog post explaining scope/hoisting/TDZ</li>
+            </ol>
+
+            <h3>Day 4 Preview: Closures</h3>
+            <p>Tomorrow we'll dive deep into closures, which builds directly on scope. You'll learn:</p>
+            <ul>
+                <li>What closures are and how they're created</li>
+                <li>Memory implications and common pitfalls</li>
+                <li>Real-world patterns (private variables, memoization, etc.)</li>
+                <li>How closures appear in React hooks</li>
+            </ul>
+
+            <div class="story-box">
+                <h4>🎓 Study Tip</h4>
+                <p>Spend at least 30 minutes trying to EXPLAIN these concepts to someone (or to yourself). If you can teach it, you know it. If you can't, review that section again.</p>
+                <p><strong>Record yourself explaining:</strong></p>
+                <ol>
+                    <li>What is scope? (1 minute)</li>
+                    <li>What is hoisting? (1 minute)</li>
+                    <li>What is TDZ? (1 minute)</li>
+                </ol>
+                <p>Listen back. If you sound confused, you need more practice.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="completion-tracker">
+        <h4>Progress Tracker</h4>
+        <div class="completion-stat">
+            <span>Completed:</span>
+            <span id="completedCount">0/10</span>
+        </div>
+        <div class="completion-stat">
+            <span>Percentage:</span>
+            <span id="completedPercent">0%</span>
+        </div>
+        <hr style="margin: 0.75rem 0; border: none; border-top: 1px solid var(--border);">
+        <h4>Study Timer</h4>
+        <div class="timer-display" id="timerDisplay">00:00:00</div>
+        <div class="timer-controls">
+            <button class="timer-btn start" onclick="startTimer()">▶</button>
+            <button class="timer-btn pause" onclick="pauseTimer()">⏸</button>
+            <button class="timer-btn reset" onclick="resetTimer()">↻</button>
+        </div>
+    </div>
+
+    <div class="back-to-top" onclick="scrollToTop()">↑</div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const btn = document.querySelector('.theme-toggle');
+            btn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.theme-toggle').textContent = '☀️ Light Mode';
+        }
+
+        // Reveal Answer
+        function revealAnswer(id) {
+            const answer = document.getElementById(id);
+            const btn = answer.previousElementSibling;
+            
+            if (answer.classList.contains('show')) {
+                answer.classList.remove('show');
+                btn.textContent = '🔓 Reveal Answer';
+            } else {
+                answer.classList.add('show');
+                btn.textContent = '🔒 Hide Answer';
+            }
+        }
+
+        // Progress Tracking
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+            const count = checked.length;
+            const total = checkboxes.length;
+            const percent = Math.round((count / total) * 100);
+            
+            document.getElementById('completedCount').textContent = `${count}/${total}`;
+            document.getElementById('completedPercent').textContent = `${percent}%`;
+            document.getElementById('progressBar').style.width = `${percent}%`;
+            
+            // Save progress
+            const checkboxStates = Array.from(checkboxes).map(cb => cb.checked);
+            localStorage.setItem('day3-progress', JSON.stringify(checkboxStates));
+        }
+
+        // Load saved progress
+        const savedProgress = localStorage.getItem('day3-progress');
+        if (savedProgress) {
+            const states = JSON.parse(savedProgress);
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach((cb, index) => {
+                if (states[index]) {
+                    cb.checked = true;
+                }
+            });
+            updateProgress();
+        }
+
+        // Back to Top
+        window.addEventListener('scroll', () => {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Smooth Scroll for Nav Links
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Add copy buttons to code blocks
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.code-block').forEach((block) => {
+                const button = document.createElement('button');
+                button.className = 'copy-btn';
+                button.innerHTML = '📋 Copy';
+                button.onclick = () => copyCode(block, button);
+                block.appendChild(button);
+            });
+        });
+
+        function copyCode(block, button) {
+            const code = block.textContent.replace('📋 Copy', '').replace('✓ Copied!', '').trim();
+            navigator.clipboard.writeText(code).then(() => {
+                button.innerHTML = '✓ Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.innerHTML = '📋 Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Study Timer
+        let timerInterval;
+        let timerSeconds = 0;
+        let timerRunning = false;
+
+        function startTimer() {
+            if (!timerRunning) {
+                timerRunning = true;
+                timerInterval = setInterval(() => {
+                    timerSeconds++;
+                    updateTimerDisplay();
+                    localStorage.setItem('day3-studyTime', timerSeconds);
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            timerRunning = false;
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timerSeconds = 0;
+            updateTimerDisplay();
+            localStorage.setItem('day3-studyTime', 0);
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timerSeconds / 3600);
+            const minutes = Math.floor((timerSeconds % 3600) / 60);
+            const seconds = timerSeconds % 60;
+            
+            const display = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = display;
+        }
+
+        // Load saved timer
+        const savedTime = localStorage.getItem('day3-studyTime');
+        if (savedTime) {
+            timerSeconds = parseInt(savedTime);
+            updateTimerDisplay();
+        }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            switch(e.key.toLowerCase()) {
+                case 'd':
+                    toggleTheme();
+                    break;
+                case 't':
+                    scrollToTop();
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    if (timerRunning) {
+                        pauseTimer();
+                    } else {
+                        startTimer();
+                    }
+                    break;
+            }
+        });
+
+        // Auto-save timer
+        window.addEventListener('beforeunload', () => {
+            if (timerRunning) {
+                localStorage.setItem('day3-studyTime', timerSeconds);
+            }
+        });
+    </script>
+</body>
+</html>
