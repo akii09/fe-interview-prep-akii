@@ -1,0 +1,2368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Deep dive into JavaScript Scope, Hoisting, and Temporal Dead Zone (TDZ) for senior frontend interviews. Master the concepts that break 70% of candidates.">
+    <meta name="keywords" content="JavaScript, Scope, Hoisting, TDZ, Temporal Dead Zone, Frontend Interview, var, let, const">
+    <meta name="author" content="Frontend Interview Prep">
+    <meta property="og:title" content="Day 3: Scope, Hoisting & TDZ Deep Dive | Frontend Interview Prep">
+    <meta property="og:description" content="Master the most misunderstood JavaScript concepts with interactive examples">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#3b82f6">
+    <title>Day 3: Scope, Hoisting & TDZ Deep Dive | Frontend Interview Prep</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --bg-light: #f8fafc;
+            --bg-dark: #1e293b;
+            --text-light: #0f172a;
+            --text-dark: #f1f5f9;
+            --code-bg: #1e1e1e;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            line-height: 1.6;
+            color: var(--text-light);
+            background: var(--bg-light);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .container {
+            background: #0f172a;
+        }
+
+        body.dark-mode .nav {
+            background: #0f172a;
+            border-bottom-color: #334155;
+        }
+
+        body.dark-mode .section {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        body.dark-mode .concept-box,
+        body.dark-mode .interview-question,
+        body.dark-mode .practice-problem,
+        body.dark-mode .cheat-sheet,
+        body.dark-mode .comparison-table {
+            background: #0f172a;
+            border-color: #334155;
+        }
+
+        body.dark-mode code {
+            background: #1e1e1e;
+        }
+
+        body.dark-mode .code-block {
+            background: #1e1e1e;
+            border-color: #334155;
+        }
+
+        body.dark-mode .keyboard-shortcuts,
+        body.dark-mode .resource-card {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: inherit;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-dark);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 2rem 2rem 2rem;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 3px solid var(--danger);
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.95;
+        }
+
+        .warning-banner {
+            background: #fee2e2;
+            border-left: 4px solid var(--danger);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        body.dark-mode .warning-banner {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .warning-banner h3 {
+            color: var(--danger);
+            margin-top: 0;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            height: 8px;
+            border-radius: 4px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--danger), var(--warning));
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .section {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h2 {
+            color: var(--danger);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--danger);
+        }
+
+        .section h3 {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .section h4 {
+            color: var(--purple);
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .concept-box {
+            background: #f0f9ff;
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .concept-box.warning {
+            background: #fef3c7;
+            border-left-color: var(--warning);
+        }
+
+        .concept-box.danger {
+            background: #fee2e2;
+            border-left-color: var(--danger);
+        }
+
+        .concept-box.success {
+            background: #d1fae5;
+            border-left-color: var(--success);
+        }
+
+        .concept-box.purple {
+            background: #f3e8ff;
+            border-left-color: var(--purple);
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            color: #d4d4d4;
+            padding: 1.5rem;
+            padding-top: 3rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #333;
+            font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            white-space: pre;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: 'JavaScript';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #2563eb;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .code-block.typescript::before {
+            content: 'TypeScript';
+            background: #3178c6;
+        }
+
+        .code-block.output::before {
+            content: 'Output';
+            background: #10b981;
+        }
+
+        .code-block.error::before {
+            content: 'Error';
+            background: #ef4444;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        body.dark-mode code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+
+        .copy-btn {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+        }
+
+        .copy-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .copy-btn.copied {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border-color: #10b981;
+        }
+
+        .interview-question {
+            background: #fef3c7;
+            border: 2px solid var(--warning);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        body.dark-mode .interview-question {
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .interview-question h4 {
+            color: var(--warning);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            margin-top: 0;
+        }
+
+        .interview-answer {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--warning);
+        }
+
+        .interview-answer.show {
+            display: block;
+        }
+
+        .reveal-btn {
+            background: var(--warning);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+
+        .reveal-btn:hover {
+            background: #d97706;
+        }
+
+        .practice-problem {
+            background: #dbeafe;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        body.dark-mode .practice-problem {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .practice-problem h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+
+        .comparison-table {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        table th,
+        table td {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        table th {
+            background: var(--danger);
+            color: white;
+            font-weight: 600;
+        }
+
+        table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        body.dark-mode table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .analogy {
+            background: #fef3c7;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+            margin: 1.5rem 0;
+            font-style: italic;
+        }
+
+        body.dark-mode .analogy {
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .story-box {
+            background: #fef3c7;
+            border: 2px dashed #f59e0b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        body.dark-mode .story-box {
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .story-box h4 {
+            color: #f59e0b;
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+
+        .key-insight {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            font-weight: 500;
+        }
+
+        .cheat-sheet {
+            background: #f0fdf4;
+            border: 3px solid var(--success);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        body.dark-mode .cheat-sheet {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .cheat-sheet h3 {
+            color: var(--success);
+            margin-top: 0;
+        }
+
+        .visual-diagram {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        body.dark-mode .visual-diagram {
+            background: #1e293b;
+        }
+
+        .scope-box {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            margin: 0.5rem;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .scope-box.global {
+            background: var(--danger);
+            padding: 2rem 3rem;
+        }
+
+        .scope-box.function {
+            background: var(--warning);
+            padding: 1.5rem 2.5rem;
+        }
+
+        .scope-box.block {
+            background: var(--success);
+            padding: 1rem 2rem;
+        }
+
+        .nested-scopes {
+            border: 3px solid var(--danger);
+            padding: 2rem;
+            margin: 1rem;
+            border-radius: 12px;
+        }
+
+        .nested-scopes .inner {
+            border: 3px solid var(--warning);
+            padding: 1.5rem;
+            margin: 1rem;
+            border-radius: 8px;
+        }
+
+        .nested-scopes .inner .deep {
+            border: 3px solid var(--success);
+            padding: 1rem;
+            margin: 0.5rem;
+            border-radius: 6px;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--primary);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 2rem 0;
+            padding: 0 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .timeline-content {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            width: 45%;
+        }
+
+        body.dark-mode .timeline-content {
+            background: #1e293b;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: 55%;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-right: 55%;
+            margin-left: auto;
+        }
+
+        .checkbox-group {
+            margin: 1.5rem 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .completion-tracker {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: white;
+            border: 2px solid var(--danger);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 200px;
+            z-index: 999;
+        }
+
+        body.dark-mode .completion-tracker {
+            background: #1e293b;
+        }
+
+        .completion-tracker h4 {
+            color: var(--danger);
+            margin-bottom: 0.5rem;
+        }
+
+        .completion-stat {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+            font-weight: 600;
+        }
+
+        .timer-display {
+            font-size: 1.5rem;
+            color: var(--danger);
+            font-weight: bold;
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .timer-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .timer-btn.start {
+            background: var(--success);
+            color: white;
+        }
+
+        .timer-btn.pause {
+            background: var(--warning);
+            color: white;
+        }
+
+        .timer-btn.reset {
+            background: var(--danger);
+            color: white;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: var(--danger);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+        }
+
+        .highlight {
+            background: linear-gradient(180deg, transparent 60%, #fef08a 60%);
+            padding: 0.2rem 0;
+        }
+
+        .resource-links {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .resource-links h3 {
+            color: white;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .resource-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .resource-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .resource-card h4 {
+            color: white;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .resource-card a {
+            color: #fef08a;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .resource-card a:hover {
+            text-decoration: underline;
+        }
+
+        .resource-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .keyboard-shortcuts {
+            background: #f8fafc;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .keyboard-shortcuts h4 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .shortcut-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.3rem 0;
+        }
+
+        .key {
+            background: var(--danger);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .nav-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+                width: 100%;
+            }
+
+            .container {
+                padding: 100px 1rem 1rem 1rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .completion-tracker {
+                display: none;
+            }
+
+            .code-block {
+                font-size: 0.8rem;
+                padding: 1rem;
+                padding-top: 3rem;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item::before {
+                left: 20px;
+            }
+
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .back-to-top {
+                bottom: 1rem;
+                left: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+
+            .nested-scopes {
+                padding: 1rem;
+            }
+
+            .nested-scopes .inner {
+                padding: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .code-block {
+                font-size: 0.75rem;
+            }
+
+            .nav {
+                padding: 0.75rem 1rem;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .nav,
+            .theme-toggle,
+            .reveal-btn,
+            .completion-tracker,
+            .back-to-top,
+            .copy-btn,
+            .timer-controls {
+                display: none;
+            }
+
+            .container {
+                padding-top: 1rem;
+            }
+
+            .interview-answer {
+                display: block !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Focus styles for accessibility */
+        a:focus,
+        button:focus,
+        input:focus {
+            outline: 3px solid var(--danger);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="logo">🔥 Day 3 Deep Dive</div>
+            <div class="nav-links">
+                <a href="#scope">Scope</a>
+                <a href="#hoisting">Hoisting</a>
+                <a href="#tdz">TDZ</a>
+                <a href="#resources">Resources</a>
+                <a href="#cheatsheet">Cheat Sheet</a>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Day 3: Scope, Hoisting & Temporal Dead Zone</h1>
+            <p>Master the 3 concepts that <span class="highlight">break 70% of interview candidates</span>. These are the foundation of JavaScript execution that every senior engineer must understand deeply.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="warning-banner">
+            <h3><span class="icon">⚠️</span> Why This Day Is Critical</h3>
+            <p><strong>Scope, Hoisting, and TDZ are the #1 source of interview failures.</strong> These concepts seem simple but have deep implications. Understanding them separates developers who "know JavaScript" from those who truly master it.</p>
+            <ul>
+                <li>Scope bugs cause 40% of production issues in React apps</li>
+                <li>Hoisting confusion leads to failed coding challenges</li>
+                <li>TDZ misunderstanding reveals shallow JavaScript knowledge</li>
+                <li>Senior roles ALWAYS test these concepts with edge cases</li>
+            </ul>
+        </div>
+
+        <!-- SCOPE SECTION -->
+        <div class="section" id="scope">
+            <h2>🎯 Part 1: Scope - Where Variables Live</h2>
+            
+            <div class="concept-box">
+                <p><span class="icon">💡</span><strong>What Is Scope?</strong> Scope determines the accessibility (visibility) of variables. It's JavaScript's way of organizing where variables can be used and where they can't.</p>
+            </div>
+
+            <h3>The Big Picture: Types of Scope</h3>
+            
+            <div class="visual-diagram">
+                <div class="nested-scopes">
+                    <strong style="color: #ef4444;">Global Scope</strong>
+                    <p style="font-size: 0.9rem;">Variables accessible everywhere</p>
+                    <div class="inner">
+                        <strong style="color: #f59e0b;">Function Scope</strong>
+                        <p style="font-size: 0.85rem;">Variables accessible within function</p>
+                        <div class="deep">
+                            <strong style="color: #10b981;">Block Scope</strong>
+                            <p style="font-size: 0.8rem;">Variables accessible within {}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>1️⃣ Global Scope</h3>
+            <p>Variables declared outside any function or block have <strong>global scope</strong>. They're accessible from anywhere in your code.</p>
+
+            <div class="code-block">
+var globalVar = "I am global";
+let globalLet = "I am also global";
+const globalConst = "Me too!";
+
+function test() {
+    console.log(globalVar);   // ✅ Accessible
+    console.log(globalLet);   // ✅ Accessible
+    console.log(globalConst); // ✅ Accessible
+}
+
+test();
+
+if (true) {
+    console.log(globalVar);   // ✅ Still accessible
+}
+            </div>
+
+            <div class="concept-box danger">
+                <p><span class="icon">⚠️</span><strong>Global Scope Danger:</strong> Global variables pollute the global namespace and can cause naming conflicts. In browsers, they attach to the <code>window</code> object. In senior code, minimize global variables!</p>
+            </div>
+
+            <h3>2️⃣ Function Scope</h3>
+            <p>Variables declared inside a function are <strong>only accessible within that function</strong>. This applies to <code>var</code>, <code>let</code>, and <code>const</code>.</p>
+
+            <div class="code-block">
+function outer() {
+    var functionVar = "I'm in function scope";
+    let functionLet = "Me too";
+    const functionConst = "And me!";
+    
+    console.log(functionVar);  // ✅ Works
+    
+    function inner() {
+        console.log(functionVar); // ✅ Can access parent function's variables
+    }
+    
+    inner();
+}
+
+outer();
+
+console.log(functionVar); // ❌ ReferenceError: functionVar is not defined
+            </div>
+
+            <div class="analogy">
+                <strong>🏠 The House Analogy:</strong><br>
+                Think of scopes as rooms in a house:<br>
+                • <strong>Global scope</strong> = The entire house (accessible everywhere)<br>
+                • <strong>Function scope</strong> = A bedroom (only accessible inside that room)<br>
+                • <strong>Block scope</strong> = A closet inside the bedroom (even more restricted)<br><br>
+                You can see out from inside (inner scopes can access outer scopes), but you can't see in from outside (outer scopes can't access inner scopes).
+            </div>
+
+            <h3>3️⃣ Block Scope (The Game Changer)</h3>
+            <p><code>let</code> and <code>const</code> introduced <strong>block scope</strong> in ES6. A block is anything inside <code>{}</code>.</p>
+
+            <div class="code-block">
+if (true) {
+    var varVariable = "I escape the block!";
+    let letVariable = "I'm trapped in the block";
+    const constVariable = "Me too!";
+}
+
+console.log(varVariable);   // ✅ "I escape the block!" (var ignores block scope!)
+console.log(letVariable);   // ❌ ReferenceError
+console.log(constVariable); // ❌ ReferenceError
+            </div>
+
+            <div class="key-insight">
+                <span class="icon">🎯</span> <strong>CRITICAL DIFFERENCE:</strong> <code>var</code> is function-scoped, <code>let</code> and <code>const</code> are block-scoped. This is the #1 reason to avoid <code>var</code> in modern JavaScript.
+            </div>
+
+            <h3>4️⃣ Lexical Scope (Static Scope)</h3>
+            <p>JavaScript uses <strong>lexical scoping</strong>, meaning where you <em>write</em> the code determines scope, not where you <em>call</em> it.</p>
+
+            <div class="code-block">
+let name = "Global";
+
+function outer() {
+    let name = "Outer";
+    
+    function inner() {
+        console.log(name); // Which "name" will it log?
+    }
+    
+    return inner;
+}
+
+const myFunc = outer();
+myFunc(); // Output: "Outer"
+
+// Why? inner() looks for "name" where it was DEFINED (inside outer), 
+// not where it was CALLED (global scope)
+            </div>
+
+            <div class="concept-box success">
+                <p><span class="icon">💡</span><strong>Lexical Scope Rule:</strong> Functions "remember" the environment where they were created. This is the foundation of closures (coming on Day 4).</p>
+            </div>
+
+            <h3>5️⃣ Scope Chain</h3>
+            <p>When JavaScript looks for a variable, it searches:</p>
+            <ol>
+                <li>Current scope</li>
+                <li>Parent scope</li>
+                <li>Parent's parent scope</li>
+                <li>... all the way to global scope</li>
+            </ol>
+
+            <div class="code-block">
+let level1 = "Global";
+
+function levelTwo() {
+    let level2 = "Function";
+    
+    if (true) {
+        let level3 = "Block";
+        
+        console.log(level3); // ✅ Found in current scope
+        console.log(level2); // ✅ Found in parent scope (function)
+        console.log(level1); // ✅ Found in grandparent scope (global)
+        console.log(level4); // ❌ ReferenceError (doesn't exist anywhere)
+    }
+}
+
+levelTwo();
+            </div>
+
+            <div class="visual-diagram">
+                <h4>Scope Chain Visualization:</h4>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <strong>1. Check Block Scope</strong>
+                            <p>Is variable here? → Yes: Use it | No: Look up</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <strong>2. Check Function Scope</strong>
+                            <p>Is variable here? → Yes: Use it | No: Look up</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <strong>3. Check Global Scope</strong>
+                            <p>Is variable here? → Yes: Use it | No: ReferenceError!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🔥 Interview Question 1: Scope Chain</h3>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> What's the output?</h4>
+                <div class="code-block">
+var x = 10;
+
+function outer() {
+    var x = 20;
+    
+    function inner() {
+        var x = 30;
+        console.log(x);
+    }
+    
+    inner();
+    console.log(x);
+}
+
+outer();
+console.log(x);
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('scope1')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="scope1">
+                    <h4>✅ Correct Answer:</h4>
+                    <div class="code-block output">
+// Output:
+// 30
+// 20
+// 10
+                    </div>
+                    <h4>📝 Explanation:</h4>
+                    <p>Each function creates its own scope with its own <code>x</code> variable:</p>
+                    <ol>
+                        <li><code>inner()</code> logs its own <code>x = 30</code></li>
+                        <li><code>outer()</code> logs its own <code>x = 20</code></li>
+                        <li>Global scope logs its own <code>x = 10</code></li>
+                    </ol>
+                    <p><strong>This is called variable shadowing</strong> - inner variables "shadow" (hide) outer variables with the same name.</p>
+                </div>
+            </div>
+
+            <h3>🔥 Interview Question 2: Block Scope Trap</h3>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> What's the output and why?</h4>
+                <div class="code-block">
+for (var i = 0; i < 3; i++) {
+    setTimeout(function() {
+        console.log(i);
+    }, 1000);
+}
+
+// vs
+
+for (let j = 0; j < 3; j++) {
+    setTimeout(function() {
+        console.log(j);
+    }, 1000);
+}
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('scope2')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="scope2">
+                    <h4>✅ Correct Answer:</h4>
+                    <div class="code-block output">
+// First loop (var):
+// 3
+// 3
+// 3
+
+// Second loop (let):
+// 0
+// 1
+// 2
+                    </div>
+                    <h4>📝 Explanation:</h4>
+                    <p><strong>First loop (var):</strong></p>
+                    <ul>
+                        <li><code>var i</code> is function-scoped (or global-scoped), NOT block-scoped</li>
+                        <li>By the time setTimeout callbacks run (after 1 second), the loop has finished</li>
+                        <li>All callbacks share the SAME <code>i</code> variable, which is now <code>3</code></li>
+                    </ul>
+                    <p><strong>Second loop (let):</strong></p>
+                    <ul>
+                        <li><code>let j</code> is block-scoped - each iteration creates a NEW <code>j</code></li>
+                        <li>Each setTimeout callback captures its OWN <code>j</code> (0, 1, 2)</li>
+                        <li>This is why <code>let</code> is preferred in loops!</li>
+                    </ul>
+                    <div class="concept-box danger">
+                        <p><span class="icon">❌</span><strong>This Is The #1 var Bug:</strong> This question breaks 60% of candidates. Always use <code>let</code> in loops!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-box">
+                <h4>🐛 Real Bug Story: The Loop Disaster</h4>
+                <p>A React developer was building a carousel with 5 slides. Each slide had a button to jump to that slide. They used a loop with <code>var</code>:</p>
+                <div class="code-block">
+for (var i = 0; i < 5; i++) {
+    slides[i].onclick = function() {
+        jumpToSlide(i); // Bug!
+    }
+}
+                </div>
+                <p><strong>The Result:</strong> Every button jumped to slide 5 (the final value of <code>i</code>).</p>
+                <p><strong>The Fix:</strong> Change <code>var i</code> to <code>let i</code>.</p>
+                <p><strong>Time Lost:</strong> 3 hours of debugging.</p>
+                <p><strong>Lesson:</strong> Senior engineers know scope differences by heart and avoid <code>var</code> in loops.</p>
+            </div>
+
+            <h3>📋 Scope Completion Checklist</h3>
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can explain the difference between function and block scope</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I understand lexical scoping and scope chain</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I know why var in loops causes bugs</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can trace variable lookup through nested scopes</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- HOISTING SECTION -->
+        <div class="section" id="hoisting">
+            <h2>⬆️ Part 2: Hoisting - JavaScript's Secret Rearrangement</h2>
+            
+            <div class="concept-box warning">
+                <p><span class="icon">💡</span><strong>What Is Hoisting?</strong> Hoisting is JavaScript's behavior of moving declarations to the top of their scope during the compilation phase, BEFORE code execution. But here's the catch: only declarations are hoisted, not initializations!</p>
+            </div>
+
+            <h3>The Mental Model</h3>
+            <p>Think of hoisting like this: JavaScript reads your code in two passes:</p>
+            <ol>
+                <li><strong>Compilation Phase:</strong> Find all declarations and allocate memory</li>
+                <li><strong>Execution Phase:</strong> Run the code line by line</li>
+            </ol>
+
+            <div class="analogy">
+                <strong>📚 The Library Analogy:</strong><br>
+                Imagine JavaScript is a librarian organizing books:<br>
+                • <strong>First pass (compilation):</strong> The librarian reads all the book titles and reserves shelf space for each book<br>
+                • <strong>Second pass (execution):</strong> The librarian actually places the books on the shelves<br><br>
+                Hoisting is like reserving shelf space. The space exists, but the book might not be there yet!
+            </div>
+
+            <h3>1️⃣ var Hoisting</h3>
+            <p><code>var</code> declarations are hoisted and initialized with <code>undefined</code>.</p>
+
+            <div class="code-block">
+console.log(myVar); // Output: undefined (not ReferenceError!)
+var myVar = "Hello";
+console.log(myVar); // Output: "Hello"
+
+// How JavaScript actually sees it (conceptually):
+var myVar;              // Declaration hoisted to top, initialized with undefined
+console.log(myVar);     // undefined
+myVar = "Hello";        // Assignment stays in place
+console.log(myVar);     // "Hello"
+            </div>
+
+            <div class="concept-box warning">
+                <p><span class="icon">⚠️</span><strong>var Hoisting Behavior:</strong> Declaration is hoisted and initialized to <code>undefined</code>. This is why you can reference <code>var</code> variables before declaration (you get <code>undefined</code>, not an error).</p>
+            </div>
+
+            <h3>2️⃣ let and const Hoisting (The TDZ Connection)</h3>
+            <p><code>let</code> and <code>const</code> ARE hoisted, but they're NOT initialized. They exist in the "Temporal Dead Zone" until the declaration line.</p>
+
+            <div class="code-block">
+console.log(myLet);    // ❌ ReferenceError: Cannot access 'myLet' before initialization
+let myLet = "Hello";
+
+console.log(myConst);  // ❌ ReferenceError: Cannot access 'myConst' before initialization
+const myConst = "World";
+
+// They ARE hoisted (JavaScript knows they exist)
+// But they're NOT initialized (you can't use them yet)
+            </div>
+
+            <div class="key-insight">
+                <span class="icon">🎯</span> <strong>CRITICAL INSIGHT:</strong> <code>let</code> and <code>const</code> ARE hoisted, but remain uninitialized in the TDZ. This is different from "not hoisted"! We'll dive deep into TDZ next.
+            </div>
+
+            <h3>3️⃣ Function Hoisting</h3>
+            <p>Function <em>declarations</em> are hoisted completely (both declaration and definition).</p>
+
+            <div class="code-block">
+greet(); // ✅ Works! Output: "Hello"
+
+function greet() {
+    console.log("Hello");
+}
+
+// How JavaScript sees it:
+function greet() {      // Entire function hoisted to top
+    console.log("Hello");
+}
+greet();               // Now it makes sense!
+            </div>
+
+            <div class="concept-box success">
+                <p><span class="icon">💡</span><strong>Function Declaration Hoisting:</strong> The ENTIRE function is hoisted. You can call it before it's written in the code. This is unique to function declarations!</p>
+            </div>
+
+            <h3>4️⃣ Function Expressions Are NOT Hoisted (The Trap!)</h3>
+
+            <div class="code-block">
+greet(); // ❌ TypeError: greet is not a function
+
+var greet = function() {
+    console.log("Hello");
+};
+
+// How JavaScript sees it:
+var greet;             // Variable declaration hoisted, initialized to undefined
+greet();              // Trying to call undefined() → TypeError!
+greet = function() {  // Assignment happens here
+    console.log("Hello");
+};
+            </div>
+
+            <div class="comparison-table">
+                <h4>Function Declaration vs Function Expression:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Function Declaration</th>
+                            <th>Function Expression</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Syntax</td>
+                            <td><code>function name() {}</code></td>
+                            <td><code>var name = function() {}</code></td>
+                        </tr>
+                        <tr>
+                            <td>Hoisting</td>
+                            <td>✅ Fully hoisted</td>
+                            <td>❌ Only variable is hoisted</td>
+                        </tr>
+                        <tr>
+                            <td>Call before definition?</td>
+                            <td>✅ Yes</td>
+                            <td>❌ No (TypeError)</td>
+                        </tr>
+                        <tr>
+                            <td>Use case</td>
+                            <td>Helper functions, utilities</td>
+                            <td>Callbacks, conditional functions</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>5️⃣ Arrow Functions and Hoisting</h3>
+
+            <div class="code-block">
+greet(); // ❌ ReferenceError: Cannot access 'greet' before initialization
+
+const greet = () => {
+    console.log("Hello");
+};
+
+// Arrow functions follow const hoisting rules (TDZ applies!)
+            </div>
+
+            <h3>6️⃣ Class Hoisting</h3>
+
+            <div class="code-block">
+const person = new Person(); // ❌ ReferenceError: Cannot access 'Person' before initialization
+
+class Person {
+    constructor(name) {
+        this.name = name;
+    }
+}
+
+// Classes are hoisted but stay in TDZ (like let/const)
+            </div>
+
+            <h3>🔥 Interview Question 3: The Classic Hoisting Trap</h3>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> What's the output?</h4>
+                <div class="code-block">
+var x = 1;
+
+function test() {
+    console.log(x);
+    var x = 2;
+    console.log(x);
+}
+
+test();
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('hoist1')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="hoist1">
+                    <h4>✅ Correct Answer:</h4>
+                    <div class="code-block output">
+// Output:
+// undefined
+// 2
+                    </div>
+                    <h4>📝 Explanation:</h4>
+                    <p>This breaks most candidates! Here's why:</p>
+                    <ol>
+                        <li>Inside <code>test()</code>, <code>var x</code> is hoisted to the top of the function</li>
+                        <li>First <code>console.log(x)</code> sees the LOCAL <code>x</code>, which is <code>undefined</code> (hoisted but not yet assigned)</li>
+                        <li>Then <code>x = 2</code> assigns the value</li>
+                        <li>Second <code>console.log(x)</code> sees <code>2</code></li>
+                    </ol>
+                    <p><strong>How JavaScript sees it:</strong></p>
+                    <div class="code-block">
+var x = 1;
+
+function test() {
+    var x;           // Hoisted to top
+    console.log(x);  // undefined
+    x = 2;           // Assignment
+    console.log(x);  // 2
+}
+
+test();
+                    </div>
+                    <div class="concept-box danger">
+                        <p><span class="icon">❌</span><strong>Common Mistake:</strong> Candidates expect first log to be <code>1</code> (from global). But the local <code>var x</code> shadows the global, and it's <code>undefined</code> until assigned!</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🔥 Interview Question 4: Function vs Variable Hoisting Priority</h3>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> What's the output?</h4>
+                <div class="code-block">
+console.log(typeof foo);
+
+var foo = "variable";
+
+function foo() {
+    return "function";
+}
+
+console.log(typeof foo);
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('hoist2')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="hoist2">
+                    <h4>✅ Correct Answer:</h4>
+                    <div class="code-block output">
+// Output:
+// "function"
+// "string"
+                    </div>
+                    <h4>📝 Explanation:</h4>
+                    <p><strong>Function declarations are hoisted BEFORE variable declarations!</strong></p>
+                    <p>How JavaScript sees it:</p>
+                    <div class="code-block">
+function foo() {         // Function hoisted first
+    return "function";
+}
+var foo;                // Variable hoisted, but doesn't override function
+
+console.log(typeof foo); // "function" (function wins!)
+
+foo = "variable";        // Now the assignment happens
+console.log(typeof foo); // "string" (variable value now)
+                    </div>
+                    <p><strong>Hoisting Priority Order:</strong></p>
+                    <ol>
+                        <li>Function declarations (highest priority)</li>
+                        <li>Variable declarations (<code>var</code>)</li>
+                        <li>Variable assignments (not hoisted)</li>
+                    </ol>
+                    <div class="key-insight">
+                        <span class="icon">🎯</span> <strong>SENIOR INSIGHT:</strong> When you have both a function and variable with the same name, the function declaration wins during hoisting. But assignments still execute in order!
+                    </div>
+                </div>
+            </div>
+
+            <h3>🔥 Interview Question 5: The Tricky One</h3>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> What's the output?</h4>
+                <div class="code-block">
+function test() {
+    console.log(a);
+    console.log(foo());
+    
+    var a = 1;
+    
+    function foo() {
+        return 2;
+    }
+}
+
+test();
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('hoist3')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="hoist3">
+                    <h4>✅ Correct Answer:</h4>
+                    <div class="code-block output">
+// Output:
+// undefined
+// 2
+                    </div>
+                    <h4>📝 Explanation:</h4>
+                    <p>How JavaScript sees it after hoisting:</p>
+                    <div class="code-block">
+function test() {
+    function foo() {     // Function hoisted first
+        return 2;
+    }
+    var a;              // Variable hoisted, initialized to undefined
+    
+    console.log(a);     // undefined
+    console.log(foo()); // 2 (function is fully available)
+    
+    a = 1;             // Assignment happens here
+}
+
+test();
+                    </div>
+                    <p><strong>Key Points:</strong></p>
+                    <ul>
+                        <li><code>foo()</code> works because function declaration is fully hoisted</li>
+                        <li><code>a</code> is <code>undefined</code> because only declaration is hoisted, not assignment</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>📋 Hoisting Completion Checklist</h3>
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I understand var is hoisted and initialized to undefined</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I know let/const are hoisted but remain in TDZ</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can explain function vs variable hoisting priority</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I know function expressions follow var hoisting rules</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- TDZ SECTION -->
+        <div class="section" id="tdz">
+            <h2>⏰ Part 3: Temporal Dead Zone (TDZ) - The Forbidden Zone</h2>
+            
+            <div class="concept-box danger">
+                <p><span class="icon">💡</span><strong>What Is The TDZ?</strong> The Temporal Dead Zone is the period between when a <code>let</code> or <code>const</code> variable is hoisted and when it's actually initialized. During this time, accessing the variable throws a ReferenceError.</p>
+            </div>
+
+            <h3>Why Does TDZ Exist?</h3>
+            <p>TDZ was introduced with <code>let</code> and <code>const</code> to catch bugs early. It prevents you from using variables before they're properly initialized.</p>
+
+            <div class="analogy">
+                <strong>🚦 The Traffic Light Analogy:</strong><br>
+                Imagine a <code>let</code> variable is like a traffic light:<br>
+                • <strong>Before declaration line:</strong> 🔴 RED (TDZ - can't access, ReferenceError)<br>
+                • <strong>After declaration line:</strong> 🟢 GREEN (can access safely)<br><br>
+                With <code>var</code>, there's no red light - just a yellow "caution" sign (undefined) before initialization.
+            </div>
+
+            <h3>1️⃣ TDZ in Action</h3>
+
+            <div class="code-block">
+console.log(myVar);  // undefined (var behavior - no TDZ)
+var myVar = "Hello";
+
+console.log(myLet);  // ❌ ReferenceError: Cannot access 'myLet' before initialization
+let myLet = "World"; // ← TDZ ends here
+
+console.log(myLet);  // ✅ "World"
+            </div>
+
+            <div class="visual-diagram">
+                <h4>TDZ Visualization:</h4>
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <div style="background: #fee2e2; padding: 1rem; margin: 0.5rem 0; border-radius: 8px; border-left: 4px solid #ef4444;">
+                        <strong>🔴 TDZ ZONE (ReferenceError)</strong>
+                        <p style="margin: 0.5rem 0; font-size: 0.9rem;">From: Start of scope</p>
+                        <p style="margin: 0.5rem 0; font-size: 0.9rem;">To: let/const declaration line</p>
+                    </div>
+                    <div style="text-align: center; font-size: 2rem; color: #ef4444; margin: 0.5rem 0;">
+                        ⬇️
+                    </div>
+                    <div style="background: #dcfce7; padding: 1rem; margin: 0.5rem 0; border-radius: 8px; border-left: 4px solid #10b981;">
+                        <strong>🟢 SAFE ZONE</strong>
+                        <p style="margin: 0.5rem 0; font-size: 0.9rem;">After: let/const declaration</p>
+                        <p style="margin: 0.5rem 0; font-size: 0.9rem;">Variable is initialized and usable</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>2️⃣ TDZ with typeof</h3>
+
+            <div class="code-block">
+console.log(typeof undeclaredVar);  // ✅ "undefined" (doesn't exist at all)
+
+console.log(typeof myLet);          // ❌ ReferenceError! (TDZ!)
+let myLet = "Hello";
+
+// The TDZ makes typeof UNSAFE for let/const before declaration!
+            </div>
+
+            <div class="concept-box warning">
+                <p><span class="icon">⚠️</span><strong>TDZ Gotcha:</strong> <code>typeof</code> is usually safe for checking if variables exist, but with <code>let</code>/<code>const</code> in TDZ, it throws ReferenceError! This is intentional to catch bugs.</p>
+            </div>
+
+            <h3>3️⃣ TDZ in Function Parameters (Tricky!)</h3>
+
+            <div class="code-block">
+function test(a = b, b = 2) {
+    return [a, b];
+}
+
+test(); // ❌ ReferenceError: Cannot access 'b' before initialization
+
+// Why? Parameter 'a' tries to use 'b' before 'b' is initialized
+// Parameters are evaluated left to right, and each creates a TDZ
+            </div>
+
+            <div class="code-block">
+// ✅ This works (correct order):
+function test(b = 2, a = b) {
+    return [a, b];
+}
+
+test(); // [2, 2]
+            </div>
+
+            <h3>4️⃣ TDZ in Loops</h3>
+
+            <div class="code-block">
+for (let i = 0; i < 3; i++) {
+    console.log(i); // ✅ Works fine
+}
+
+// But watch this:
+for (let i = i; i < 3; i++) {  // ❌ ReferenceError!
+    console.log(i);
+}
+
+// The second 'i' (in 'let i = i') is in TDZ when accessed!
+            </div>
+
+            <h3>5️⃣ Why TDZ Is Actually Good</h3>
+
+            <div class="concept-box success">
+                <p><span class="icon">💡</span><strong>TDZ Benefits:</strong></p>
+                <ul>
+                    <li><strong>Catches bugs early:</strong> Forces you to declare before use</li>
+                    <li><strong>Prevents temporal coupling:</strong> Code order matters, making logic clearer</li>
+                    <li><strong>Makes const truly constant:</strong> Can't access before initialization</li>
+                    <li><strong>Encourages better practices:</strong> Declare at the top, use below</li>
+                </ul>
+            </div>
+
+            <h3>🔥 Interview Question 6: TDZ with Closures</h3>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> What's the output?</h4>
+                <div class="code-block">
+let x = 1;
+
+function outer() {
+    console.log(x);
+    let x = 2;
+}
+
+outer();
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('tdz1')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="tdz1">
+                    <h4>✅ Correct Answer:</h4>
+                    <div class="code-block error">
+// Output:
+// ReferenceError: Cannot access 'x' before initialization
+                    </div>
+                    <h4>📝 Explanation:</h4>
+                    <p>This breaks 80% of candidates! Here's why:</p>
+                    <ul>
+                        <li>Inside <code>outer()</code>, JavaScript sees <code>let x = 2</code></li>
+                        <li>It hoists the declaration to the top of <code>outer()</code> (but leaves it in TDZ)</li>
+                        <li>The <code>console.log(x)</code> tries to access the LOCAL <code>x</code>, which is in TDZ</li>
+                        <li>ReferenceError!</li>
+                    </ul>
+                    <p><strong>Common Mistake:</strong> Candidates expect <code>x</code> to be <code>1</code> from global scope. But the local <code>let x</code> shadows it, and TDZ kicks in!</p>
+                    <div class="key-insight">
+                        <span class="icon">🎯</span> <strong>CRITICAL RULE:</strong> Once a <code>let</code>/<code>const</code> is declared in a scope, it shadows outer variables with the same name, even BEFORE the declaration line (TDZ applies).
+                    </div>
+                </div>
+            </div>
+
+            <h3>🔥 Interview Question 7: const in TDZ</h3>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> What happens here?</h4>
+                <div class="code-block">
+{
+    const func = function() {
+        console.log(value);
+    };
+    
+    func();
+    
+    const value = "Hello";
+}
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('tdz2')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="tdz2">
+                    <h4>✅ Correct Answer:</h4>
+                    <div class="code-block error">
+// Output:
+// ReferenceError: Cannot access 'value' before initialization
+                    </div>
+                    <h4>📝 Explanation:</h4>
+                    <ol>
+                        <li><code>func</code> is defined</li>
+                        <li><code>func()</code> is called</li>
+                        <li>Inside <code>func</code>, it tries to log <code>value</code></li>
+                        <li>But <code>value</code> is declared later in the same block - it's in TDZ!</li>
+                        <li>ReferenceError</li>
+                    </ol>
+                    <p><strong>Fix:</strong> Declare <code>value</code> before <code>func</code>:</p>
+                    <div class="code-block">
+{
+    const value = "Hello";  // Move up
+    
+    const func = function() {
+        console.log(value); // ✅ Works now
+    };
+    
+    func(); // "Hello"
+}
+                    </div>
+                </div>
+            </div>
+
+            <h3>📋 TDZ Completion Checklist</h3>
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can explain what TDZ is and why it exists</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I understand TDZ affects let/const but not var</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I know typeof is unsafe in TDZ</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can debug TDZ-related ReferenceErrors</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- VAR VS LET VS CONST COMPARISON -->
+        <div class="comparison-table">
+            <h2>🔍 The Ultimate Comparison: var vs let vs const</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>var</th>
+                        <th>let</th>
+                        <th>const</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Scope</strong></td>
+                        <td>Function-scoped</td>
+                        <td>Block-scoped</td>
+                        <td>Block-scoped</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hoisting</strong></td>
+                        <td>✅ Hoisted & initialized to undefined</td>
+                        <td>✅ Hoisted but in TDZ</td>
+                        <td>✅ Hoisted but in TDZ</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TDZ</strong></td>
+                        <td>❌ No TDZ</td>
+                        <td>✅ Has TDZ</td>
+                        <td>✅ Has TDZ</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Re-declaration</strong></td>
+                        <td>✅ Can re-declare</td>
+                        <td>❌ Cannot re-declare</td>
+                        <td>❌ Cannot re-declare</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Re-assignment</strong></td>
+                        <td>✅ Can reassign</td>
+                        <td>✅ Can reassign</td>
+                        <td>❌ Cannot reassign</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Global object property</strong></td>
+                        <td>✅ Yes (window.varName)</td>
+                        <td>❌ No</td>
+                        <td>❌ No</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Use in loops</strong></td>
+                        <td>⚠️ Dangerous (shared variable)</td>
+                        <td>✅ Safe (new binding per iteration)</td>
+                        <td>✅ Safe for iteration variable</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Best practice</strong></td>
+                        <td>❌ Avoid in modern code</td>
+                        <td>✅ Use for reassignable variables</td>
+                        <td>✅ Prefer for everything else</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TYPESCRIPT INTEGRATION -->
+        <div class="section">
+            <h2>📘 TypeScript Integration</h2>
+
+            <h3>1️⃣ TypeScript Block Scope</h3>
+            <p>TypeScript fully supports block scope and catches scope errors at compile time!</p>
+
+            <div class="code-block typescript">
+if (true) {
+    let message: string = "Block scoped";
+    const count: number = 5;
+}
+
+console.log(message); // ❌ TypeScript Error: Cannot find name 'message'
+console.log(count);   // ❌ TypeScript Error: Cannot find name 'count'
+            </div>
+
+            <h3>2️⃣ const Assertions</h3>
+
+            <div class="code-block typescript">
+// Regular const (mutable object)
+const config = {
+    apiUrl: "https://api.example.com",
+    timeout: 5000
+};
+
+config.apiUrl = "https://new-api.com"; // ✅ Allowed (object is mutable)
+
+// const assertion (deeply readonly)
+const config2 = {
+    apiUrl: "https://api.example.com",
+    timeout: 5000
+} as const;
+
+config2.apiUrl = "https://new-api.com"; // ❌ TypeScript Error: Cannot assign to 'apiUrl'
+            </div>
+
+            <h3>3️⃣ Type Narrowing in Scopes</h3>
+
+            <div class="code-block typescript">
+function process(value: string | number) {
+    if (typeof value === "string") {
+        // TypeScript narrows type to 'string' in this block
+        console.log(value.toUpperCase()); // ✅ Safe
+    } else {
+        // TypeScript narrows type to 'number' in this block
+        console.log(value.toFixed(2));    // ✅ Safe
+    }
+    
+    // Outside blocks, type is still 'string | number'
+    console.log(value.toUpperCase()); // ❌ Error: Property 'toUpperCase' doesn't exist on number
+}
+            </div>
+
+            <div class="concept-box purple">
+                <p><span class="icon">💡</span><strong>TypeScript Advantage:</strong> TypeScript catches scope and TDZ errors at compile time, before your code even runs. This makes debugging much easier!</p>
+            </div>
+        </div>
+
+        <!-- RESOURCES -->
+        <div class="resource-links" id="resources">
+            <h2>📚 Essential Resources for Day 3</h2>
+            
+            <h3>📖 Must-Read Articles</h3>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">📕</div>
+                    <h4>MDN: Scope</h4>
+                    <p>Comprehensive guide to JavaScript scope</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Glossary/Scope" target="_blank">Read on MDN →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">📗</div>
+                    <h4>MDN: Hoisting</h4>
+                    <p>Official documentation on hoisting behavior</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Glossary/Hoisting" target="_blank">Read on MDN →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">📘</div>
+                    <h4>MDN: Temporal Dead Zone</h4>
+                    <p>Deep dive into TDZ mechanics</p>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let#temporal_dead_zone_tdz" target="_blank">Read on MDN →</a>
+                </div>
+            </div>
+
+            <h3>📚 Books & Deep Dives</h3>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">📖</div>
+                    <h4>You Don't Know JS: Scope & Closures</h4>
+                    <p>Kyle Simpson's definitive guide (FREE)</p>
+                    <a href="https://github.com/getify/You-Dont-Know-JS/tree/2nd-ed/scope-closures" target="_blank">Read on GitHub →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">📙</div>
+                    <h4>JavaScript.info: Variables</h4>
+                    <p>Modern tutorial with interactive examples</p>
+                    <a href="https://javascript.info/variables" target="_blank">Read Tutorial →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">🎓</div>
+                    <h4>ES6 In Depth: let and const</h4>
+                    <p>Mozilla Hacks deep dive</p>
+                    <a href="https://hacks.mozilla.org/2015/07/es6-in-depth-let-and-const/" target="_blank">Read Article →</a>
+                </div>
+            </div>
+
+            <h3>🎥 Video Resources</h3>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">🎬</div>
+                    <h4>Hoisting Explained</h4>
+                    <p>Visual explanation of hoisting mechanics</p>
+                    <a href="https://www.youtube.com/results?search_query=javascript+hoisting+explained" target="_blank">Watch on YouTube →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">📺</div>
+                    <h4>var, let, and const</h4>
+                    <p>Complete comparison video</p>
+                    <a href="https://www.youtube.com/results?search_query=var+let+const+javascript" target="_blank">Watch on YouTube →</a>
+                </div>
+            </div>
+
+            <h3>🛠️ Practice Platforms</h3>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">💻</div>
+                    <h4>JavaScript Quiz</h4>
+                    <p>Test your scope knowledge</p>
+                    <a href="https://javascriptquiz.com/" target="_blank">Take Quiz →</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">🎮</div>
+                    <h4>TypeScript Playground</h4>
+                    <p>Practice scope with TypeScript</p>
+                    <a href="https://www.typescriptlang.org/play" target="_blank">Try Playground →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHEAT SHEET -->
+        <div class="cheat-sheet" id="cheatsheet">
+            <h2>📋 Day 3 Quick Reference Cheat Sheet</h2>
+            
+            <h3>Scope Rules (One-Liners)</h3>
+            <ul>
+                <li><strong>Global Scope:</strong> Variables accessible everywhere</li>
+                <li><strong>Function Scope:</strong> Variables accessible only inside function (<code>var</code>, <code>let</code>, <code>const</code>)</li>
+                <li><strong>Block Scope:</strong> Variables accessible only inside <code>{}</code> (<code>let</code>, <code>const</code> only)</li>
+                <li><strong>Lexical Scope:</strong> Scope determined by WHERE code is written, not where it's called</li>
+                <li><strong>Scope Chain:</strong> JavaScript looks up scopes: current → parent → global</li>
+            </ul>
+
+            <h3>Hoisting Rules (One-Liners)</h3>
+            <ul>
+                <li><strong>var:</strong> Hoisted & initialized to <code>undefined</code></li>
+                <li><strong>let/const:</strong> Hoisted but stay in TDZ until declaration</li>
+                <li><strong>Function declarations:</strong> Fully hoisted (can call before declaration)</li>
+                <li><strong>Function expressions:</strong> Follow <code>var</code>/<code>let</code>/<code>const</code> rules</li>
+                <li><strong>Classes:</strong> Hoisted but stay in TDZ</li>
+            </ul>
+
+            <h3>TDZ Rules (One-Liners)</h3>
+            <ul>
+                <li><strong>What:</strong> Zone where <code>let</code>/<code>const</code> exist but can't be accessed</li>
+                <li><strong>When:</strong> From start of scope to declaration line</li>
+                <li><strong>Error:</strong> ReferenceError if accessed in TDZ</li>
+                <li><strong>typeof:</strong> Unsafe for TDZ variables (throws error)</li>
+                <li><strong>Purpose:</strong> Catch bugs early, enforce declaration before use</li>
+            </ul>
+
+            <h3>Common Interview Traps</h3>
+            <ul>
+                <li>❌ <code>var</code> in loops shares ONE variable across iterations</li>
+                <li>❌ <code>let</code> in outer scope can shadow and cause TDZ in inner scope</li>
+                <li>❌ Function declarations hoist before variable declarations</li>
+                <li>❌ Function expressions don't fully hoist (only variable part)</li>
+                <li>❌ <code>typeof</code> throws error for <code>let</code>/<code>const</code> in TDZ</li>
+            </ul>
+
+            <h3>Best Practices</h3>
+            <ul>
+                <li>✅ Use <code>const</code> by default</li>
+                <li>✅ Use <code>let</code> if you need to reassign</li>
+                <li>❌ Avoid <code>var</code> in modern code</li>
+                <li>✅ Declare variables at the top of their scope</li>
+                <li>✅ Use <code>let</code> in loops, never <code>var</code></li>
+                <li>✅ Minimize global variables</li>
+            </ul>
+        </div>
+
+        <!-- FINAL SECTION -->
+        <div class="section">
+            <h2>🎯 Next Steps</h2>
+            
+            <h3>You're Ready for Day 4 When You Can:</h3>
+            <ul>
+                <li>✅ Explain the difference between function and block scope to a junior developer</li>
+                <li>✅ Predict output of hoisting questions without running code</li>
+                <li>✅ Debug TDZ-related ReferenceErrors instantly</li>
+                <li>✅ Explain why <code>var</code> in loops is dangerous</li>
+                <li>✅ Know when <code>typeof</code> is unsafe</li>
+                <li>✅ Answer all 7 interview questions correctly</li>
+            </ul>
+
+            <div class="key-insight">
+                <span class="icon">🚀</span> <strong>Remember:</strong> These concepts (Scope, Hoisting, TDZ) form the foundation for understanding Closures (Day 4) and <code>this</code> binding (Day 6). Master this, and the rest becomes much easier.
+            </div>
+
+            <h3>Tomorrow: Closures (Part 1)</h3>
+            <p style="margin-top: 1rem;">Now that you understand scope, we'll dive into <strong>closures</strong> - one of JavaScript's most powerful features. Closures are built on top of lexical scope, so today's learning is essential.</p>
+
+            <div class="keyboard-shortcuts">
+                <h4>⌨️ Keyboard Shortcuts</h4>
+                <div class="shortcut-row">
+                    <span>Toggle Dark Mode</span>
+                    <kbd class="key">D</kbd>
+                </div>
+                <div class="shortcut-row">
+                    <span>Scroll to Top</span>
+                    <kbd class="key">T</kbd>
+                </div>
+                <div class="shortcut-row">
+                    <span>Jump to Resources</span>
+                    <kbd class="key">R</kbd>
+                </div>
+                <div class="shortcut-row">
+                    <span>Jump to Cheat Sheet</span>
+                    <kbd class="key">C</kbd>
+                </div>
+                <div class="shortcut-row">
+                    <span>Start/Pause Timer</span>
+                    <kbd class="key">Space</kbd>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="completion-tracker">
+        <h4>Day 3 Progress</h4>
+        <div class="completion-stat">
+            <span>Completed:</span>
+            <span id="completedCount">0/16</span>
+        </div>
+        <div class="completion-stat">
+            <span>Percentage:</span>
+            <span id="completedPercent">0%</span>
+        </div>
+        <hr style="margin: 0.75rem 0; border: none; border-top: 1px solid var(--border);">
+        <h4>Study Timer</h4>
+        <div class="timer-display" id="timerDisplay">00:00:00</div>
+        <div class="timer-controls">
+            <button class="timer-btn start" onclick="startTimer()">▶</button>
+            <button class="timer-btn pause" onclick="pauseTimer()">⏸</button>
+            <button class="timer-btn reset" onclick="resetTimer()">↻</button>
+        </div>
+    </div>
+
+    <div class="back-to-top" onclick="scrollToTop()">↑</div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const btn = document.querySelector('.theme-toggle');
+            btn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
+            localStorage.setItem('theme-day3', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        if (localStorage.getItem('theme-day3') === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.theme-toggle').textContent = '☀️ Light Mode';
+        }
+
+        // Reveal Answer
+        function revealAnswer(id) {
+            const answer = document.getElementById(id);
+            const btn = answer.previousElementSibling;
+            
+            if (answer.classList.contains('show')) {
+                answer.classList.remove('show');
+                btn.textContent = '🔓 Reveal Answer';
+            } else {
+                answer.classList.add('show');
+                btn.textContent = '🔒 Hide Answer';
+            }
+        }
+
+        // Progress Tracking
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+            const count = checked.length;
+            const total = checkboxes.length;
+            const percent = Math.round((count / total) * 100);
+            
+            document.getElementById('completedCount').textContent = `${count}/${total}`;
+            document.getElementById('completedPercent').textContent = `${percent}%`;
+            document.getElementById('progressBar').style.width = `${percent}%`;
+            
+            // Save progress
+            const checkboxStates = Array.from(checkboxes).map(cb => cb.checked);
+            localStorage.setItem('day3-progress', JSON.stringify(checkboxStates));
+        }
+
+        // Load saved progress
+        const savedProgress = localStorage.getItem('day3-progress');
+        if (savedProgress) {
+            const states = JSON.parse(savedProgress);
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach((cb, index) => {
+                if (states[index]) {
+                    cb.checked = true;
+                }
+            });
+            updateProgress();
+        }
+
+        // Back to Top
+        window.addEventListener('scroll', () => {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Smooth Scroll for Nav Links
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Add copy buttons to code blocks
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.code-block').forEach((block, index) => {
+                const button = document.createElement('button');
+                button.className = 'copy-btn';
+                button.innerHTML = '📋 Copy';
+                button.onclick = () => copyCode(block, button);
+                block.appendChild(button);
+            });
+        });
+
+        function copyCode(block, button) {
+            const code = block.textContent.replace('📋 Copy', '').replace('✓ Copied!', '').trim();
+            navigator.clipboard.writeText(code).then(() => {
+                button.innerHTML = '✓ Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.innerHTML = '📋 Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Study Timer
+        let timerInterval;
+        let timerSeconds = 0;
+        let timerRunning = false;
+
+        function startTimer() {
+            if (!timerRunning) {
+                timerRunning = true;
+                timerInterval = setInterval(() => {
+                    timerSeconds++;
+                    updateTimerDisplay();
+                    localStorage.setItem('studyTime-day3', timerSeconds);
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            timerRunning = false;
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timerSeconds = 0;
+            updateTimerDisplay();
+            localStorage.setItem('studyTime-day3', 0);
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timerSeconds / 3600);
+            const minutes = Math.floor((timerSeconds % 3600) / 60);
+            const seconds = timerSeconds % 60;
+            
+            const display = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = display;
+        }
+
+        // Load saved timer
+        const savedTime = localStorage.getItem('studyTime-day3');
+        if (savedTime) {
+            timerSeconds = parseInt(savedTime);
+            updateTimerDisplay();
+        }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            switch(e.key.toLowerCase()) {
+                case 'd':
+                    toggleTheme();
+                    break;
+                case 't':
+                    scrollToTop();
+                    break;
+                case 'r':
+                    document.getElementById('resources').scrollIntoView({ behavior: 'smooth' });
+                    break;
+                case 'c':
+                    document.getElementById('cheatsheet').scrollIntoView({ behavior: 'smooth' });
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    if (timerRunning) {
+                        pauseTimer();
+                    } else {
+                        startTimer();
+                    }
+                    break;
+            }
+        });
+
+        // Auto-save timer
+        window.addEventListener('beforeunload', () => {
+            if (timerRunning) {
+                localStorage.setItem('studyTime-day3', timerSeconds);
+            }
+        });
+    </script>
+</body>
+</html>
