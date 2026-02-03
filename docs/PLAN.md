@@ -1,2136 +1,2908 @@
-# 84-Day Senior Frontend Interview Preparation Plan
+# 100-Day Senior Frontend Interview Preparation Plan V3.0
 
-**Target:** Sr/Lead roles at top product companies  
-**Daily Commitment:** 4.5 hours  
-**Start Date:** Today  
-**Interview Ready Date:** Day 85
-
----
-
-## Plan Structure
-
-### Phase 1: JavaScript Foundations (Days 1-28)
-### Phase 2: React & Ecosystem (Days 29-49)
-### Phase 3: DSA for Frontend (Days 50-63)
-### Phase 4: System Design (Days 64-77)
-### Phase 5: Mock Interviews & Polish (Days 78-84)
+**Version:** 3.0 (Realistic & Production-Ready)  
+**Target:** Sr/Lead Frontend roles at Unicorn & Top Product Companies  
+**Daily Commitment:** 3.5 hours average (flexible)  
+**Start Date:** ___________  
+**Interview Ready Date:** Day 100-110
 
 ---
 
-# PHASE 1: JavaScript Foundations (Days 1-28)
+## Executive Summary
 
-## Week 1: Execution Model & Core Concepts (Days 1-7)
+This plan fixes the critical unrealistic expectations in previous versions:
+
+- **Realistic time allocation:** 3.5 hours/day average with flexible pacing
+- **Quality over quantity:** Focus on actual understanding, not just completion
+- **Frontend-optimized:** DSA and system design tailored for frontend interviews
+- **Portfolio-first:** 5 deployed projects + 10 blog posts by completion
+- **AI-integrated:** Every coding problem uses AI workflow
+- **Behavioral early:** Distributed preparation throughout 9 weeks
+
+---
+
+## Progress Tracker
+
+| Phase | Days | Status | Notes |
+|-------|------|--------|-------|
+| Phase 1: JavaScript + TypeScript | 1-35 | [ ] Not Started | |
+| Phase 2: React & Ecosystem | 36-60 | [ ] Not Started | |
+| Phase 3: Testing Mastery | 61-66 | [ ] Not Started | |
+| Phase 4: Frontend-Optimized DSA | 67-82 | [ ] Not Started | |
+| Phase 5: System Design + Build | 83-94 | [ ] Not Started | |
+| Phase 6: Mock Interviews & Polish | 95-100 | [ ] Not Started | |
+
+**Overall Readiness:** [ ] Not Ready | [ ] Partially Ready | [ ] Interview Ready
+
+---
+
+## Daily Structure (Flexible Sessions)
+
+Each day = **3-4 focused sessions** (45-60 mins each)
+
+```
+Session 1: Core Concept (45-60 mins)
+Session 2: Practice/Application (45-60 mins)  
+Session 3: Review/Reflection (30-45 mins)
+Session 4: (Optional) Deep Dive (45-60 mins)
+
+Total: 2.5-4 hours (average 3.5 hours)
+```
+
+**Flexibility Rule:** Complete 3 sessions minimum. 4th session only if energy allows.
+
+**Buffer Days:** Built-in flexibility - some days will naturally take longer.
+
+---
+
+## AI-Augmented Learning Protocol (MANDATORY)
+
+For EVERY coding problem:
+
+1. **First Attempt:** Solve manually without AI help
+2. **AI Review:** Ask AI to review your approach
+3. **Compare:** Analyze differences in solutions
+4. **Learn:** Extract patterns from AI's approach
+5. **Generate:** Ask AI to create variations/edge cases
+
+**Tools to Use Daily:**
+- Claude/ChatGPT for explanation and review
+- GitHub Copilot for pair programming practice
+- Cursor/Windsurf for AI-assisted debugging
+
+---
+
+# PHASE 1: JavaScript + TypeScript Foundations (Days 1-35)
+
+## Week 1: Core Concepts (Days 1-7)
 
 ### Day 1: Event Loop & Execution Context
-**Time: 4.5 hours**
+**Sessions: 3-4 | Flexible Time: 2.5-4 hours**
 
-**Morning (2 hours): Study**
+**Session 1: Study (45-60 mins)**
 - How JavaScript executes code (call stack)
-- Execution context (global, function)
+- Execution context creation
 - Event loop phases: Call Stack → Microtask Queue → Macrotask Queue
-- `setTimeout` vs `Promise` timing
-- Microtasks vs Macrotasks
 
-**Resources:**
-- Jake Archibald's "In The Loop" talk (YouTube)
-- JavaScript.info: Event Loop chapter
-- Lydia Hallie's JavaScript Visualized series
-
-**Afternoon (2 hours): Practice**
-- 20 output prediction problems (event loop)
+**Session 2: Practice (45-60 mins)**
+- 8 output prediction problems (event loop)
 - Explain each answer out loud
-- Create a mental model diagram
+- Create simple mental model
 
-**Evening (30 mins): Review**
-- Write down 5 key insights
-- Note confusing parts for tomorrow
+**Session 3: Review (30-45 mins)**
+- Write 3 key insights
+- Note confusing parts
+- Ask AI to explain unclear concepts
 
-**Deliverable:** Can predict output of mixed async code confidently
+**Understanding Checkpoint:** 
+- Can I explain event loop to someone without notes?
+- Can I predict output of mixed async code?
+
+**Deliverable:** Mental model diagram created
 
 ---
 
-### Day 2: Event Loop Deep Dive + Testing
-**Time: 4.5 hours**
+### Day 2: Event Loop Deep Dive + TypeScript
+**Sessions: 3-4 | Flexible Time: 2.5-4 hours**
 
-**Morning (1.5 hours): Advanced Concepts**
-- `process.nextTick` vs `setImmediate` (Node.js)
-- `queueMicrotask` API
-- Starvation scenarios
-- `async/await` execution order
+**Session 1: Advanced Concepts (45-60 mins)**
+- Microtasks vs Macrotasks detailed comparison
+- `setTimeout` vs `Promise` timing differences
+- Browser vs Node.js event loop differences
 
-**Afternoon (2 hours): Coding**
-- Implement a simple task scheduler
-- Build a custom Promise.resolve
-- Solve 15 more output prediction problems
+**Session 2: TypeScript Basics (45-60 mins)**
+- Why TypeScript for senior roles
+- Basic types: string, number, boolean, array
+- Type inference vs explicit typing
+- Union types and literal types
 
-**Evening (1 hour): TEST WITH ME**
-- Post "Day 2 complete, ready for test"
-- I'll give you 10 rapid-fire questions
-- Must score 8/10 to move forward
+**Session 3: Practice (30-45 mins)**
+- 10 event loop prediction problems
+- Convert 3 JS functions to TypeScript
+- Use AI to generate edge case scenarios
 
-**Blocker:** If you score <8/10, repeat Day 2
+**Understanding Checkpoint:**
+- Can I implement custom Promise.resolve?
+- Can I type async functions correctly?
 
 ---
 
 ### Day 3: Scope, Hoisting, TDZ
-**Time: 4.5 hours**
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2 hours): Study**
+**Session 1: Study (45 mins)**
 - Lexical scope vs dynamic scope
-- Scope chain resolution
-- Hoisting (var, let, const, function)
-- Temporal Dead Zone (TDZ)
-- Block scope vs function scope
+- Hoisting mechanism (var, let, const, function)
+- Temporal Dead Zone (TDZ) - why it exists
 
-**Afternoon (2 hours): Practice**
-- 25 output prediction problems (scope/hoisting)
-- Fix 10 scope-related bugs
+**Session 2: Practice (45 mins)**
+- 15 output prediction problems (scope/hoisting)
+- Fix 5 scope-related bugs
 - Explain hoisting to yourself aloud
 
-**Evening (30 mins): Create Cheat Sheet**
-- var vs let vs const (all differences)
-- Hoisting rules
-- TDZ examples
+**Session 3: TypeScript Integration (30 mins)**
+- Block-scoped behavior in TypeScript
+- `const` assertions
+- Type narrowing in different scopes
+
+**Understanding Checkpoint:**
+- Can I debug scope-related bugs quickly?
+- Can I explain TDZ without confusion?
 
 ---
 
 ### Day 4: Closures (Part 1)
-**Time: 4.5 hours**
+**Sessions: 3-4 | Flexible Time: 2.5-4 hours**
 
-**Morning (2 hours): Study**
-- What is a closure?
+**Session 1: Study (45-60 mins)**
+- What is a closure? (formal definition)
 - How closures are created
-- Closure use cases (data privacy, function factories)
 - Memory implications
 - Classic loop + setTimeout bug
 
-**Resources:**
-- MDN: Closures
-- "You Don't Know JS: Scope & Closures" (Chapter 5)
-
-**Afternoon (2 hours): Coding**
+**Session 2: Practice (45-60 mins)**
 - Fix var/setTimeout bug (3 different ways)
-- Create private counter
+- Create private counter with increment/decrement
 - Implement `once()` function
-- Build function that returns incrementing IDs
 
-**Evening (30 mins): Explain**
-- Record yourself explaining closures (audio/video)
-- Listen back—are you clear?
+**Session 3: TypeScript (30-45 mins)**
+- Type function factories
+- Generic closures
+- Type the private counter
+
+**Understanding Checkpoint:**
+- Can I implement closure-based patterns from memory?
+- Can I explain memory implications?
 
 ---
 
-### Day 5: Closures (Part 2) + Testing
-**Time: 4.5 hours**
+### Day 5: Closures (Part 2) + Real Applications
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (1.5 hours): Advanced Patterns**
-- Partial application
-- Currying with closures
-- Memoization using closures
+**Session 1: Advanced Patterns (45 mins)**
+- Memoization with closures
 - Module pattern (IIFE)
+- Event listener cleanup patterns
 
-**Afternoon (2 hours): Coding**
-- Implement memoize function
-- Build a cache with TTL using closures
-- Solve 5 LeetCode-style closure problems
+**Session 2: Real-World Practice (45 mins)**
+- Build cache with TTL using closures
+- Implement rate limiter
+- Create event emitter
 
-**Evening (1 hour): TEST WITH ME**
-- Post "Day 5 complete, ready for closure test"
-- I'll ask implementation + explanation questions
-- Must demonstrate clear understanding
+**Session 3: Debugging (30 mins)**
+- Identify and fix closure memory leaks
+- Use Chrome DevTools memory profiling
+
+**Understanding Checkpoint:**
+- Can I debug closure memory leaks?
+- Can I implement memoization under time pressure?
 
 ---
 
 ### Day 6: `this` Binding (Critical)
-**Time: 4.5 hours**
+**Sessions: 3-4 | Flexible Time: 2.5-4 hours**
 
-**Morning (2 hours): Study**
-- Default binding (strict vs non-strict mode)
+**Session 1: The 4 Rules (45-60 mins)**
+- Default binding (strict vs non-strict)
 - Implicit binding (method calls)
 - Explicit binding (call, apply, bind)
-- `new` binding
-- Arrow functions (lexical `this`)
-- Precedence rules
+- `new` binding (constructor calls)
 
-**Resources:**
-- "You Don't Know JS: this & Object Prototypes"
-- Tyler McGinnis: "JavaScript this Keyword"
+**Session 2: Practice (45-60 mins)**
+- 20 "what is `this`?" prediction problems
+- Fix 8 context-loss bugs
+- Convert between regular and arrow functions
 
-**Afternoon (2 hours): Practice**
-- 30 "what is `this`?" prediction problems
-- Fix 10 context-loss bugs
-- Implement scenarios for each binding type
+**Session 3: TypeScript (30-45 mins)**
+- `this` parameter typing
+- Typing methods correctly
+- Type-safe event handlers
 
-**Evening (30 mins): Create Reference**
-- `this` determination flowchart
-- All binding rules with examples
-
-**Critical:** This is your weakest area—invest extra focus
+**Understanding Checkpoint:**
+- Can I debug `this` binding issues quickly?
+- Can I implement bind/call/apply from scratch?
 
 ---
 
-### Day 7: `this` Deep Dive + Implementation
-**Time: 4.5 hours**
+### Day 7: Week 1 Review + Portfolio Start
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2 hours): Implementations**
-- Implement `Function.prototype.bind` from scratch
-- Implement `Function.prototype.call`
-- Implement `Function.prototype.apply`
-- Understand how `new` operator works with `this`
+**Session 1: Review (45 mins)**
+- Redo failed checkpoint questions
+- Strengthen weak areas
+- Create summary notes
 
-**Afternoon (1.5 hours): Coding**
-- Fix real-world callback context bugs
-- Convert functions to arrow functions (and vice versa)
-- Solve class method binding problems
+**Session 2: Portfolio Project 1 (60 mins)**
+- Start simple weather app
+- Fetch data, display, basic styling
+- Deploy to Vercel
 
-**Evening (1 hour): TEST WITH ME**
-- Post "Day 7 complete, ready for `this` test"
-- Implementation + explanation questions
-- Must score 9/10—this is critical
+**Session 3: Blog Post (45 mins)**
+- Write: "Understanding JavaScript Event Loop"
+- Publish to personal blog/Dev.to
+
+**Weekly Goal:** Complete 3 sessions minimum on 5/7 days
 
 ---
 
 ## Week 2: Prototypes & OOP (Days 8-14)
 
 ### Day 8: Prototypes (Part 1)
-**Time: 4.5 hours**
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2.5 hours): Study**
-- `__proto__` vs `prototype`
+**Session 1: Core Concepts (45 mins)**
+- `__proto__` vs `prototype` difference
 - Prototype chain traversal
-- How property lookup works
-- Constructor functions
-- `Object.create()`
+- Property lookup algorithm
 
-**Resources:**
-- MDN: Inheritance and the prototype chain
-- JavaScript.info: Prototypes
-
-**Afternoon (2 hours): Practice**
-- Trace prototype chains in 15 examples
+**Session 2: Practice (45 mins)**
+- Trace prototype chains in 10 examples
 - Create objects with `Object.create()`
-- Build inheritance without classes
+- Build simple inheritance
+
+**Session 3: TypeScript (30 mins)**
+- Interface inheritance vs prototype
+- Typing prototype methods
+- Constructor types
+
+**Understanding Checkpoint:**
+- Can I trace any prototype chain?
+- Can I explain prototype vs class differences?
 
 ---
 
-### Day 9: Prototypes (Part 2)
-**Time: 4.5 hours**
+### Day 9: Prototypes (Part 2) + Implementation
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2 hours): Advanced Concepts**
-- Adding methods to prototypes
-- Prototype pollution (security concern)
-- `Object.getPrototypeOf()`, `Object.setPrototypeOf()`
+**Session 1: Advanced (45 mins)**
+- Prototype pollution security concerns
 - `instanceof` operator internals
+- Performance implications
 
-**Afternoon (2 hours): Implementations**
+**Session 2: Implementations (45 mins)**
 - Implement `Object.create()` polyfill
 - Implement `instanceof` from scratch
-- Implement `new` operator behavior
 - Create deep inheritance chain
 
-**Evening (30 mins): Diagrams**
-- Draw prototype chains for complex scenarios
+**Session 3: Real-World (30 mins)**
+- Debug prototype-related bugs
+- Performance profiling
+
+**Understanding Checkpoint:**
+- Can I implement prototype methods from memory?
+- Can I debug prototype chain issues?
 
 ---
 
 ### Day 10: ES6 Classes & Inheritance
-**Time: 4.5 hours**
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2 hours): Study**
-- Class syntax (syntactic sugar)
-- Constructor vs class methods
-- `super` keyword
-- Static methods
-- Private fields (#field)
-- Getters and setters
+**Session 1: Study (45 mins)**
+- Class as syntactic sugar
+- Constructor, methods, static properties
+- `extends` and `super`
+- Private fields (`#field`)
 
-**Afternoon (2 hours): Practice**
-- Convert constructor functions to classes
-- Implement inheritance with extends
-- Create abstract patterns with classes
-- Build real-world class hierarchies
+**Session 2: Practice (45 mins)**
+- Convert 3 constructor functions to classes
+- Implement inheritance hierarchy
+- Use private fields
 
-**Evening (30 mins): Compare**
-- Class vs constructor function (pros/cons)
-- When to use each
+**Session 3: TypeScript (30 mins)**
+- Access modifiers (public, private, protected)
+- Abstract classes
+- Implementing interfaces
+
+**Understanding Checkpoint:**
+- Can I convert between class and prototype patterns?
+- Can I use private fields correctly?
 
 ---
 
-### Day 11: Object Mastery
-**Time: 4.5 hours**
+### Day 11: Object Mastery + Real Debugging
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2 hours): Study**
-- Property descriptors (writable, enumerable, configurable)
+**Session 1: Property Descriptors (45 mins)**
+- writable, enumerable, configurable
 - `Object.defineProperty()`
-- `Object.freeze()`, `Object.seal()`, `Object.preventExtensions()`
-- Getters/setters with descriptors
-- Computed property names
-- Object destructuring (all forms)
+- `Object.freeze()`, `Object.seal()`
 
-**Afternoon (2 hours): Coding**
-- Deep clone object (handle circular references)
-- Deep freeze object
-- Implement getter/setter validation
-- Solve 10 object manipulation problems
+**Session 2: Real Debugging (45 mins)**
+- Debug 5 real-world object manipulation bugs
+- Use Chrome DevTools object inspector
+- Performance profiling
 
-**Evening (30 mins): Patterns**
-- When to use freeze vs seal
-- Immutability patterns
+**Session 3: TypeScript (30 mins)**
+- Index signatures
+- Record type
+- Readonly and Partial utilities
 
----
-
-### Day 12: Prototypes + Objects Testing
-**Time: 4.5 hours**
-
-**Morning (2 hours): Review & Reinforce**
-- Redo problems from Days 8-11
-- Fill any conceptual gaps
-- Create consolidated notes
-
-**Afternoon (1.5 hours): Coding Challenge**
-- Build a complete inheritance system
-- Implement object utility functions
-- Solve complex prototype problems
-
-**Evening (1 hour): TEST WITH ME**
-- Post "Day 12 complete, ready for OOP test"
-- Prototype chain + implementation questions
-- Explanation of concepts
+**Understanding Checkpoint:**
+- Can I debug object property issues?
+- Can I implement deep freeze?
 
 ---
 
-### Day 13: Async Foundations - Callbacks & Promises
-**Time: 4.5 hours**
+### Day 12: TypeScript Advanced Types (Day 1)
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2.5 hours): Study**
-- Callbacks and callback hell
-- Error-first callback convention
-- Promise states (pending, fulfilled, rejected)
-- Promise chaining
-- Error propagation in promises
-- `then()`, `catch()`, `finally()`
+**Session 1: Union & Intersection (45 mins)**
+- Union types (`|`)
+- Intersection types (`&`)
+- Type narrowing techniques
+- Discriminated unions
 
-**Resources:**
-- JavaScript.info: Promises
-- Exploring JS: Promises
+**Session 2: Generics Basics (45 mins)**
+- Generic functions
+- Generic constraints (`extends`)
+- Multiple type parameters
 
-**Afternoon (2 hours): Practice**
-- Convert callbacks to promises
-- Chain promises correctly
-- Handle errors in promise chains
-- Understand `fetch` promise behavior (404 vs network error)
+**Session 3: Practice (30 mins)**
+- Implement generic `identity` function
+- Create type-safe `pick` function
+- Type event emitter
+
+**Understanding Checkpoint:**
+- Can I use generics in real code?
+- Can I implement utility types?
 
 ---
 
-### Day 14: Promise APIs & Implementation
-**Time: 4.5 hours**
+### Day 13: TypeScript Advanced Types (Day 2)
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2 hours): Study & Code**
-- `Promise.all()` - parallel execution, fail-fast
-- `Promise.race()` - first settled
-- `Promise.allSettled()` - all results regardless
-- `Promise.any()` - first fulfilled
+**Session 1: Conditional Types (45 mins)**
+- Basic conditional types
+- `infer` keyword
+- Utility type implementations
 
-**Afternoon (2 hours): Implementations**
-- Implement `Promise.all()` from scratch
-- Implement `Promise.race()`
-- Implement `Promise.allSettled()`
-- Add timeout wrapper for promises
-- Retry failed promises N times
+**Session 2: Template Literals (45 mins)**
+- Template literal types
+- String manipulation
+- Pattern matching
 
-**Evening (30 mins): Patterns**
-- When to use each Promise API
-- Sequential vs parallel execution trade-offs
+**Session 3: Practice (30 mins)**
+- Implement `MyPick<T, K>`
+- Implement `DeepReadonly<T>`
+- Build type-safe API handler
+
+**Understanding Checkpoint:**
+- Can I implement advanced utility types?
+- Can I debug complex type errors?
+
+---
+
+### Day 14: Week 2 Review + Portfolio Project 2
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Review (45 mins)**
+- Practice weak areas from Week 2
+- Redo checkpoint failures
+- Consolidate notes
+
+**Session 2: Portfolio Project (60 mins)**
+- Build Todo app with:
+  - Add/edit/delete todos
+  - Mark complete
+  - Local storage persistence
+  - TypeScript throughout
+
+**Session 3: Blog Post (45 mins)**
+- Write: "JavaScript Prototypes vs Classes"
+- Include real examples and TypeScript
+
+**Weekly Goal:** Complete 3 sessions minimum on 5/7 days
 
 ---
 
 ## Week 3: Async Patterns & Performance (Days 15-21)
 
-### Day 15: Async/Await Mastery
-**Time: 4.5 hours**
+### Day 15: Callbacks & Promises Fundamentals
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2 hours): Study**
+**Session 1: Callbacks (45 mins)**
+- Callback pattern
+- Callback hell problems
+- Error-first convention
+
+**Session 2: Promises (45 mins)**
+- Promise states and behavior
+- `then()`, `catch()`, `finally()`
+- Promise chaining
+
+**Session 3: TypeScript (30 mins)**
+- `Promise<T>` typing
+- Async function return types
+- Error typing
+
+**Understanding Checkpoint:**
+- Can I convert callbacks to promises?
+- Can I handle promise errors correctly?
+
+---
+
+### Day 16: Promise APIs & Implementation
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Static Methods (45 mins)**
+- `Promise.all()`, `Promise.race()`
+- `Promise.allSettled()`, `Promise.any()`
+- Edge cases and behavior
+
+**Session 2: Implementations (45 mins)**
+- Implement `Promise.all()` from scratch
+- Implement `Promise.race()`
+- Handle edge cases
+
+**Session 3: Real-World (30 mins)**
+- Add timeout wrapper
+- Implement retry logic
+- Type implementations
+
+**Understanding Checkpoint:**
+- Can I implement Promise APIs from memory?
+- Can I debug promise race conditions?
+
+---
+
+### Day 17: Async/Await Mastery
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Fundamentals (45 mins)**
 - async/await as syntactic sugar
-- Error handling (try-catch)
-- Sequential vs parallel with async/await
-- Top-level await
-- Async iteration (for-await-of)
-- Common pitfalls
+- Error handling with try-catch
+- Sequential vs parallel patterns
 
-**Afternoon (2 hours): Practice**
+**Session 2: Practice (45 mins)**
 - Convert promise chains to async/await
 - Handle errors properly
-- Sequential execution patterns
-- Parallel execution patterns
-- Mixed async patterns
+- Sequential and parallel execution
 
-**Evening (30 mins): Patterns**
-- When to use .then() vs async/await
-- Error handling best practices
+**Session 3: Common Pitfalls (30 mins)**
+- Missing await bugs
+- Error swallowing
+- Performance considerations
+
+**Understanding Checkpoint:**
+- Can I choose between .then() and async/await?
+- Can I debug async/await issues?
 
 ---
 
-### Day 16: Advanced Async Patterns
-**Time: 4.5 hours**
+### Day 18: Advanced Async Patterns
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2 hours): Implementations**
-- Sequential promise execution
+**Session 1: Concurrency Control (45 mins)**
+- Sequential execution
 - Parallel with concurrency limit
-- Request queue with rate limiting
+- Request queue management
+
+**Session 2: Resilience (45 mins)**
 - Retry with exponential backoff
-- Timeout for async operations
+- Circuit breaker pattern
+- Timeout patterns
 
-**Afternoon (2 hours): Real-World**
-- Build API client with retry logic
-- Implement rate-limited API caller
-- Create async task scheduler
-- Handle race conditions
+**Session 3: Race Conditions (30 mins)**
+- Identify race conditions
+- Prevent with AbortController
+- Request deduplication
 
-**Evening (30 mins): Review**
-- Common async bugs and fixes
+**Understanding Checkpoint:**
+- Can I implement concurrent request pool?
+- Can I handle race conditions?
 
 ---
 
-### Day 17: Debounce & Throttle (Critical)
-**Time: 4.5 hours**
+### Day 19: Debounce & Throttle (Critical)
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2 hours): Study & Understand**
-- What is debouncing? (wait for silence)
-- What is throttling? (limit execution rate)
+**Session 1: Concepts (45 mins)**
+- Debouncing vs throttling
 - Use cases for each
 - Implementation requirements
 
-**Afternoon (2 hours): Implementations**
-- Implement debounce from scratch (with leading/trailing options)
-- Implement throttle from scratch
-- Implement debounce with immediate execution
+**Session 2: Implementations (45 mins)**
+- Implement debounce with leading/trailing
+- Implement throttle with options
 - Add cancel method to both
 
-**Evening (30 mins): Practice**
+**Session 3: Real-World (30 mins)**
 - Use debounce for search input
 - Use throttle for scroll handler
-- Compare performance
+- Performance testing
 
-**Critical:** You got this completely wrong—focus deeply
+**Understanding Checkpoint:**
+- Can I implement both from memory?
+- Can I choose when to use each?
 
 ---
 
-### Day 18: Memoization & Performance
-**Time: 4.5 hours**
+### Day 20: Memoization & Caching
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2 hours): Study**
+**Session 1: Concepts (45 mins)**
 - What is memoization?
-- When to use it
-- Cache invalidation strategies
-- LRU cache concept
+- When it helps vs hurts
+- Cache key generation
 
-**Afternoon (2 hours): Implementations**
-- Implement simple memoize function
-- Memoize with multiple arguments
-- Implement LRU cache
-- Memoize with TTL (time-to-live)
-- Fibonacci with memoization
+**Session 2: Implementations (45 mins)**
+- Simple memoize function
+- LRU Cache implementation
+- Memoize with TTL
 
-**Evening (30 mins): Patterns**
-- When memoization helps vs hurts
-- Memory trade-offs
+**Session 3: Real-World (30 mins)**
+- API response caching
+- Computed value caching
+- Performance profiling
 
----
-
-### Day 19: Memory Management & Optimization
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- JavaScript garbage collection (mark-and-sweep)
-- Memory leaks (closures, timers, DOM refs, event listeners)
-- WeakMap and WeakSet (garbage collection friendly)
-- Reference vs value
-- Memory profiling basics
-
-**Afternoon (2 hours): Practice**
-- Identify memory leaks in code samples
-- Fix closure-based memory leaks
-- Use WeakMap for caching
-- Clean up timers and event listeners properly
-
-**Evening (30 mins): Checklist**
-- Common memory leak patterns
-- Prevention strategies
+**Understanding Checkpoint:**
+- Can I implement LRU cache efficiently?
+- Can I debug cache invalidation issues?
 
 ---
 
-### Day 20: Async + Performance Testing
-**Time: 4.5 hours**
+### Day 21: Week 3 Review + Debugging Practice
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (1.5 hours): Review**
-- Redo problems from Days 15-19
-- Consolidate learnings
+**Session 1: Review (45 mins)**
+- Practice async debugging
+- Redo checkpoint failures
+- Consolidate async patterns
 
-**Afternoon (2 hours): Coding Challenge**
-- Build complete async utilities library
-- Solve 10 performance optimization problems
-- Implement real-world scenarios
+**Session 2: Real Debugging (60 mins)**
+- Debug 3 real async codebases
+- Use Chrome DevTools async debugging
+- Performance profiling
 
-**Evening (1 hour): TEST WITH ME**
-- Post "Day 20 complete, ready for async test"
-- Implement debounce/throttle/memoize
-- Explain async patterns
-- Handle edge cases
+**Session 3: Portfolio Project (45 mins)**
+- Add search with debounce to Todo app
+- Implement API integration with caching
+- Deploy updated version
 
----
-
-### Day 21: Rest Day & Consolidation
-**Time: 4.5 hours**
-
-**Morning (2 hours): Review Week 1-3**
-- Redo failed test questions
-- Strengthen weak areas
-- Create summary notes
-
-**Afternoon (2 hours): Practice**
-- Solve 20 mixed problems (all topics so far)
-- Explain concepts out loud
-- Identify remaining gaps
-
-**Evening (30 mins): Prepare**
-- Plan for Week 4
-- Set goals for functional programming
+**Weekly Goal:** Complete 3 sessions minimum on 5/7 days
 
 ---
 
-## Week 4: Functional Programming & Advanced Concepts (Days 22-28)
+## Week 4: Functional Programming (Days 22-28)
 
-### Day 22: Functional Programming Foundations
-**Time: 4.5 hours**
+### Day 22: FP Foundations
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2.5 hours): Study**
-- Pure functions (no side effects)
-- Immutability principles
+**Session 1: Core Principles (45 mins)**
+- Pure functions
+- Immutability
 - First-class functions
 - Higher-order functions
-- Function composition
-- Declarative vs imperative
 
-**Resources:**
-- "Functional-Light JavaScript" by Kyle Simpson
-- "Professor Frisby's Mostly Adequate Guide"
+**Session 2: Practice (45 mins)**
+- Convert 5 imperative functions to pure
+- Identify side effects
+- Write declarative transformations
 
-**Afternoon (2 hours): Practice**
-- Convert imperative code to functional
-- Write pure functions
-- Compose functions
-- Chain array methods
+**Session 3: TypeScript (30 mins)**
+- Typing higher-order functions
+- Generic function composition
+- Readonly types
+
+**Understanding Checkpoint:**
+- Can I write pure functions consistently?
+- Can I identify side effects?
 
 ---
 
 ### Day 23: Array Methods Deep Dive
-**Time: 4.5 hours**
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2 hours): Study**
-- `map`, `filter`, `reduce` internals
-- `forEach`, `find`, `findIndex`
-- `some`, `every`
-- `flat`, `flatMap`
-- Method chaining performance
-- Mutation vs non-mutation methods
-
-**Afternoon (2 hours): Implementations**
-- Implement `map` from scratch
-- Implement `filter` from scratch
-- Implement `reduce` from scratch
-- Implement `flat` (all levels)
-- Implement `flatMap`
-
-**Evening (30 mins): Patterns**
-- When to use reduce vs map+filter
+**Session 1: Transformation Methods (45 mins)**
+- `map`, `filter`, `reduce`
+- Method chaining patterns
 - Performance considerations
+
+**Session 2: Implementations (45 mins)**
+- Implement `Array.prototype.map`
+- Implement `Array.prototype.reduce`
+- Implement `Array.prototype.flat`
+
+**Session 3: Real-World (30 mins)**
+- Complex data transformations
+- Performance optimization
+- TypeScript typing
+
+**Understanding Checkpoint:**
+- Can I implement array methods from memory?
+- Can I choose optimal methods for scenarios?
 
 ---
 
 ### Day 24: Currying & Composition
-**Time: 4.5 hours**
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2 hours): Study**
-- Currying concept
-- Partial application
-- Difference between currying and partial application
+**Session 1: Concepts (45 mins)**
+- Currying vs partial application
 - Function composition
-- Pipe vs compose
+- Point-free style
 
-**Afternoon (2 hours): Implementations**
-- Implement curry function (with placeholders)
-- Implement partial application
-- Implement compose function
-- Implement pipe function
-- Build real-world curried utilities
+**Session 2: Implementations (45 mins)**
+- Implement `curry` function
+- Implement `compose` function
+- Implement `pipe` function
 
-**Evening (30 mins): Practice**
-- Curry existing functions
-- Compose complex transformations
+**Session 3: Practice (30 mins)**
+- Curry existing utilities
+- Build data transformation pipelines
+- TypeScript typing
+
+**Understanding Checkpoint:**
+- Can I implement currying from scratch?
+- Can I build functional pipelines?
 
 ---
 
 ### Day 25: ES6+ Features
-**Time: 4.5 hours**
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2.5 hours): Study**
-- Destructuring (all forms: array, object, nested, defaults)
-- Spread operator (objects, arrays)
+**Session 1: Destructuring & Spread (45 mins)**
+- Array and object destructuring
+- Spread operator (arrays, objects)
 - Rest parameters
-- Default parameters
-- Template literals (including tagged templates)
-- Symbols
-- Iterators and generators
+
+**Session 2: Other Features (45 mins)**
+- Template literals
+- Symbols and well-known symbols
 - for...of loops
+- Default parameters
 
-**Afternoon (2 hours): Practice**
-- Use destructuring in complex scenarios
-- Create custom iterators
-- Implement generator functions
-- Write generator for Fibonacci
-- Use symbols for privacy
+**Session 3: Practice (30 mins)**
+- 15 destructuring problems
+- Convert code to use ES6+ features
+- TypeScript integration
 
----
-
-### Day 26: Advanced ES6+ & Proxies
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- Proxy object
-- Reflect API
-- Proxy traps (get, set, has, deleteProperty, etc.)
-- WeakMap and WeakSet
-- Map vs Object, Set vs Array
-- Use cases for each
-
-**Afternoon (2 hours): Implementations**
-- Create validation proxy
-- Implement observable pattern with proxy
-- Build property access logger
-- Use WeakMap for private data
-- Solve problems with Map/Set
-
-**Evening (30 mins): Patterns**
-- When to use Proxy vs Object.defineProperty
-- WeakMap use cases
+**Understanding Checkpoint:**
+- Can I use ES6+ features fluently?
+- Can I debug destructuring issues?
 
 ---
 
-### Day 27: Error Handling & Modules
-**Time: 4.5 hours**
+### Day 26: Iterators & Generators
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2 hours): Study**
-**Error Handling:**
+**Session 1: Iterators (45 mins)**
+- Iterator protocol
+- Iterable protocol
+- Custom iterators
+
+**Session 2: Generators (45 mins)**
+- Generator function syntax
+- `yield` keyword
+- Async generators
+
+**Session 3: Practice (30 mins)**
+- Create custom iterator
+- Build Fibonacci generator
+- Lazy evaluation examples
+
+**Understanding Checkpoint:**
+- Can I create custom iterators?
+- Can I use generators for lazy evaluation?
+
+---
+
+### Day 27: Proxy & Reflect
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Proxy Fundamentals (45 mins)**
+- Proxy object creation
+- Handler and traps
+- Common use cases
+
+**Session 2: Implementations (45 mins)**
+- Validation proxy
+- Observable pattern
+- Property access logging
+
+**Session 3: Real-World (30 mins)**
+- Vue 3 reactivity concepts
+- Performance considerations
+- TypeScript typing
+
+**Understanding Checkpoint:**
+- Can I implement Proxy patterns?
+- Can I debug Proxy-related issues?
+
+---
+
+### Day 28: Week 4 Review + Portfolio Project 3
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Review (45 mins)**
+- Practice FP concepts
+- Redo checkpoint failures
+- Consolidate notes
+
+**Session 2: Portfolio Project (60 mins)**
+- Build Mini Twitter Feed:
+  - Fetch and display tweets
+  - Infinite scroll
+  - Like/favorite functionality
+  - TypeScript throughout
+
+**Session 3: Blog Post (45 mins)**
+- Write: "Functional Programming in JavaScript"
+- Include real examples and benefits
+
+**Weekly Goal:** Complete 3 sessions minimum on 5/7 days
+
+---
+
+## Week 5: JavaScript Advanced + Modules (Days 29-35)
+
+### Day 29: Module Systems
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: History & Concepts (45 mins)**
+- IIFE modules
+- CommonJS vs AMD vs ESM
+- Module loading mechanisms
+
+**Session 2: ES Modules (45 mins)**
+- Named and default exports
+- Dynamic imports
+- Tree shaking concepts
+
+**Session 3: Practice (30 mins)**
+- Convert CommonJS to ESM
+- Implement dynamic imports
+- TypeScript module typing
+
+**Understanding Checkpoint:**
+- Can I work with different module systems?
+- Can I debug module resolution issues?
+
+---
+
+### Day 30: Error Handling & Debugging
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Error Handling (45 mins)**
 - try-catch-finally
-- Error types (TypeError, ReferenceError, SyntaxError)
-- Custom errors
+- Custom error classes
 - Error propagation
 - Global error handling
 
-**Module Systems:**
-- CommonJS vs ES Modules
-- Named vs default exports
-- Dynamic imports
-- Circular dependencies
-- Tree shaking
+**Session 2: Debugging (45 mins)**
+- Chrome DevTools debugging
+- Console debugging techniques
+- Performance profiling
 
-**Afternoon (2 hours): Practice**
-- Create custom error classes
-- Handle async errors properly
-- Use dynamic imports for code splitting
-- Resolve circular dependency issues
+**Session 3: Practice (30 mins)**
+- Implement error boundary patterns
+- Debug 3 real code snippets
+- Create debugging cheat sheet
 
-**Evening (30 mins): Patterns**
-- Error handling strategies
-- Module organization best practices
+**Understanding Checkpoint:**
+- Can I debug any JavaScript issue efficiently?
+- Can I implement proper error handling?
 
 ---
 
-### Day 28: Week 4 Testing & Phase 1 Review
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Review**
-- Functional programming concepts
-- Array method implementations
-- ES6+ features
-- Fill gaps from Days 22-27
-
-**Afternoon (2 hours): Comprehensive Coding**
-- Solve 15 mixed problems (FP, arrays, ES6+)
-- Implement utilities using all learned concepts
-- Real-world scenario problems
-
-**Evening (1 hour): PHASE 1 FINAL TEST WITH ME**
-- Post "Phase 1 complete, ready for comprehensive test"
-- I'll test all JavaScript fundamentals
-- Mixed questions across all 4 weeks
-- Must score 80%+ to move to React
-
-**Blocker:** If <80%, identify weak areas and spend 2-3 extra days
-
----
-
-# PHASE 2: React & Ecosystem (Days 29-49)
-
-## Week 5: React Foundations (Days 29-35)
-
-### Day 29: React Fundamentals
-**Time: 4.5 hours**
-
-**Morning (2.5 hours): Study**
-- React philosophy (declarative, component-based)
-- JSX syntax and transforms
-- Components (functional vs class)
-- Props and prop drilling
-- Children prop
-- Composition vs inheritance
-- Controlled vs uncontrolled components
-
-**Resources:**
-- Official React docs (new beta docs)
-- "React - The Complete Guide" (Udemy - first 4 hours)
-
-**Afternoon (2 hours): Practice**
-- Build 5 basic components
-- Pass data with props
-- Compose components
-- Handle form inputs (controlled)
-
----
-
-### Day 30: State & Events
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- State concept
-- `useState` hook
-- State updates (async, batching)
-- Event handling in React
-- Synthetic events
-- State lifting
-- Immutable state updates
-
-**Afternoon (2 hours): Practice**
-- Build stateful components
-- Lift state to parent
-- Handle multiple input fields
-- Update nested state immutably
-- Build simple counter, todo app
-
-**Evening (30 mins): Patterns**
-- When to lift state
-- State update patterns
-
----
-
-### Day 31: Component Lifecycle & useEffect
-**Time: 4.5 hours**
-
-**Morning (2.5 hours): Study**
-- Component lifecycle (mount, update, unmount)
-- `useEffect` hook
-- Dependency array rules
-- Cleanup functions
-- Effect execution timing
-- Common pitfalls (infinite loops, missing deps)
-- Class lifecycle methods (for comparison)
-
-**Afternoon (2 hours): Practice**
-- Fetch data with useEffect
-- Set up timers with cleanup
-- Subscribe to events with cleanup
-- Handle dependencies correctly
-- Debug infinite effect loops
-
----
-
-### Day 32: Refs & DOM Interaction
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- `useRef` hook
-- Ref vs state (when to use each)
-- Accessing DOM elements
-- Storing mutable values
-- `forwardRef`
-- `useImperativeHandle`
-- Callback refs
-
-**Afternoon (2 hours): Practice**
-- Focus input on mount
-- Measure DOM elements
-- Integrate third-party DOM libraries
-- Build custom input component with ref
-- Store previous values with ref
-
-**Evening (30 mins): Patterns**
-- Ref use cases
-- Ref vs state decision tree
-
----
-
-### Day 33: Lists, Keys & Reconciliation
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- Rendering lists
-- Key prop (why it matters)
-- Reconciliation algorithm
-- Virtual DOM concept
-- React Fiber basics
-- Diffing algorithm
-- Index as key (pitfalls)
-
-**Afternoon (2 hours): Practice**
-- Render dynamic lists
-- Handle key correctly
-- Build todo list with add/remove
-- Reorder items properly
-- Optimize list rendering
-
-**Evening (30 mins): Debugging**
-- Identify key-related bugs
-- Fix reconciliation issues
-
----
-
-### Day 34: Forms & Validation
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- Controlled components (inputs, textarea, select)
-- Uncontrolled components with refs
-- Form submission handling
-- Validation strategies
-- Form libraries (react-hook-form concepts)
-
-**Afternoon (2 hours): Practice**
-- Build multi-field form
-- Implement validation logic
-- Show error messages
-- Handle dynamic form fields
-- Form with checkbox/radio groups
-
-**Evening (30 mins): Patterns**
-- Controlled vs uncontrolled decision
-- Validation approaches
-
----
-
-### Day 35: React Fundamentals Testing
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Review**
-- Components, props, state
-- useEffect, useRef
-- Lists and keys
-- Forms
-
-**Afternoon (2 hours): Build Project**
-- Complete todo app with:
-  - Add/edit/delete
-  - Mark complete
-  - Filter (all/active/completed)
-  - Local storage persistence
-  - Form validation
-
-**Evening (1 hour): TEST WITH ME**
-- Post "Day 35 complete, ready for React basics test"
-- Explain rendering behavior
-- Debug component issues
-- Implement features live
-
----
-
-## Week 6: Advanced React (Days 36-42)
-
-### Day 36: Context API & Prop Drilling Solutions
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- Prop drilling problem
-- Context API (`createContext`, `Provider`, `Consumer`)
-- `useContext` hook
-- Multiple contexts
-- Context performance implications
-- When to use vs avoid context
-
-**Afternoon (2 hours): Practice**
-- Build theme context
-- Build auth context
-- Avoid unnecessary re-renders with context
-- Split contexts by concern
-- Combine context with custom hooks
-
-**Evening (30 mins): Patterns**
-- Context design patterns
-- Performance optimization with context
-
----
-
-### Day 37: Custom Hooks
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- Rules of hooks
-- Creating custom hooks
-- Hook composition
-- Sharing stateful logic
-- Testing custom hooks
-- Common custom hook patterns
-
-**Afternoon (2 hours): Implementations**
-- `useLocalStorage` hook
-- `useFetch` hook
-- `useDebounce` hook
-- `useToggle` hook
-- `usePrevious` hook
-- `useEventListener` hook
-
-**Evening (30 mins): Library**
-- Create personal hook library
-- Document each hook
-
----
-
-### Day 38: Performance Optimization
-**Time: 4.5 hours**
-
-**Morning (2.5 hours): Study**
-- React.memo (when to use)
-- `useMemo` hook
-- `useCallback` hook
-- Difference between useMemo and useCallback
-- Expensive computation memoization
-- Referential equality issues
-- Performance profiling (React DevTools)
-- Code splitting with lazy and Suspense
-
-**Afternoon (2 hours): Practice**
-- Optimize expensive list rendering
-- Prevent unnecessary re-renders
-- Use React.memo appropriately
-- Lazy load components
-- Profile component performance
-- Fix performance issues
-
----
-
-### Day 39: Advanced Patterns
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- Higher-Order Components (HOC)
-- Render props pattern
-- Compound components
-- State reducer pattern
-- Controlled component props
-- React design patterns
-
-**Afternoon (2 hours): Implementations**
-- Build HOC for authentication
-- Create render prop component
-- Implement compound component (Tabs)
-- Build controlled/uncontrolled component
-
-**Evening (30 mins): Compare**
-- HOC vs render props vs hooks
-- When to use each pattern
-
----
-
-### Day 40: Error Boundaries & Portals
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- Error boundaries (class-based)
-- Error catching in React
-- Graceful error handling
-- Portals (ReactDOM.createPortal)
-- Use cases for portals (modals, tooltips)
-
-**Afternoon (2 hours): Practice**
-- Create error boundary component
-- Build modal with portal
-- Build tooltip with portal
-- Handle errors gracefully
-- Create notification system with portal
-
-**Evening (30 mins): Patterns**
-- Error boundary placement strategy
-- Portal use cases
-
----
-
-### Day 41: React 18+ Features
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- Concurrent rendering
-- `useTransition` hook
-- `useDeferredValue` hook
-- Automatic batching
-- Suspense for data fetching
-- Server Components (conceptual understanding)
-- New Suspense features
-
-**Afternoon (2 hours): Practice**
-- Use useTransition for non-urgent updates
-- Implement search with useDeferredValue
-- Optimize with concurrent features
-- Understand Suspense boundaries
-
-**Evening (30 mins): New Features**
-- What's new in React 18+
-- Migration considerations
-
----
-
-### Day 42: Advanced React Testing
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Review**
-- Context, custom hooks
-- Performance optimization
-- Advanced patterns
-- React 18 features
-
-**Afternoon (2 hours): Build Project**
-- E-commerce product filter:
-  - Search with debounce
-  - Category filters
-  - Price range slider
-  - Infinite scroll/pagination
-  - Context for cart
-  - Performance optimizations
-
-**Evening (1 hour): TEST WITH ME**
-- Post "Day 42 complete, ready for advanced React test"
-- Explain re-rendering behavior
-- Debug performance issues
-- Implement optimizations live
-
----
-
-## Week 7: Next.js & Ecosystem (Days 43-49)
-
-### Day 43: Next.js Fundamentals
-**Time: 4.5 hours**
-
-**Morning (2.5 hours): Study**
-- Next.js philosophy (React framework)
-- File-based routing (Pages Router)
-- App Router (Next.js 13+)
-- Pages vs App directory
-- Link component
-- Image component
-- next.config.js basics
-
-**Resources:**
-- Official Next.js docs
-- Next.js 13+ crash course
-
-**Afternoon (2 hours): Practice**
-- Create Next.js project
-- Build multi-page app with routing
-- Use Link and Image components
-- Create nested routes
-- Dynamic routes ([id].js)
-
----
-
-### Day 44: Data Fetching in Next.js
-**Time: 4.5 hours**
-
-**Morning (2.5 hours): Study**
-- Static Generation (SSG) vs Server-Side Rendering (SSR)
-- `getStaticProps`, `getStaticPaths`
-- `getServerSideProps`
-- Incremental Static Regeneration (ISR)
-- App Router data fetching (async components)
-- Client-side fetching
-- SWR and React Query concepts
-
-**Afternoon (2 hours): Practice**
-- Build page with getStaticProps
-- Build page with getServerSideProps
-- Dynamic routes with getStaticPaths
-- Implement ISR
-- Fetch data on client with SWR
-
----
-
-### Day 45: App Router Deep Dive
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- Server Components vs Client Components
-- `use client` directive
-- `use server` directive
-- Layouts and templates
-- Loading and error states (loading.js, error.js)
-- Parallel and intercepted routes
-- Route groups
-
-**Afternoon (2 hours): Practice**
-- Build app with App Router
-- Create layouts
-- Implement loading states
-- Add error boundaries
-- Use server and client components correctly
-
-**Evening (30 mins): Patterns**
-- When to use Server vs Client Components
-- App Router best practices
-
----
-
-### Day 46: API Routes & Middleware
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- API routes in Pages Router
-- Route handlers in App Router
-- Request and response handling
-- Middleware (middleware.ts)
-- Authentication with middleware
-- Edge runtime vs Node runtime
-
-**Afternoon (2 hours): Practice**
-- Create REST API endpoints
-- Handle GET/POST/PUT/DELETE
-- Implement middleware for auth
-- Edge middleware examples
-- Connect to database (conceptual)
-
-**Evening (30 mins): Security**
-- API route security best practices
-- CORS handling
-
----
-
-### Day 47: Styling & Optimization
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- CSS Modules
-- Tailwind CSS with Next.js
-- CSS-in-JS options (styled-components, emotion)
-- Font optimization (next/font)
-- Image optimization
-- Script optimization (next/script)
+### Day 31: Performance Optimization
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Fundamentals (45 mins)**
+- Memory management basics
+- Garbage collection
+- Common performance bottlenecks
+
+**Session 2: Tools & Techniques (45 mins)**
+- Chrome DevTools performance tab
+- Memory profiling
 - Bundle analysis
 
-**Afternoon (2 hours): Practice**
-- Style components with CSS Modules
-- Set up Tailwind CSS
-- Optimize fonts and images
-- Analyze bundle size
-- Lazy load components
+**Session 3: Practice (30 mins)**
+- Optimize 3 code snippets
+- Identify memory leaks
+- Performance testing
+
+**Understanding Checkpoint:**
+- Can I identify performance issues?
+- Can I optimize JavaScript code?
 
 ---
 
-### Day 48: Deployment & Full Next.js Project
-**Time: 4.5 hours**
+### Day 32: Security & Best Practices
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (1.5 hours): Study**
-- Vercel deployment
-- Environment variables
-- Build optimization
-- Caching strategies
-- Static exports
-
-**Afternoon (3 hours): Build Complete Project**
-- Blog with Next.js:
-  - List of posts (SSG)
-  - Individual post pages (SSG with dynamic routes)
-  - Search (client-side)
-  - Categories (static)
-  - Contact form (API route)
-  - Responsive design
-  - Image optimization
-  - SEO optimization
-
----
-
-### Day 49: React Ecosystem & Phase 2 Final Test
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Study**
-- State management overview (Redux, Zustand, Jotai)
-- React Query / TanStack Query (data fetching)
-- Form libraries (React Hook Form, Formik)
-- Testing (Jest, React Testing Library basics)
-- TypeScript with React (basics)
-
-**Afternoon (1.5 hours): Review**
-- Review all React and Next.js concepts
-- Consolidate notes
-- Identify weak areas
-
-**Evening (1.5 hours): PHASE 2 FINAL TEST WITH ME**
-- Post "Phase 2 complete, ready for React/Next.js test"
-- Build features live
-- Explain rendering, SSR vs SSG
-- Debug issues
-- Optimize performance
-- Must score 80%+
-
----
-
-# PHASE 3: DSA for Frontend (Days 50-63)
-
-## Week 8: DSA Foundations (Days 50-56)
-
-### Day 50: DSA Mindset & Big O
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- Why DSA matters for frontend
-- Big O notation (time and space)
-- Common complexities (O(1), O(n), O(log n), O(n²))
-- Best, average, worst case
-- Space complexity
-
-**Resources:**
-- "Grokking Algorithms" (Chapter 1)
-- BigO cheat sheet
-
-**Afternoon (2 hours): Practice**
-- Analyze complexity of existing code
-- Calculate Big O for 20 code snippets
-- Optimize code based on complexity
-
-**Evening (30 mins): Reference**
-- Create Big O quick reference
-- Common pattern complexities
-
----
-
-### Day 51: Arrays & Strings
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Concepts**
-- Array operations (insert, delete, search)
-- Two-pointer technique
-- Sliding window
-- String manipulation patterns
-
-**Afternoon (3 hours): LeetCode Practice**
-**Easy (10 problems):**
-- Two Sum
-- Best Time to Buy and Sell Stock
-- Contains Duplicate
-- Valid Anagram
-- Valid Palindrome
-- Reverse String
-- Merge Sorted Array
-- Remove Duplicates from Sorted Array
-- Plus One
-- Move Zeroes
-
-**Target:** Solve each in <20 mins
-
----
-
-### Day 52: Arrays & Strings (Advanced)
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Patterns**
-- Sliding window (fixed and variable)
-- Two-pointer (same direction, opposite)
-- Prefix sum
-- Kadane's algorithm
-
-**Afternoon (3 hours): LeetCode Practice**
-**Medium (8 problems):**
-- Longest Substring Without Repeating Characters
-- 3Sum
-- Container With Most Water
-- Product of Array Except Self
-- Maximum Subarray
-- Group Anagrams
-- Longest Palindromic Substring
-- String to Integer (atoi)
-
-**Target:** Solve each in <30 mins
-
----
-
-### Day 53: Hash Tables & Sets
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Concepts**
-- Hash table implementation
-- Collision resolution
-- Map vs Object in JavaScript
-- Set operations
-- When to use hash tables
-
-**Afternoon (3 hours): LeetCode Practice**
-**Easy to Medium (10 problems):**
-- Two Sum (with hash map)
-- Valid Anagram (optimal solution)
-- Intersection of Two Arrays
-- Happy Number
-- Isomorphic Strings
-- Word Pattern
-- Contains Duplicate II
-- Logger Rate Limiter
-- Design HashMap
-- First Unique Character in a String
-
----
-
-### Day 54: Stacks & Queues
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Concepts**
-- Stack (LIFO) - implementation and use cases
-- Queue (FIFO) - implementation and use cases
-- Monotonic stack
-- Deque (double-ended queue)
-
-**Afternoon (3 hours): LeetCode Practice**
-**Easy to Medium (10 problems):**
-- Valid Parentheses
-- Implement Queue using Stacks
-- Implement Stack using Queues
-- Min Stack
-- Backspace String Compare
-- Daily Temperatures
-- Next Greater Element I
-- Evaluate Reverse Polish Notation
-- Simplify Path
-- Decode String
-
----
-
-### Day 55: Linked Lists
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Concepts**
-- Singly linked list
-- Doubly linked list
-- Fast & slow pointer (Floyd's cycle detection)
-- Reverse linked list pattern
-
-**Afternoon (3 hours): LeetCode Practice**
-**Easy to Medium (8 problems):**
-- Reverse Linked List
-- Merge Two Sorted Lists
-- Linked List Cycle
-- Remove Nth Node From End
-- Middle of Linked List
-- Palindrome Linked List
-- Intersection of Two Linked Lists
-- Add Two Numbers
-
----
-
-### Day 56: Trees (Part 1)
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Concepts**
-- Binary tree terminology
-- Tree traversals (inorder, preorder, postorder)
-- DFS vs BFS
-- Level-order traversal
-
-**Afternoon (3 hours): LeetCode Practice**
-**Easy to Medium (8 problems):**
-- Maximum Depth of Binary Tree
-- Same Tree
-- Invert Binary Tree
-- Symmetric Tree
-- Path Sum
-- Binary Tree Level Order Traversal
-- Binary Tree Inorder Traversal
-- Binary Tree Preorder Traversal
-
----
-
-## Week 9: DSA Intermediate (Days 57-63)
-
-### Day 57: Trees (Part 2)
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Concepts**
-- Binary Search Tree (BST)
-- BST properties and operations
-- Lowest Common Ancestor
-- Tree construction from traversals
-
-**Afternoon (3 hours): LeetCode Practice**
-**Medium (8 problems):**
-- Validate Binary Search Tree
-- Kth Smallest Element in BST
-- Lowest Common Ancestor of BST
-- Binary Tree Right Side View
-- Construct Binary Tree from Preorder and Inorder
-- Path Sum II
-- Count Good Nodes in Binary Tree
-- Diameter of Binary Tree
-
----
-
-### Day 58: Recursion & Backtracking
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Concepts**
-- Recursion fundamentals
-- Base case and recursive case
-- Backtracking pattern
-- When to use backtracking
-
-**Afternoon (3 hours): LeetCode Practice**
-**Easy to Medium (8 problems):**
-- Fibonacci Number
-- Climbing Stairs
-- Pow(x, n)
-- Subsets
-- Permutations
-- Combination Sum
-- Generate Parentheses
-- Letter Combinations of Phone Number
-
----
-
-### Day 59: Dynamic Programming (Intro)
-**Time: 4.5 hours**
-
-**Morning (2 hours): Concepts**
-- DP philosophy (optimal substructure, overlapping subproblems)
-- Memoization (top-down)
-- Tabulation (bottom-up)
-- 1D DP patterns
-
-**Afternoon (2.5 hours): LeetCode Practice**
-**Easy to Medium (6 problems):**
-- Climbing Stairs (DP approach)
-- Min Cost Climbing Stairs
-- House Robber
-- Maximum Subarray (DP approach)
-- Coin Change
-- Longest Increasing Subsequence
-
----
-
-### Day 60: Graphs (Basics)
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Concepts**
-- Graph representation (adjacency list, matrix)
-- DFS in graphs
-- BFS in graphs
-- Connected components
-
-**Afternoon (3 hours): LeetCode Practice**
-**Easy to Medium (6 problems):**
-- Number of Islands
-- Clone Graph
-- Pacific Atlantic Water Flow
-- Course Schedule
-- Number of Connected Components
-- Graph Valid Tree
-
----
-
-### Day 61: Binary Search
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Concepts**
-- Binary search template
-- Search space reduction
-- Binary search on answer
-- Rotated array searches
-
-**Afternoon (3 hours): LeetCode Practice**
-**Easy to Medium (8 problems):**
-- Binary Search
-- First Bad Version
-- Search Insert Position
-- Find Peak Element
-- Search in Rotated Sorted Array
-- Find Minimum in Rotated Sorted Array
-- Koko Eating Bananas
-- Time Based Key-Value Store
-
----
-
-### Day 62: Heaps & Priority Queue
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Concepts**
-- Min heap and max heap
-- Heap operations
-- Priority queue use cases
-- Top K patterns
-
-**Afternoon (3 hours): LeetCode Practice**
-**Easy to Medium (6 problems):**
-- Kth Largest Element in Array
-- Top K Frequent Elements
-- Merge K Sorted Lists
-- Find Median from Data Stream
-- Last Stone Weight
-- K Closest Points to Origin
-
----
-
-### Day 63: DSA Phase Final Test
-**Time: 4.5 hours**
-
-**Morning (1.5 hours): Review**
-- Review all data structures
-- Review patterns
-- Redo difficult problems
-
-**Afternoon (2 hours): Mixed Practice**
-- Solve 10 random medium problems
-- Time yourself (<30 mins each)
-- Focus on explaining approach
-
-**Evening (1 hour): TEST WITH ME**
-- Post "Phase 3 complete, ready for DSA test"
-- Solve 3 problems live (easy, medium, medium)
-- Explain approach before coding
-- Analyze complexity
-- Must complete all 3 correctly
-
----
-
-# PHASE 4: System Design (Days 64-77)
-
-## Week 10: Frontend System Design Foundations (Days 64-70)
-
-### Day 64: System Design Fundamentals
-**Time: 4.5 hours**
-
-**Morning (2.5 hours): Study**
-- What is frontend system design?
-- Design interview format and expectations
-- Gathering requirements
-- Defining scope
-- Clarifying questions framework
-- High-level vs detailed design
-
-**Resources:**
-- "Frontend System Design Guidebook" by GreatFrontEnd
-- System design primer
-
-**Afternoon (2 hours): Practice**
-- Watch 2 system design interview videos
-- Practice asking clarifying questions
-- Create requirements checklist template
-
----
-
-### Day 65: Component Architecture & State Management
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- Component design principles
-- Component composition
-- Prop drilling vs state management
-- When to use Context vs Redux vs Zustand
-- State normalization
-- Client state vs server state
-
-**Afternoon (2.5 hours): Practice**
-- Design component hierarchy for:
-  - E-commerce product page
-  - Social media feed
-  - Dashboard with widgets
-- Decide state management approach for each
-- Draw component trees
-
----
-
-### Day 66: Data Fetching & Caching
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- Data fetching strategies (fetch on mount, lazy, prefetch)
-- Caching strategies (in-memory, localStorage, IndexedDB)
-- Cache invalidation
-- Optimistic updates
-- Polling vs WebSockets vs SSE
-- React Query / SWR patterns
-
-**Afternoon (2.5 hours): Practice**
-- Design data flow for:
-  - News feed with infinite scroll
-  - Real-time chat application
-  - Dashboard with live data
-- Choose fetching and caching strategy
-- Handle loading, error, empty states
-
----
-
-### Day 67: Performance Optimization
-**Time: 4.5 hours**
-
-**Morning (2.5 hours): Study**
-- Performance metrics (FCP, LCP, CLS, FID, TTI)
-- Code splitting strategies
-- Lazy loading (images, components, routes)
-- Bundle optimization
-- Tree shaking
-- Critical rendering path
-- Resource prioritization
-- Virtualization (windowing)
-
-**Afternoon (2 hours): Practice**
-- Optimize designs from Day 65:
-  - Identify performance bottlenecks
-  - Apply code splitting
-  - Add lazy loading
-  - Implement virtualization where needed
-- Create performance checklist
-
----
-
-### Day 68: Accessibility & Responsive Design
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- WCAG guidelines (A, AA, AAA)
-- Semantic HTML
-- ARIA roles and attributes
-- Keyboard navigation
-- Screen reader considerations
-- Responsive design principles
-- Mobile-first approach
-- Touch vs mouse interactions
-
-**Afternoon (2.5 hours): Practice**
-- Add accessibility to previous designs:
-  - Keyboard navigation
-  - ARIA labels
-  - Focus management
-  - Screen reader support
-- Design responsive layouts:
-  - Mobile, tablet, desktop
-  - Breakpoint strategy
-
----
-
-### Day 69: API Design & Error Handling
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
-- REST API design
-- GraphQL basics
-- API versioning
-- Rate limiting
-- Error handling strategies
-- Retry logic
-- Fallback mechanisms
-- Graceful degradation
-
-**Afternoon (2.5 hours): Practice**
-- Design API layer for applications:
-  - Define endpoints
-  - Handle errors gracefully
-  - Implement retry logic
-  - Add loading states
-  - Plan fallbacks
-
----
-
-### Day 70: Security & Testing Strategy
-**Time: 4.5 hours**
-
-**Morning (2 hours): Study**
+**Session 1: Security Fundamentals (45 mins)**
 - XSS prevention
 - CSRF protection
 - Content Security Policy
-- Authentication (JWT, OAuth, session)
-- Authorization patterns
-- HTTPS and secure connections
-- Testing pyramid (unit, integration, e2e)
-- Test strategy for components
+- Secure coding practices
 
-**Afternoon (2.5 hours): Practice**
-- Add security to previous designs:
-  - Authentication flow
-  - Authorization checks
-  - Secure API calls
-  - Input sanitization
-- Define testing strategy:
-  - What to unit test
-  - What to integration test
-  - E2E test scenarios
+**Session 2: Real-World Security (45 mins)**
+- Sanitize user input
+- Secure API calls
+- Authentication patterns
 
----
+**Session 3: Practice (30 mins)**
+- Fix 5 security vulnerabilities
+- Implement secure patterns
+- Code review for security
 
-## Week 11: Real-World System Design (Days 71-77)
-
-### Day 71: Design Common Applications (Part 1)
-**Time: 4.5 hours**
-
-**Full Day: Design 2 Systems**
-
-**System 1: News Feed (2 hours)**
-- Requirements gathering
-- Component architecture
-- Data fetching (infinite scroll)
-- State management
-- Performance (virtualization)
-- Real-time updates
-
-**System 2: Autocomplete/Typeahead (2.5 hours)**
-- Requirements
-- Debouncing
-- Caching results
-- Keyboard navigation
-- Accessibility
-- API design
-- Performance
-
-**Document both with diagrams**
+**Understanding Checkpoint:**
+- Can I identify security vulnerabilities?
+- Can I implement secure coding practices?
 
 ---
 
-### Day 72: Design Common Applications (Part 2)
-**Time: 4.5 hours**
+### Day 33: Build Tools & Workflow
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Full Day: Design 2 Systems**
+**Session 1: Modern Tooling (45 mins)**
+- Bundlers (Webpack, Vite, Parcel)
+- Transpilers (Babel, TypeScript)
+- Linters and formatters
 
-**System 1: Image Gallery/Carousel (2 hours)**
-- Requirements
-- Lazy loading images
-- Thumbnail generation
-- Swipe gestures
-- Keyboard controls
-- Responsive design
-- Performance
+**Session 2: Configuration (45 mins)**
+- Basic Webpack/Vite config
+- TypeScript configuration
+- ESLint/Prettier setup
 
-**System 2: Chat Application (2.5 hours)**
-- Requirements
-- Real-time messaging (WebSocket)
-- Message history
-- Online status
-- Typing indicators
-- Optimistic updates
-- State management
+**Session 3: Practice (30 mins)**
+- Set up build pipeline
+- Configure for production
+- Optimize build performance
 
----
-
-### Day 73: Design Common Applications (Part 3)
-**Time: 4.5 hours**
-
-**Full Day: Design 2 Systems**
-
-**System 1: E-commerce Product Listing (2 hours)**
-- Requirements
-- Filters and sorting
-- Pagination vs infinite scroll
-- URL state management
-- Performance
-- SEO considerations
-
-**System 2: Video Player (2.5 hours)**
-- Requirements
-- Controls (play, pause, seek, volume)
-- Quality selection
-- Subtitles/captions
-- Keyboard shortcuts
-- Accessibility
-- Performance (buffering)
+**Understanding Checkpoint:**
+- Can I configure build tools?
+- Can I optimize build processes?
 
 ---
 
-### Day 74: Design Common Applications (Part 4)
-**Time: 4.5 hours**
+### Day 34: Phase 1 Review + Portfolio Enhancement
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Full Day: Design 2 Systems**
+**Session 1: Comprehensive Review (60 mins)**
+- Review all JavaScript concepts
+- Practice checkpoint failures
+- Identify remaining gaps
 
-**System 1: Dashboard with Widgets (2 hours)**
-- Requirements
-- Widget library
-- Drag and drop
-- Customization
-- Data refresh
-- Performance
+**Session 2: Portfolio Polish (45 mins)**
+- Add TypeScript to all projects
+- Improve styling and UX
+- Add proper error handling
 
-**System 2: Notification System (2.5 hours)**
-- Requirements
-- Real-time notifications
-- Notification types
-- Persistence
-- Read/unread state
-- Permissions (browser notifications)
+**Session 3: Blog Post (45 mins)**
+- Write: "JavaScript Performance Optimization Guide"
+- Include real examples and tools
+
+**Weekly Goal:** Complete 3 sessions minimum on 5/7 days
 
 ---
 
-### Day 75: Advanced Topics
-**Time: 4.5 hours**
+### Day 35: Phase 1 Final Assessment
+**Sessions: 3-4 | Flexible Time: 3-4 hours**
 
-**Morning (2 hours): Study**
-- Micro-frontends
-- Server-side rendering (SSR) architecture
-- Static site generation (SSG)
-- Progressive Web Apps (PWA)
-- Web Workers
-- Service Workers
-- CDN strategy
-- Multi-region deployment
+**Session 1: Self-Assessment (60 mins)**
+- Test all core JavaScript concepts
+- Implement key utilities from memory
+- Debug complex code snippets
 
-**Afternoon (2.5 hours): Practice**
-- Design architecture for:
-  - Multi-tenant application
-  - Global application (i18n, multiple regions)
-  - Offline-first application
-- Discuss trade-offs for each
+**Session 2: Portfolio Review (45 mins)**
+- Review all 3 projects
+- Ensure TypeScript coverage
+- Check deployment and performance
 
----
+**Session 3: Gap Analysis (45 mins)**
+- Identify weak areas
+- Plan remediation
+- Adjust timeline if needed
 
-### Day 76: Trade-offs & Scalability
-**Time: 4.5 hours**
+**Phase 1 Completion Checkpoint:**
+- [ ] Can implement event loop concepts
+- [ ] Can debug closure/memory issues
+- [ ] Can work with prototypes and classes
+- [ ] Can handle async patterns proficiently
+- [ ] Can use TypeScript effectively
+- [ ] Portfolio projects deployed and polished
 
-**Morning (2 hours): Study**
-- Common trade-offs in frontend:
-  - Performance vs maintainability
-  - SSR vs CSR vs SSG
-  - Monolith vs micro-frontends
-  - REST vs GraphQL
-  - Client state vs server state
-- Scalability patterns
-- Monitoring and observability
-
-**Afternoon (2.5 hours): Practice**
-- Revisit previous designs
-- Identify trade-offs made
-- Discuss alternatives
-- Plan for scale (10x, 100x traffic)
+**Phase 1 Status:** [ ] Completed | [ ] Needs More Work
 
 ---
 
-### Day 77: System Design Phase Test
-**Time: 4.5 hours**
+# PHASE 2: React & Ecosystem (Days 36-60)
 
-**Morning (1.5 hours): Review**
-- Review all system designs
+## Week 6: React Foundations (Days 36-42)
+
+### Day 36: React Fundamentals + JSX
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: React Philosophy (45 mins)**
+- Declarative UI paradigm
+- Component-based architecture
+- Virtual DOM concept
+- One-way data flow
+
+**Session 2: JSX Deep Dive (45 mins)**
+- JSX transforms
+- Expressions in JSX
+- Conditional rendering
+- List rendering basics
+
+**Session 3: Practice (30 mins)**
+- Build 3 basic components
+- Implement conditional rendering
+- Practice list rendering
+
+**Understanding Checkpoint:**
+- Can I explain React's core concepts?
+- Can I build basic components fluently?
+
+---
+
+### Day 37: State & Events
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: useState Hook (45 mins)**
+- State concept in React
+- `useState` syntax and behavior
+- Lazy initialization
+- Functional updates
+
+**Session 2: Events (45 mins)**
+- Event handling in React
+- Synthetic events
+- Passing arguments to handlers
+- Event pooling (historical context)
+
+**Session 3: Practice (30 mins)**
+- Counter component variations
+- Form with multiple inputs
+- State lifting exercises
+
+**Understanding Checkpoint:**
+- Can I manage state effectively?
+- Can I handle events properly?
+
+---
+
+### Day 38: useEffect & Lifecycle
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: useEffect Fundamentals (45 mins)**
+- Effect execution timing
+- Dependency array rules
+- Cleanup functions
+- Common pitfalls
+
+**Session 2: Practice (45 mins)**
+- Fetch data on mount
+- Subscribe to events with cleanup
+- Timer with cleanup
+- Window resize listener
+
+**Session 3: Debugging (30 mins)**
+- Infinite loop debugging
+- Missing dependency fixes
+- ESLint exhaustive-deps
+
+**Understanding Checkpoint:**
+- Can I use useEffect correctly?
+- Can I debug effect-related issues?
+
+---
+
+### Day 39: useRef & DOM Interaction
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: useRef Hook (45 mins)**
+- Ref vs state comparison
+- Accessing DOM elements
+- Storing mutable values
+- Ref current property
+
+**Session 2: Advanced Ref Patterns (45 mins)**
+- `forwardRef` usage
+- `useImperativeHandle`
+- Callback refs
+- Ref cleanup
+
+**Session 3: Practice (30 mins)**
+- Focus input on mount
+- Measure DOM elements
+- Store previous values
+
+**Understanding Checkpoint:**
+- Can I choose between ref and state?
+- Can I implement ref patterns?
+
+---
+
+### Day 40: Lists, Keys & Reconciliation
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Rendering Lists (45 mins)**
+- map() for rendering
+- Key prop importance
+- Good vs bad keys
+- Index as key considerations
+
+**Session 2: Reconciliation (45 mins)**
+- Virtual DOM diffing
+- Reconciliation algorithm
+- React Fiber overview
+- Performance implications
+
+**Session 3: Practice (30 mins)**
+- Todo list with add/remove/reorder
+- Sortable list implementation
+- Key stability debugging
+
+**Understanding Checkpoint:**
+- Can I render lists efficiently?
+- Can I debug reconciliation issues?
+
+---
+
+### Day 41: Forms & Controlled Components
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Controlled Components (45 mins)**
+- Controlled vs uncontrolled
+- Input, textarea, select
+- Checkbox and radio handling
+- File inputs
+
+**Session 2: Form State Management (45 mins)**
+- Single handler for multiple inputs
+- Dynamic form fields
+- Form validation approaches
+- Error display
+
+**Session 3: Practice (30 mins)**
+- Multi-field form implementation
+- Real-time validation
+- Form submission handling
+
+**Understanding Checkpoint:**
+- Can I build complex forms?
+- Can I implement validation patterns?
+
+---
+
+### Day 42: Week 6 Review + Project Integration
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Review (45 mins)**
+- Practice React fundamentals
+- Redo checkpoint failures
+- Consolidate concepts
+
+**Session 2: Portfolio Enhancement (60 mins)**
+- Add React components to existing projects
+- Implement state management
+- Improve user interactions
+
+**Session 3: Blog Post (45 mins)**
+- Write: "React Hooks Deep Dive"
+- Include real examples and best practices
+
+**Weekly Goal:** Complete 3 sessions minimum on 5/7 days
+
+---
+
+## Week 7: Advanced React (Days 43-49)
+
+### Day 43: Context API
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Context Fundamentals (45 mins)**
+- Prop drilling problem
+- createContext, Provider, Consumer
+- useContext hook
+- Default values
+
+**Session 2: Patterns (45 mins)**
+- Multiple contexts
+- Context composition
+- Performance considerations
+- When NOT to use context
+
+**Session 3: Practice (30 mins)**
+- Theme context implementation
+- Auth context with user state
+- Combine with custom hooks
+
+**Understanding Checkpoint:**
+- Can I implement context patterns?
+- Can I optimize context performance?
+
+---
+
+### Day 44: Custom Hooks
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Hook Rules & Patterns (45 mins)**
+- Rules of hooks
+- Custom hook conventions
+- Logic extraction patterns
+- Hook composition
+
+**Session 2: Common Hooks (45 mins)**
+- `useLocalStorage`
+- `useFetch` with loading/error
+- `useDebounce`
+- `useThrottle`
+
+**Session 3: Practice (30 mins)**
+- `useToggle` implementation
+- `usePrevious` hook
+- `useEventListener`
+- TypeScript typing
+
+**Understanding Checkpoint:**
+- Can I create custom hooks?
+- Can I type hooks correctly?
+
+---
+
+### Day 45: Performance Optimization
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: React.memo (45 mins)**
+- What React.memo does
+- When to use it
+- Custom comparison function
+- Common mistakes
+
+**Session 2: useMemo & useCallback (45 mins)**
+- useMemo for computed values
+- useCallback for functions
+- Dependency management
+- Performance trade-offs
+
+**Session 3: Practice (30 mins)**
+- Optimize expensive list rendering
+- Prevent unnecessary re-renders
+- Profile with React DevTools
+
+**Understanding Checkpoint:**
+- Can I optimize React performance?
+- Can I choose appropriate optimization techniques?
+
+---
+
+### Day 46: Advanced Patterns
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Component Patterns (45 mins)**
+- Higher-Order Components (HOC)
+- Render props pattern
+- Compound components
+- Controlled vs uncontrolled
+
+**Session 2: State Patterns (45 mins)**
+- State reducer pattern
+- State machine concepts
+- Lifted content pattern
+- Provider pattern
+
+**Session 3: Practice (30 mins)**
+- withAuth HOC implementation
+- Compound Tabs component
+- Controlled component with API
+
+**Understanding Checkpoint:**
+- Can I implement advanced patterns?
+- Can I choose appropriate patterns?
+
+---
+
+### Day 47: Error Boundaries & Portals
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Error Boundaries (45 mins)**
+- Error boundary concept
+- getDerivedStateFromError
+- componentDidCatch
+- Error catching scope
+
+**Session 2: Portals (45 mins)**
+- ReactDOM.createPortal
+- Portal use cases
+- Event bubbling through portals
+- Accessibility considerations
+
+**Session 3: Practice (30 mins)**
+- Create reusable error boundary
+- Modal with portal implementation
+- Toast notification system
+
+**Understanding Checkpoint:**
+- Can I implement error handling?
+- Can I use portals appropriately?
+
+---
+
+### Day 48: React 18+ Features
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Concurrent React (45 mins)**
+- Concurrent rendering concept
+- Automatic batching
+- Transitions
+- What problems it solves
+
+**Session 2: New Hooks (45 mins)**
+- useTransition for non-urgent updates
+- useDeferredValue for expensive computations
+- useId for unique IDs
+- Suspense concepts
+
+**Session 3: Practice (30 mins)**
+- Search with useTransition
+- Expensive filter with useDeferredValue
+- Compare with throttle/debounce
+
+**Understanding Checkpoint:**
+- Can I use React 18+ features?
+- Can I explain concurrent rendering?
+
+---
+
+### Day 49: Week 7 Review + Portfolio Project 4
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Review (45 mins)**
+- Practice advanced React concepts
+- Redo checkpoint failures
 - Consolidate patterns
-- Create design checklist
 
-**Afternoon (1.5 hours): Practice**
-- Redesign 2 systems from scratch
-- Time yourself (45 mins each)
+**Session 2: Portfolio Project (60 mins)**
+- Build E-commerce Product Filter:
+  - Search with debounce
+  - Category/price filters
+  - Infinite scroll
+  - Cart with Context
+  - Performance optimizations
 
-**Evening (1.5 hours): TEST WITH ME**
-- Post "Phase 4 complete, ready for system design test"
-- Design 1 complete system live (1 hour)
-- Must cover:
-  - Requirements
-  - Architecture
-  - State management
-  - Performance
-  - Accessibility
-  - Trade-offs
-- I'll interrupt with follow-ups
+**Session 3: Blog Post (45 mins)**
+- Write: "Advanced React Patterns and Performance"
+- Include real examples and trade-offs
+
+**Weekly Goal:** Complete 3 sessions minimum on 5/7 days
 
 ---
 
-# PHASE 5: Final Preparation & Mock Interviews (Days 78-84)
+## Week 8: Next.js & Ecosystem (Days 50-56)
 
-### Day 78: Behavioral Preparation
-**Time: 4.5 hours**
+### Day 50: Next.js Fundamentals
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Morning (2 hours): Prepare Stories**
-- STAR method (Situation, Task, Action, Result)
-- Prepare 10 stories:
-  - Leadership/ownership
-  - Conflict resolution
-  - Technical decision
-  - Failure and learning
-  - Challenging project
-  - Performance optimization
-  - Scalability challenge
-  - Team collaboration
-  - Tight deadline
-  - Innovation
+**Session 1: Next.js Overview (45 mins)**
+- Why Next.js benefits
+- Pages Router vs App Router
+- File-based routing
+- Project structure
 
-**Afternoon (2 hours): Practice**
-- Record yourself answering
-- Refine each story to 2-3 mins
-- Practice conciseness
+**Session 2: Routing (45 mins)**
+- Static routes
+- Dynamic routes ([id])
+- Catch-all routes
+- Route groups
 
-**Evening (30 mins): Company Research**
-- Research target companies
-- Understand their products
-- Read engineering blogs
+**Session 3: Practice (30 mins)**
+- Create Next.js project
+- Build multi-page app
+- Dynamic routes implementation
+
+**Understanding Checkpoint:**
+- Can I work with Next.js routing?
+- Can I structure Next.js projects?
 
 ---
 
-### Day 79: Full Mock Interview - JavaScript
-**Time: 4.5 hours**
+### Day 51: Data Fetching (App Router)
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Full Mock Interview with Me (2 hours):**
-- JavaScript fundamentals (30 mins)
-- Coding problem (45 mins)
-- System discussion (45 mins)
+**Session 1: Server Components (45 mins)**
+- Server vs Client Components
+- Default Server Component behavior
+- 'use client' directive
+- Benefits and trade-offs
 
-**Post-Interview (2.5 hours):**
-- Review feedback
-- Fix weak areas
-- Redo failed questions
-- Practice improvements
+**Session 2: Data Fetching (45 mins)**
+- Async Server Components
+- fetch() in Server Components
+- Caching and revalidation
+- Dynamic rendering
 
----
+**Session 3: Practice (30 mins)**
+- Fetch data in Server Component
+- Mix Server and Client Components
+- Streaming with loading.js
 
-### Day 80: Full Mock Interview - React
-**Time: 4.5 hours**
-
-**Full Mock Interview with Me (2 hours):**
-- React concepts (30 mins)
-- Build feature live (1 hour)
-- Performance optimization (30 mins)
-
-**Post-Interview (2.5 hours):**
-- Review feedback
-- Rebuild feature better
-- Practice verbal explanations
+**Understanding Checkpoint:**
+- Can I implement data fetching patterns?
+- Can I choose Server vs Client Components?
 
 ---
 
-### Day 81: Full Mock Interview - System Design
-**Time: 4.5 hours**
+### Day 52: API Routes & Middleware
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Full Mock Interview with Me (1.5 hours):**
-- Design complete system
-- Handle follow-ups
-- Discuss trade-offs
+**Session 1: API Routes (45 mins)**
+- Route Handlers (App Router)
+- Request/Response handling
+- HTTP methods
+- Route parameters
 
-**Post-Interview (3 hours):**
-- Review feedback
-- Redesign with improvements
-- Create final design templates
+**Session 2: Middleware (45 mins)**
+- middleware.ts location
+- Path matching
+- Request modification
+- Authentication patterns
 
----
+**Session 3: Practice (30 mins)**
+- RESTful API endpoints
+- Auth middleware implementation
+- Rate limiting concepts
 
-### Day 82: Problem Solving Marathon
-**Time: 4.5 hours**
-
-**Full Day: Timed Problem Solving**
-- 2 easy LeetCode (15 mins each)
-- 4 medium LeetCode (30 mins each)
-- 2 hard LeetCode (45 mins each)
-
-**No breaks between problems - simulate real conditions**
-
-**Evening:** Review solutions, note patterns
+**Understanding Checkpoint:**
+- Can I build API routes?
+- Can I implement middleware?
 
 ---
 
-### Day 83: Weak Area Blitz
-**Time: 4.5 hours**
+### Day 53: Styling & Optimization
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-**Identify Your Top 3 Weakest Areas:**
-- From all tests and mocks
-- Spend 1.5 hours on each
+**Session 1: Styling Options (45 mins)**
+- CSS Modules
+- Tailwind CSS integration
+- CSS-in-JS options
+- Global styles
 
-**Practice:**
-- Redo failed questions
-- Solve similar problems
-- Explain concepts clearly
-- Build confidence
+**Session 2: Built-in Optimization (45 mins)**
+- next/image optimization
+- next/font optimization
+- next/script loading
+- Automatic code splitting
 
----
+**Session 3: Practice (30 mins)**
+- Style app with preferred method
+- Optimize images and fonts
+- Configure performance settings
 
-### Day 84: Final Review & Confidence Building
-**Time: 4.5 hours**
-
-**Morning (2 hours): Final Review**
-- Skim all notes
-- Review JavaScript cheat sheets
-- Review React patterns
-- Review system design templates
-- Review behavioral stories
-
-**Afternoon (1.5 hours): Light Practice**
-- 5 easy problems (confidence boost)
-- Explain 3 concepts aloud
-- Design 1 simple system
-
-**Evening (1 hour): Mental Preparation**
-- Visualize successful interview
-- Relax and rest
-- Prepare logistics (quiet space, internet, etc.)
+**Understanding Checkpoint:**
+- Can I implement styling solutions?
+- Can I optimize Next.js apps?
 
 ---
 
-# Vue.js Quick Wrap-up (Optional: 1-2 Days)
+### Day 54: State Management Overview
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-## If You Need Vue.js Coverage
+**Session 1: Redux (45 mins)**
+- Redux philosophy
+- Actions, reducers, store
+- Redux Toolkit modern approach
+- When Redux makes sense
 
-### Vue.js Day 1: Core Concepts
-**Time: 4.5 hours**
+**Session 2: Lighter Alternatives (45 mins)**
+- Zustand (simple, hooks-based)
+- Jotai (atomic state)
+- Recoil overview
+- Comparison and selection
 
-**Morning (2 hours):**
-- Vue instance and lifecycle
-- Template syntax
-- Directives (v-if, v-for, v-bind, v-on)
-- Computed properties vs methods
-- Watchers
+**Session 3: Server State (30 mins)**
+- TanStack Query (React Query)
+- SWR library
+- Server vs client state
+- Caching strategies
 
-**Afternoon (2 hours):**
-- Components (props, events)
-- Slots
-- Component communication
-- Vuex basics (state management)
+**Understanding Checkpoint:**
+- Can I choose appropriate state management?
+- Can I implement state solutions?
 
-**Evening (30 mins):**
-- Vue vs React comparison
-- When to use what
+---
 
-### Vue.js Day 2: Advanced (Optional)
-**Time: 4.5 hours**
+### Day 55: Full Next.js Project
+**Sessions: 3-4 | Flexible Time: 3-4 hours**
 
-**Morning (2 hours):**
-- Composition API
-- Vue Router
-- Lifecycle hooks
+**Session 1: Setup & Structure (60 mins)**
+- Project setup (App Router)
+- Layout structure
+- TypeScript configuration
+
+**Session 2: Core Features (60 mins)**
+- Home page (list posts - SSG)
+- Post page (dynamic route)
+- Category pages
+- Search functionality
+
+**Session 3: Polish (45 mins)**
+- SEO optimization
+- Responsive design
+- Image optimization
+- Error boundaries
+
+**Session 4: Deployment (45 mins)**
+- Vercel deployment
+- Environment variables
+- Performance monitoring
+
+**Understanding Checkpoint:**
+- Can I build complete Next.js applications?
+- Can I deploy production-ready apps?
+
+---
+
+### Day 56: Week 8 Review + Portfolio Enhancement
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Review (45 mins)**
+- Practice React/Next.js concepts
+- Redo checkpoint failures
+- Consolidate knowledge
+
+**Session 2: Portfolio Polish (60 mins)**
+- Add Next.js projects
+- Improve performance
+- Add proper error handling
+- Enhance user experience
+
+**Session 3: Blog Post (45 mins)**
+- Write: "Next.js App Router Complete Guide"
+- Include real examples and best practices
+
+**Weekly Goal:** Complete 3 sessions minimum on 5/7 days
+
+---
+
+## Week 9: React Ecosystem + AI Integration (Days 57-60)
+
+### Day 57: TypeScript + React Best Practices
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Component Typing (45 mins)**
+- FC vs function components
+- Props with children typing
+- Event handler types
+- Ref types
+
+**Session 2: Advanced Typing (45 mins)**
+- Generic components
+- Discriminated union props
+- Component prop polymorphism
+- as prop pattern
+
+**Session 3: Practice (30 mins)**
+- Type complex components
+- Implement generic hooks
+- Debug type errors
+
+**Understanding Checkpoint:**
+- Can I type React components effectively?
+- Can I debug TypeScript issues?
+
+---
+
+### Day 58: AI-Augmented React Development
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: AI Workflows (45 mins)**
+- Component scaffolding with AI
+- Test generation with AI
+- Documentation with AI
+- Debugging assistance
+
+**Session 2: AI-Powered Features (45 mins)**
+- Streaming responses in UI
+- Chat interfaces
+- AI-generated content
+- Loading states
+
+**Session 3: Practice (30 mins)**
+- Build component with AI assistance
+- Generate tests with AI
+- Implement streaming UI
+
+**Understanding Checkpoint:**
+- Can I leverage AI effectively in development?
+- Can I maintain code quality with AI help?
+
+---
+
+### Day 59: Testing Integration
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Test Setup (45 mins)**
+- Jest configuration
+- React Testing Library setup
+- Test environment configuration
+
+**Session 2: Component Testing (45 mins)**
+- Test component rendering
+- Test user interactions
+- Test async behavior
+- Mock external dependencies
+
+**Session 3: Practice (30 mins)**
+- Add tests to existing components
+- Achieve meaningful coverage
+- Debug failing tests
+
+**Understanding Checkpoint:**
+- Can I write effective component tests?
+- Can I debug test failures?
+
+---
+
+### Day 60: Phase 2 Final Assessment
+**Sessions: 3-4 | Flexible Time: 3-4 hours**
+
+**Session 1: Self-Assessment (60 mins)**
+- Test all React concepts
+- Build features under time pressure
+- Debug React issues
+- Optimize performance
+
+**Session 2: Portfolio Review (45 mins)**
+- Review all React projects
+- Ensure TypeScript coverage
+- Check performance and accessibility
+
+**Session 3: Gap Analysis (45 mins)**
+- Identify weak areas
+- Plan remediation
+- Adjust timeline if needed
+
+**Phase 2 Completion Checkpoint:**
+- [ ] Can build React components fluently
+- [ ] Can manage state effectively
+- [ ] Can optimize React performance
+- [ ] Can work with Next.js proficiently
+- [ ] Can use TypeScript with React
+- [ ] Portfolio projects showcase React skills
+
+**Phase 2 Status:** [ ] Completed | [ ] Needs More Work
+
+---
+
+# PHASE 3: Testing Mastery (Days 61-66)
+
+## Week 10: Comprehensive Testing (Days 61-66)
+
+### Day 61: Testing Fundamentals
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Testing Philosophy (45 mins)**
+- Testing pyramid (unit, integration, e2e)
+- Test-driven development (TDD)
+- What to test, what not to test
+- Test organization
+
+**Session 2: Jest Fundamentals (45 mins)**
+- Test structure (describe, it, test)
+- Assertions (expect, matchers)
+- Setup and teardown
+- Mocking basics
+
+**Session 3: Practice (30 mins)**
+- Test pure functions
+- Test async functions
+- Mock modules
+- Basic coverage analysis
+
+**Understanding Checkpoint:**
+- Can I write effective unit tests?
+- Can I mock dependencies properly?
+
+---
+
+### Day 62: React Testing Library
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: RTL Philosophy (45 mins)**
+- "The more your tests resemble the way your software is used..."
+- Testing behavior, not implementation
+- Accessible queries priority
+- User-event vs fireEvent
+
+**Session 2: Queries & Patterns (45 mins)**
+- getBy, queryBy, findBy differences
+- Query priority (Role, Label, Text)
+- Within queries
+- Debug and screen utilities
+
+**Session 3: Practice (30 mins)**
+- Test component rendering
+- Test user interactions
+- Test form submissions
+- Test async behavior
+
+**Understanding Checkpoint:**
+- Can I test React components effectively?
+- Can I use RTL best practices?
+
+---
+
+### Day 63: Integration Testing
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Integration Concepts (45 mins)**
+- Testing component interactions
+- Testing with real providers
+- API mocking strategies
+- Database mocking
+
+**Session 2: MSW for API Mocking (45 mins)**
+- MSW setup and configuration
+- Request/response handlers
+- Mock service workers
+- Integration with tests
+
+**Session 3: Practice (30 mins)**
+- Integration test for form flow
+- Test authentication flow
+- Test error scenarios
+- Mock external APIs
+
+**Understanding Checkpoint:**
+- Can I write integration tests?
+- Can I mock APIs effectively?
+
+---
+
+### Day 64: E2E Testing
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: E2E Concepts (45 mins)**
+- Cypress overview
+- Playwright overview
+- When to write E2E tests
+- E2E vs integration trade-offs
+
+**Session 2: Setup & Basics (45 mins)**
+- Test environment setup
+- Basic test structure
+- Element selection
+- Actions and assertions
+
+**Session 3: Practice (30 mins)**
+- Simple user journey test
+- Form submission test
+- Navigation test
+- Basic assertions
+
+**Understanding Checkpoint:**
+- Can I write E2E tests?
+- Can I choose appropriate test types?
+
+---
+
+### Day 65: Testing Best Practices
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Advanced Patterns (45 mins)**
+- Test organization and structure
+- Naming conventions
+- DRY vs readability in tests
+- Flaky test prevention
+
+**Session 2: Coverage & CI (45 mins)**
+- Code coverage analysis
+- Coverage thresholds
+- CI/CD integration
+- Pre-commit hooks
+
+**Session 3: Practice (30 mins)**
+- Add tests to previous projects
+- Achieve meaningful coverage
+- Set up test automation
+- Debug flaky tests
+
+**Understanding Checkpoint:**
+- Can I write maintainable tests?
+- Can I integrate testing into workflow?
+
+---
+
+### Day 66: Phase 3 Final Assessment
+**Sessions: 3-4 | Flexible Time: 3-4 hours**
+
+**Session 1: Comprehensive Testing (60 mins)**
+- Write tests for complex components
+- Test edge cases and error states
+- Mock complex dependencies
+- Achieve good coverage
+
+**Session 2: Test Debugging (45 mins)**
+- Debug failing tests
+- Identify test issues
+- Fix flaky tests
+- Optimize test performance
+
+**Session 3: Portfolio Integration (45 mins)**
+- Add comprehensive tests to portfolio projects
+- Ensure test coverage
+- Set up CI/CD for tests
+- Document testing approach
+
+**Phase 3 Completion Checkpoint:**
+- [ ] Can write unit tests effectively
+- [ ] Can test React components with RTL
+- [ ] Can write integration tests
+- [ ] Can write E2E tests
+- [ ] Can maintain test suites
+- [ ] Portfolio projects have good test coverage
+
+**Phase 3 Status:** [ ] Completed | [ ] Needs More Work
+
+---
+
+# PHASE 4: Frontend-Optimized DSA (Days 67-82)
+
+## Week 11: Frontend-Focused Algorithms (Days 67-73)
+
+### Day 67: Frontend DSA Mindset
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Frontend vs Backend DSA (45 mins)**
+- What frontend interviews actually test
+- Common frontend algorithm patterns
+- Practical vs theoretical focus
+- Time constraints in interviews
+
+**Session 2: Problem-Solving Framework (45 mins)**
+- Understand the problem
+- Work through examples
+- Break down approach
+- Code solution
+- Test and optimize
+
+**Session 3: Practice Setup (30 mins)**
+- Set up coding environment
+- Practice template creation
+- Time tracking setup
+- Test case generation
+
+**Understanding Checkpoint:**
+- Can I approach problems systematically?
+- Can I work under time constraints?
+
+---
+
+### Day 68: Array & String Manipulation
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Frontend-Relevant Patterns (45 mins)**
+- Efficient array operations
+- String processing and validation
+- Form data manipulation
+- URL and query parameter parsing
+
+**Session 2: Practice Problems (45 mins)**
+- [ ] Implement autocomplete with filtering
+- [ ] Parse and validate email addresses
+- [ ] URL parameter extraction and manipulation
+- [ ] Form data serialization/deserialization
+
+**Session 3: Real-World Application (30 mins)**
+- Build autocomplete component
+- Implement form validation
+- Create URL utility functions
 - Performance optimization
 
-**Afternoon (2 hours):**
-- Build small Vue app
-- Compare to React implementation
+**Understanding Checkpoint:**
+- Can I manipulate arrays/strings efficiently?
+- Can I build practical utility functions?
 
 ---
 
-# Daily Routine Structure
+### Day 69: Tree Structures & DOM
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-## How to Use Your 4.5 Hours
+**Session 1: Tree Concepts (45 mins)**
+- Tree traversal algorithms
+- DOM tree relationships
+- Virtual DOM concepts
+- Tree manipulation patterns
 
-**Standard Day Structure:**
+**Session 2: Practice Problems (45 mins)**
+- [ ] Implement DOM tree traversal
+- [ ] Build virtual DOM diff algorithm
+- [ ] Create tree flattening utility
+- [ ] Implement event delegation system
 
-1. **Morning Block (2-2.5 hours):**
-   - Study new concepts
-   - Watch videos / read documentation
-   - Take notes
+**Session 3: Real Implementation (30 mins)**
+- Build simple virtual DOM
+- Implement event delegation
+- Create tree utility library
+- Performance testing
 
-2. **Afternoon Block (2 hours):**
-   - Practice coding
-   - Solve problems
-   - Build projects
-   - Implement concepts
-
-3. **Evening Block (30-60 mins):**
-   - Review and consolidate
-   - Test with me (on test days)
-   - Prepare for next day
-
-**Test Days:**
-- Reduced study time
-- More practice time
-- 1 hour test with me
+**Understanding Checkpoint:**
+- Can I work with tree structures?
+- Can I implement DOM-related algorithms?
 
 ---
 
-# Study Resources
+### Day 70: Custom Hooks & Utilities
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
 
-## JavaScript
-- JavaScript.info (complete guide)
-- "You Don't Know JS" book series (GitHub)
+**Session 1: Hook Implementation (45 mins)**
+- Debounce and throttle hooks
+- Memoization hooks
+- Event listener hooks
+- Data fetching hooks
+
+**Session 2: Practice Implementation (45 mins)**
+- [ ] Implement useDebounce hook
+- [ ] Implement useThrottle hook
+- [ ] Implement useMemoCompare hook
+- [ ] Implement useLocalStorage hook
+
+**Session 3: Real Usage (30 mins)**
+- Use hooks in existing projects
+- Optimize hook performance
+- Debug hook issues
+- Document hook usage
+
+**Understanding Checkpoint:**
+- Can I implement custom hooks?
+- Can I optimize hook performance?
+
+---
+
+### Day 71: Performance & Optimization
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Optimization Techniques (45 mins)**
+- Virtual scrolling implementation
+- Lazy loading patterns
+- Memoization strategies
+- Rendering optimization
+
+**Session 2: Practice Problems (45 mins)**
+- [ ] Implement virtual scrolling component
+- [ ] Build lazy image loading
+- [ ] Create performance monitoring utility
+- [ ] Implement request deduplication
+
+**Session 3: Real Implementation (30 mins)**
+- Add virtual scrolling to list component
+- Implement lazy loading for images
+- Create performance monitoring dashboard
+- Optimize existing components
+
+**Understanding Checkpoint:**
+- Can I implement performance optimizations?
+- Can I measure and improve performance?
+
+---
+
+### Day 72: Parsing & Validation
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Parsing Fundamentals (45 mins)**
+- String parsing techniques
+- Data validation patterns
+- Schema validation
+- Error handling in parsing
+
+**Session 2: Practice Problems (45 mins)**
+- [ ] Parse complex configuration objects
+- [ ] Validate form data with nested structures
+- [ ] Implement JSON schema validator
+- [ ] Create custom validation library
+
+**Session 3: Real Application (30 mins)**
+- Build form validation system
+- Implement configuration parser
+- Create validation middleware
+- Test edge cases
+
+**Understanding Checkpoint:**
+- Can I parse and validate complex data?
+- Can I handle validation errors gracefully?
+
+---
+
+### Day 73: Week 11 Review
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Pattern Consolidation (45 mins)**
+- Review all frontend DSA patterns
+- Create pattern reference guide
+- Identify common approaches
+- Document best practices
+
+**Session 2: Mixed Practice (60 mins)**
+- Solve 3 mixed frontend problems
+- Time yourself (30 mins each)
+- Focus on explanation and approach
+- Review solutions with AI
+
+**Session 3: Weak Area Analysis (45 mins)**
+- Identify struggling patterns
+- Create targeted practice plan
+- Set up additional resources
+- Plan remediation
+
+**Weekly Goal:** Complete 3 sessions minimum on 5/7 days
+
+---
+
+## Week 12: Advanced Frontend DSA (Days 74-82)
+
+### Day 74: State Management Algorithms
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: State Patterns (45 mins)**
+- Redux-style reducers
+- State machine implementations
+- Complex state transformations
+- Immutability patterns
+
+**Session 2: Practice Problems (45 mins)**
+- [ ] Implement Redux-like store
+- [ ] Build state machine for UI flow
+- [ ] Create undo/redo functionality
+- [ ] Implement complex form state management
+
+**Session 3: Real Implementation (30 mins)**
+- Add Redux-like state to project
+- Implement state machine for component
+- Create undo/redo feature
+- Optimize state updates
+
+**Understanding Checkpoint:**
+- Can I manage complex state?
+- Can I implement state patterns?
+
+---
+
+### Day 75: Caching & Memoization
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Caching Strategies (45 mins)**
+- LRU cache implementation
+- TTL-based caching
+- Memoization techniques
+- Cache invalidation patterns
+
+**Session 2: Practice Problems (45 mins)**
+- [ ] Implement LRU cache
+- [ ] Build TTL cache system
+- [ ] Create memoization utility
+- [ ] Implement API response caching
+
+**Session 3: Real Application (30 mins)**
+- Add caching to existing projects
+- Implement memoization for expensive operations
+- Create cache monitoring
+- Optimize cache performance
+
+**Understanding Checkpoint:**
+- Can I implement caching systems?
+- Can I optimize with memoization?
+
+---
+
+### Day 76: Event Systems & PubSub
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Event Patterns (45 mins)**
+- Event emitter implementation
+- PubSub patterns
+- Event delegation
+- Custom event systems
+
+**Session 2: Practice Problems (45 mins)**
+- [ ] Implement event emitter
+- [ ] Build PubSub system
+- [ ] Create custom event library
+- [ ] Implement event delegation utility
+
+**Session 3: Real Implementation (30 mins)**
+- Add event system to projects
+- Implement custom events
+- Create event monitoring
+- Debug event issues
+
+**Understanding Checkpoint:**
+- Can I implement event systems?
+- Can I debug event-related issues?
+
+---
+
+### Day 77: Data Structures for Frontend
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Frontend Data Structures (45 mins)**
+- Trie for autocomplete
+- Graph for dependencies
+- Heap for priority queues
+- Set/Map for deduplication
+
+**Session 2: Practice Problems (45 mins)**
+- [ ] Implement trie for search
+- [ ] Build dependency graph resolver
+- [ ] Create priority queue for tasks
+- [ ] Implement deduplication system
+
+**Session 3: Real Application (30 mins)**
+- Add trie to search component
+- Implement dependency resolution
+- Create task priority system
+- Add deduplication features
+
+**Understanding Checkpoint:**
+- Can I choose appropriate data structures?
+- Can I implement them effectively?
+
+---
+
+### Day 78: Algorithmic Problem Solving
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Problem-Solving Patterns (45 mins)**
+- Sliding window for arrays
+- Two pointers for efficiency
+- Divide and conquer approaches
+- Greedy algorithms
+
+**Session 2: Practice Problems (45 mins)**
+- [ ] Sliding window maximum
+- [ ] Two sum variations
+- [ ] Merge intervals
+- [ ] Stock buy/sell problems
+
+**Session 3: Real Implementation (30 mins)**
+- Implement solutions in projects
+- Optimize for performance
+- Add error handling
+- Document approaches
+
+**Understanding Checkpoint:**
+- Can I solve algorithmic problems?
+- Can I optimize solutions?
+
+---
+
+### Day 79: System Design Algorithms
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Design Patterns (45 mins)**
+- Rate limiting algorithms
+- Load balancing concepts
+- Caching strategies
+- Data synchronization
+
+**Session 2: Practice Problems (45 mins)**
+- [ ] Implement rate limiter
+- [ ] Build simple load balancer
+- [ ] Create caching layer
+- [ ] Implement data sync utility
+
+**Session 3: Real Application (30 mins)**
+- Add rate limiting to APIs
+- Implement simple load balancing
+- Create caching strategies
+- Build data synchronization
+
+**Understanding Checkpoint:**
+- Can I implement system-level algorithms?
+- Can I handle scalability concerns?
+
+---
+
+### Day 80: Portfolio Integration
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Project Enhancement (60 mins)**
+- Add algorithmic solutions to projects
+- Implement performance optimizations
+- Add advanced features using DSA
+- Improve code quality
+
+**Session 2: Documentation (45 mins)**
+- Document algorithmic approaches used
+- Explain optimization decisions
+- Create technical guides
+- Update README files
+
+**Session 3: Testing (45 mins)**
+- Test algorithm implementations
+- Verify performance improvements
+- Ensure edge case handling
+- Validate user experience
+
+**Weekly Goal:** Complete 3 sessions minimum on 5/7 days
+
+---
+
+### Day 81: Mixed Practice Marathon
+**Sessions: 3-4 | Flexible Time: 3-4 hours**
+
+**Session 1: Timed Practice Set 1 (60 mins)**
+- 2 easy frontend problems (15 mins each)
+- 1 medium problem (30 mins)
+- Focus on explanation and approach
+
+**Session 2: Timed Practice Set 2 (60 mins)**
+- 2 medium frontend problems (30 mins each)
+- Emphasize optimization and edge cases
+
+**Session 3: Review & Analysis (45 mins)**
+- Analyze solutions
+- Identify patterns and improvements
+- Document learnings
+- Plan next steps
+
+**Session 4: (Optional) Additional Practice (45 mins)**
+- Work on weak areas
+- Practice explanation skills
+- Review with AI assistance
+
+---
+
+### Day 82: Phase 4 Final Assessment
+**Sessions: 3-4 | Flexible Time: 3-4 hours**
+
+**Session 1: Comprehensive Assessment (60 mins)**
+- Solve 3 frontend-focused problems
+- Explain approach before coding
+- Analyze time/space complexity
+- Handle follow-up questions
+
+**Session 2: Real-World Application (45 mins)**
+- Implement solution in existing project
+- Optimize for production use
+- Add proper error handling
+- Document implementation
+
+**Session 3: Pattern Mastery (45 mins)**
+- Review all frontend DSA patterns
+- Create reference materials
+- Identify remaining gaps
+- Plan continued practice
+
+**Phase 4 Completion Checkpoint:**
+- [ ] Can solve frontend-focused algorithm problems
+- [ ] Can implement practical utility functions
+- [ ] Can optimize performance using algorithms
+- [ ] Can explain approach and trade-offs
+- [ ] Can apply DSA to real projects
+- [ ] Portfolio showcases algorithmic thinking
+
+**Phase 4 Status:** [ ] Completed | [ ] Needs More Work
+
+---
+
+# PHASE 5: System Design + Build (Days 83-94)
+
+## Week 13: System Design Foundations (Days 83-89)
+
+### Day 83: System Design Introduction
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Frontend System Design (45 mins)**
+- What is frontend system design?
+- Differences from backend system design
+- Interview format and expectations
+- Evaluation criteria
+
+**Session 2: Framework & Process (45 mins)**
+- Requirements gathering (functional, non-functional)
+- Clarifying questions template
+- Component architecture basics
+- API design fundamentals
+
+**Session 3: Practice Analysis (30 mins)**
+- Analyze existing system (Twitter/X feed)
+- Identify components and data flow
+- Note design decisions
+- Create improvement suggestions
+
+**Understanding Checkpoint:**
+- Can I approach system design systematically?
+- Can I ask effective clarifying questions?
+
+---
+
+### Day 84: Component Architecture & State
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Component Design (45 mins)**
+- Component hierarchy principles
+- Container vs presentational components
+- Atomic design concepts
+- Component composition patterns
+
+**Session 2: State Management (45 mins)**
+- When to use what (local, context, global)
+- Client state vs server state
+- State normalization techniques
+- Derived state patterns
+
+**Session 3: Practice Design (30 mins)**
+- Design e-commerce product page architecture
+- Plan social media feed components
+- Design admin dashboard structure
+- Document architecture decisions
+
+**Understanding Checkpoint:**
+- Can I design component architectures?
+- Can I choose appropriate state management?
+
+---
+
+### Day 85: Data Fetching & Caching
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Fetching Strategies (45 mins)**
+- Fetch on mount vs lazy loading
+- Prefetching strategies
+- Background refresh patterns
+- Error handling approaches
+
+**Session 2: Caching Strategies (45 mins)**
+- In-memory cache implementation
+- LocalStorage/IndexedDB usage
+- Cache invalidation techniques
+- Stale-while-revalidate pattern
+
+**Session 3: Real-World Design (30 mins)**
+- Design news feed data layer
+- Plan real-time chat data flow
+- Design dashboard with live data
+- Document caching strategy
+
+**Understanding Checkpoint:**
+- Can I design data fetching systems?
+- Can I implement caching strategies?
+
+---
+
+### Day 86: Performance & Optimization
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Performance Metrics (45 mins)**
+- Core Web Vitals (FCP, LCP, CLS, FID/INP)
+- Time to Interactive (TTI)
+- Total Blocking Time (TBT)
+- Measurement and monitoring
+
+**Session 2: Optimization Techniques (45 mins)**
+- Code splitting strategies
+- Lazy loading (routes, components, images)
+- Virtualization (windowing) approaches
+- Bundle optimization techniques
+
+**Session 3: Critical Path (30 mins)**
+- Critical rendering path optimization
+- Resource prioritization
+- Preload, prefetch, preconnect
+- Above-the-fold optimization
+
+**Understanding Checkpoint:**
+- Can I identify performance bottlenecks?
+- Can I implement optimization strategies?
+
+---
+
+### Day 87: Accessibility & Responsive Design
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Accessibility Fundamentals (45 mins)**
+- WCAG guidelines (A, AA, AAA)
+- Semantic HTML importance
+- ARIA roles and attributes
+- Keyboard navigation essentials
+
+**Session 2: Screen Reader & Testing (45 mins)**
+- Screen reader behavior patterns
+- Focus management techniques
+- Live regions usage
+- Form accessibility best practices
+
+**Session 3: Responsive Design (30 mins)**
+- Mobile-first approach
+- Breakpoint strategies
+- Touch vs mouse interaction
+- Responsive images and media
+
+**Understanding Checkpoint:**
+- Can I design accessible interfaces?
+- Can I implement responsive layouts?
+
+---
+
+### Day 88: Security & Error Handling
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Frontend Security (45 mins)**
+- XSS prevention techniques
+- CSRF protection methods
+- Content Security Policy (CSP)
+- Secure coding practices
+
+**Session 2: Authentication & Authorization (45 mins)**
+- JWT token handling
+- OAuth flow understanding
+- Session management
+- Authorization pattern implementation
+
+**Session 3: Error Handling (30 mins)**
+- Error boundary implementation
+- API error handling strategies
+- Retry logic patterns
+- Fallback and graceful degradation
+
+**Understanding Checkpoint:**
+- Can I implement security measures?
+- Can I handle errors gracefully?
+
+---
+
+### Day 89: Week 13 Review + Template Creation
+**Sessions: 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Pattern Consolidation (45 mins)**
+- Review all system design patterns
+- Create design template/checklist
+- Document decision frameworks
+- Identify common approaches
+
+**Session 2: Practice Designs (60 mins)**
+- Design 2 systems from scratch (30 mins each)
+- Use created templates
+- Focus on completeness and clarity
+- Review with AI assistance
+
+**Session 3: Weak Area Analysis (45 mins)**
+- Identify struggling design areas
+- Create targeted improvement plan
+- Set up additional resources
+- Plan continued practice
+
+**Weekly Goal:** Complete 3 sessions minimum on 5/7 days
+
+---
+
+## Week 14: Real-World System Design + Build (Days 90-94)
+
+### Day 90: Design & Build - News Feed
+**Sessions 3-4 | Flexible Time: 3-4 hours**
+
+**Session 1: Design Phase (60 mins)**
+- Requirements gathering and clarification
+- Component architecture planning
+- Data fetching and caching strategy
+- Performance optimization plan
+- Accessibility considerations
+
+**Session 2: Build Phase (90 mins)**
+- Implement core components
+- Set up data fetching with caching
+- Add performance optimizations
+- Implement basic styling
+
+**Session 3: Enhancement Phase (45 mins)**
+- Add accessibility features
+- Implement error handling
+- Add loading states
+- Optimize performance
+
+**Session 4: Testing & Documentation (45 mins)**
+- Test functionality
+- Document design decisions
+- Create user guide
+- Deploy to showcase
+
+**Understanding Checkpoint:**
+- Can I design complete systems?
+- Can I build from design to implementation?
+
+---
+
+### Day 91: Design & Build - Autocomplete
+**Sessions 3-4 | Flexible Time: 3-4 hours**
+
+**Session 1: Design Phase (60 mins)**
+- Requirements gathering for search functionality
+- Debouncing and performance considerations
+- Caching strategy for search results
+- Keyboard navigation and accessibility
+- API integration planning
+
+**Session 2: Build Phase (90 mins)**
+- Implement autocomplete component
+- Add debouncing functionality
+- Implement caching mechanism
+- Create keyboard navigation
+
+**Session 3: Enhancement Phase (45 mins)**
+- Add accessibility features
+- Implement error handling
+- Add loading and empty states
+- Optimize performance
+
+**Session 4: Testing & Documentation (45 mins)**
+- Test all functionality
+- Document implementation approach
+- Create usage examples
+- Deploy demonstration
+
+**Understanding Checkpoint:**
+- Can I implement complex UI components?
+- Can I optimize for user experience?
+
+---
+
+### Day 92: Design & Build - Chat Application
+**Sessions 3-4 | Flexible Time: 3-4 hours**
+
+**Session 1: Design Phase (60 mins)**
+- Real-time messaging requirements
+- WebSocket vs polling considerations
+- Message history and persistence
+- Typing indicators and presence
+- Performance and scalability planning
+
+**Session 2: Build Phase (90 mins)**
+- Implement basic chat interface
+- Set up WebSocket connection
+- Create message display and input
+- Add typing indicators
+
+**Session 3: Enhancement Phase (45 mins)**
+- Implement message history
+- Add user presence features
+- Create notification system
+- Optimize for performance
+
+**Session 4: Testing & Documentation (45 mins)**
+- Test real-time functionality
+- Document architecture decisions
+- Create deployment guide
+- Deploy working demo
+
+**Understanding Checkpoint:**
+- Can I build real-time applications?
+- Can I handle complex state management?
+
+---
+
+### Day 93: Design & Build - Dashboard
+**Sessions 3-4 | Flexible Time: 3-4 hours**
+
+**Session 1: Design Phase (60 mins)**
+- Widget-based dashboard requirements
+- Data visualization needs
+- Customization and configuration
+- Performance with multiple widgets
+- Responsive design considerations
+
+**Session 2: Build Phase (90 mins)**
+- Implement dashboard layout
+- Create widget system
+- Add data visualization components
+- Implement drag-and-drop (basic)
+
+**Session 3: Enhancement Phase (45 mins)**
+- Add widget customization
+- Implement data refresh
+- Create configuration UI
+- Optimize rendering performance
+
+**Session 4: Testing & Documentation (45 mins)**
+- Test dashboard functionality
+- Document component architecture
+- Create user customization guide
+- Deploy interactive demo
+
+**Understanding Checkpoint:**
+- Can I build complex dashboard systems?
+- Can I implement modular architectures?
+
+---
+
+### Day 94: Phase 5 Final Assessment
+**Sessions: 3-4 | Flexible Time: 3-4 hours**
+
+**Session 1: Comprehensive Design (60 mins)**
+- Design complete system from requirements
+- Cover all aspects: architecture, state, performance, accessibility
+- Handle follow-up questions and modifications
+- Document design decisions
+
+**Session 2: Rapid Implementation (60 mins)**
+- Implement core features of designed system
+- Focus on key functionality
+- Apply learned patterns and optimizations
+- Ensure basic working state
+
+**Session 3: Review & Analysis (45 mins)**
+- Review complete system design
+- Analyze implementation approach
+- Identify strengths and areas for improvement
+- Document lessons learned
+
+**Session 4: Portfolio Integration (45 mins)**
+- Add designed systems to portfolio
+- Create comprehensive documentation
+- Write technical blog posts about designs
+- Prepare presentation materials
+
+**Phase 5 Completion Checkpoint:**
+- [ ] Can design complete frontend systems
+- [ ] Can implement from design to working code
+- [ ] Can handle performance and scalability
+- [ ] Can address accessibility requirements
+- [ ] Can make architectural trade-off decisions
+- [ ] Portfolio showcases system design skills
+
+**Phase 5 Status:** [ ] Completed | [ ] Needs More Work
+
+---
+
+# PHASE 6: Mock Interviews & Polish (Days 95-100)
+
+## Week 15: Comprehensive Preparation (Days 95-100)
+
+### Day 95: Behavioral Preparation
+**Sessions 3-4 | Flexible Time: 3-4 hours**
+
+**Session 1: STAR Story Development (60 mins)**
+- Develop 5 key behavioral stories using STAR method:
+  - Leadership/ownership example
+  - Technical decision-making
+  - Conflict resolution
+  - Challenging project overcoming
+  - Learning from failure
+- Structure each story (Situation, Task, Action, Result)
+- Practice conciseness (2-3 minutes each)
+
+**Session 2: Story Refinement (45 mins)**
+- Record each story and review
+- Refine for clarity and impact
+- Get feedback from peers or AI
+- Adjust based on company focus
+
+**Session 3: Practice Delivery (45 mins)**
+- Practice telling stories naturally
+- Work on body language and tone
+- Handle follow-up questions
+- Adapt stories for different contexts
+
+**Session 4: Company Research (45 mins)**
+- Research target companies deeply
+- Understand their products and engineering culture
+- Read recent engineering blog posts
+- Prepare company-specific questions
+
+**Understanding Checkpoint:**
+- [ ] Can tell compelling behavioral stories
+- [ ] Can adapt stories for different contexts
+- [ ] Can handle follow-up questions
+- [ ] Prepared company-specific content
+
+---
+
+### Day 96: Technical Mock Interview
+**Sessions 3-4 | Flexible Time: 3-4 hours**
+
+**Session 1: JavaScript/TypeScript Round (60 mins)**
+- 30 mins: JavaScript fundamentals questions
+- 30 mins: TypeScript implementation problem
+- Focus on: closures, async/await, prototypes, this binding
+
+**Session 2: React/Next.js Round (60 mins)**
+- 30 mins: React concepts and hooks
+- 30 mins: Build feature under time pressure
+- Focus on: performance, state management, optimization
+
+**Session 3: Problem-Solving (45 mins)**
+- 2 frontend-focused algorithm problems
+- Emphasize explanation and approach
+- Discuss optimization and trade-offs
+
+**Session 4: Feedback & Review (45 mins)**
+- Review performance in all areas
+- Identify specific weaknesses
+- Create improvement plan
+- Adjust final preparation focus
+
+**Understanding Checkpoint:**
+- [ ] Strong JavaScript/TypeScript fundamentals
+- [ ] Proficient React/Next.js skills
+- [ ] Effective problem-solving approach
+- [ ] Clear communication of technical concepts
+
+---
+
+### Day 97: System Design Mock Interview
+**Sessions 3-4 | Flexible Time: 3-4 hours**
+
+**Session 1: Design Challenge (90 mins)**
+- 45 mins: Requirements gathering and clarification
+- 45 mins: High-level architecture design
+- Focus on: component architecture, state management, data flow
+
+**Session 2: Deep Dive & Trade-offs (60 mins)**
+- 30 mins: Detailed component design
+- 30 mins: Performance, scalability, accessibility considerations
+- Handle follow-up questions and modifications
+
+**Session 3: Implementation Discussion (45 mins)**
+- Discuss implementation approach
+- Address technical challenges
+- Explain design decisions and alternatives
+- Handle edge cases and failure scenarios
+
+**Session 4: Review & Analysis (45 mins)**
+- Comprehensive review of design approach
+- Identify strengths and improvement areas
+- Document key learnings
+- Prepare for final interviews
+
+**Understanding Checkpoint:**
+- [ ] Can gather and clarify requirements effectively
+- [ ] Can design comprehensive system architectures
+- [ ] Can make and justify architectural decisions
+- [ ] Can handle deep-dive technical questions
+
+---
+
+### Day 98: Full Loop Mock Interview
+**Sessions 3-4 | Flexible Time: 3-4 hours**
+
+**Session 1: Behavioral + Technical Intro (60 mins)**
+- 30 mins: Behavioral questions (STAR stories)
+- 30 mins: JavaScript/TypeScript warm-up
+- Set tone for comprehensive evaluation
+
+**Session 2: Coding Round (60 mins)**
+- 2 algorithm problems (medium difficulty)
+- Focus on approach, explanation, and code quality
+- Time management and communication skills
+
+**Session 3: System Design Round (60 mins)**
+- Complete system design challenge
+- Emphasize structured approach and clear communication
+- Handle complexity and trade-off discussions
+
+**Session 4: Debrief & Strategy (60 mins)**
+- Comprehensive performance review
+- Identify final preparation priorities
+- Create interview day strategy
+- Mental preparation and confidence building
+
+**Understanding Checkpoint:**
+- [ ] Can perform well across all interview areas
+- [ ] Can manage time and energy effectively
+- [ ] Can communicate clearly under pressure
+- [ ] Ready for actual interview conditions
+
+---
+
+### Day 99: Final Portfolio & Documentation
+**Sessions 3-4 | Flexible Time: 3-4 hours**
+
+**Session 1: Portfolio Finalization (60 mins)**
+- Review and polish all 5 projects
+- Ensure TypeScript coverage and best practices
+- Add comprehensive documentation
+- Verify deployments and performance
+
+**Session 2: Technical Content Creation (60 mins)**
+- Write 2 final technical blog posts:
+  - "Lessons Learned from Frontend Interview Prep"
+  - "Building Production-Ready React Applications"
+- Share on personal blog and LinkedIn
+- Prepare content for technical discussions
+
+**Session 3: Interview Materials Preparation (45 mins)**
+- Create one-pagers for key projects
+- Prepare technical talking points
+- Organize code samples and references
+- Set up laptop/environment for interviews
+
+**Session 4: Final Review (45 mins)**
+- Review all preparation materials
+- Practice quick technical explanations
+- Final confidence building
+- Prepare questions for interviewers
+
+**Understanding Checkpoint:**
+- [ ] Portfolio showcases complete skill set
+- [ ] Technical content demonstrates expertise
+- [ ] Interview materials are organized and ready
+- [ ] Confident and prepared mentally
+
+---
+
+### Day 100: Final Review & Confidence Building
+**Sessions 3 | Flexible Time: 2.5-3 hours**
+
+**Session 1: Comprehensive Review (60 mins)**
+- Quick review of all major topics
+- Practice key concepts aloud
+- Review behavioral stories one final time
+- Go through portfolio projects briefly
+
+**Session 2: Light Practice (45 mins)**
+- 2 easy coding problems for confidence
+- Quick system design thinking exercise
+- Review key interview strategies
+- Mental preparation techniques
+
+**Session 3: Final Preparation (45 mins)**
+- Confirm interview logistics
+- Prepare physical/mental state
+- Visualize successful interviews
+- Plan post-interview routine
+
+**Final Readiness Checkpoint:**
+- [ ] Technical skills thoroughly prepared
+- [ ] Behavioral responses polished
+- [ ] Portfolio and materials ready
+- [ ] Mental state confident and focused
+- [ ] Logistics confirmed and planned
+
+**Overall Status:** [ ] Ready for Interviews | [ ] Needs Final Adjustments
+
+---
+
+## Post-Completion Guidelines
+
+### Ongoing Maintenance (After Day 100)
+- **Weekly Practice:** 2-3 hours maintaining skills
+- **Portfolio Updates:** Monthly project improvements
+- **Blog Writing:** Continue sharing learnings
+- **Skill Tracking:** Monitor new technologies and patterns
+- **Network Engagement:** Stay connected with tech community
+
+### Interview Follow-Up Protocol
+- **24 Hours Post-Interview:** Send thank-you notes
+- **One Week Follow-Up:** Check on status if no response
+- **Continuous Learning:** Document interview experiences
+- **Adjustment Process:** Update preparation based on feedback
+
+### Career Development Beyond Interviews
+- **Skill Specialization:** Identify areas for deeper expertise
+- **Leadership Preparation:** Begin preparing for senior roles
+- **Mentorship:** Start helping others with similar goals
+- **Industry Involvement:** Engage with technical communities
+
+---
+
+# Appendix A: Quick Reference Materials
+
+## Essential Checkpoints
+- Event Loop Mastery
+- Closure Implementation
+- Promise API Creation
+- React Hooks Proficiency
+- TypeScript Type Safety
+- System Design Approach
+- Algorithmic Problem Solving
+
+## Daily Practice Template
+```
+Session 1: [Concept] - [Time]
+Session 2: [Practice] - [Time]  
+Session 3: [Review] - [Time]
+AI Integration: [Required Activities]
+Checkpoint: [Understanding Test]
+```
+
+## Portfolio Project Requirements
+- [ ] 5 Deployed Projects
+- [ ] TypeScript Implementation
+- [ ] Performance Optimization
+- [ ] Accessibility Compliance
+- [ ] Comprehensive Testing
+- [ ] Documentation
+
+## Interview Preparation Checklist
+- [ ] Technical Skills Confirmed
+- [ ] Behavioral Stories Polished
+- [ ] System Design Confidence
+- [ ] Portfolio Showcases Skills
+- [ ] Communication Skills Ready
+- [ ] Mental State Prepared
+
+---
+
+# Appendix B: Resource Library
+
+## Primary Learning Resources
+- JavaScript/TypeScript Documentation
+- React/Next.js Official Guides
 - MDN Web Docs
-- Lydia Hallie's JavaScript Questions (GitHub)
-- JS Visualized series
+- LeetCode (Frontend-Focused)
+- Frontend Mentor
 
-## React
-- Official React Docs (new beta docs)
-- Kent C. Dodds Epic React
-- "React - The Complete Guide" (Udemy)
-- React TypeScript Cheatsheet
+## Supplementary Materials
+- "You Don't Know JS" Series
+- React Documentation
+- Next.js Documentation
+- TypeScript Handbook
+- System Design Resources
 
-## Next.js
-- Official Next.js Docs
-- Next.js 13+ tutorials
-- Vercel guides
+## Tools and Platforms
+- GitHub for Code Portfolio
+- Vercel for Deployments
+- Chrome DevTools for Debugging
+- VS Code with Extensions
+- Testing Libraries
 
-## DSA
-- LeetCode (primary platform)
-- "Grokking Algorithms" book
-- NeetCode roadmap
-- AlgoExpert (optional)
-
-## System Design
-- GreatFrontEnd System Design
-- Frontend Interview Handbook
-- "Designing Data-Intensive Applications" (relevant chapters)
-- Company engineering blogs
+## Community and Practice
+- Technical Discord/Slack Groups
+- Reddit r/frontend and r/reactjs
+- Local Meetups and Conferences
+- Mentorship Programs
+- Coding Practice Platforms
 
 ---
 
-# Testing Schedule
+# Appendix C: Timeline and Milestones
 
-**JavaScript Tests:**
-- Day 2, 5, 7, 12, 20, 28
+## Weekly Goals Matrix
 
-**React Tests:**
-- Day 35, 42, 49
+| Week | Focus Area | Key Deliverables | Success Metrics |
+|------|------------|------------------|-----------------|
+| 1-5 | JavaScript/TypeScript | 3 Portfolio Projects | Event Loop, Closure, Prototype Mastery |
+| 6-9 | React & Ecosystem | Advanced Projects | Hooks, Performance, Next.js Proficiency |
+| 10 | Testing | Complete Test Coverage | Unit, Integration, E2E Testing Skills |
+| 11-12 | Frontend DSA | Optimized Components | Custom Hooks, Algorithms, Optimization |
+| 13-14 | System Design + Build | Working Systems | Design Architecture, Implementation, Trade-offs |
+| 15 | Interview Prep | Portfolio Showcase | Readiness Across All Interview Areas |
 
-**DSA Test:**
-- Day 63
+## Buffer Days Schedule
+Days allocated for: 15, 28, 42, 56, 70, 84, 98
+Purpose: Deep dives, remediation, or accelerated progress
 
-**System Design Test:**
-- Day 77
-
-**Mock Interviews:**
-- Days 79, 80, 81
-
----
-
-# Success Criteria
-
-## To Move Forward from Each Phase:
-
-**Phase 1 (JavaScript):** 80%+ on comprehensive test
-**Phase 2 (React):** 80%+ on React test + can build features
-**Phase 3 (DSA):** Solve 3/3 problems correctly in test
-**Phase 4 (System Design):** Complete system design with good coverage
-**Phase 5:** Pass mock interviews with strong performance
+## Progress Tracking Template
+```
+Week [Number]: [Focus Area]
+- Sessions Completed: [X]/[Y]
+- Checkpoints Passed: [List]
+- Areas Needing Work: [List]
+- Next Week Adjustments: [Notes]
+```
 
 ---
 
-# Important Notes
-
-1. **Don't Skip Tests:** If you fail a test, repeat that section before moving forward
-
-2. **Daily Commitment:** 4.5 hours is non-negotiable—consistency matters more than intensity
-
-3. **Ask for Help:** If stuck >30 mins, post question and move to next topic
-
-4. **Practice Out Loud:** Explain concepts aloud—critical for interviews
-
-5. **Code by Hand:** Practice writing code without autocomplete
-
-6. **Time Yourself:** Simulate real interview pressure
-
-7. **Stay Honest:** Don't look at solutions immediately—struggle builds skill
-
-8. **Rest Days:** Take 1 full rest day per week (e.g., Sunday)
-
-9. **Track Progress:** Mark completed items daily
-
-10. **Interview Applications:** Start applying on Day 70 (interviews take 2-3 weeks to schedule)
+**Document Version:** 3.0  
+**Last Updated:** ___________  
+**Current Phase:** ___________  
+**Overall Progress:** ___/100 days  
+**Interview Readiness:** [ ] Not Ready | [ ] Nearly Ready | [ ] Interview Ready
 
 ---
 
-# Ready to Start?
-
-Post "Starting Day 1" when you're ready to begin.
-
-I'll be here to:
-- Clarify concepts when stuck
-- Administer tests
-- Conduct mock interviews
-- Adjust the plan if needed
-- Push you when you're slacking
-- Support you through the journey
-
-**Remember:** This is a marathon, not a sprint. Trust the process, stay consistent, and you'll be ready in 84 days.
-
-Let's build your future. Go.
+*This is a living document. Update progress after each day's completion and adjust timeline based on actual pace and understanding.*
