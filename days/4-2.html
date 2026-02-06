@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master JavaScript Closures for senior frontend interviews. Deep dive with real examples, patterns, and React applications.">
+    <meta name="keywords" content="JavaScript Closures, Frontend Interview, React Hooks, Memory Leaks, Function Factories">
+    <title>Day 4: Closures Deep Dive | Frontend Interview Prep</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --purple: #8b5cf6;
+            --bg-light: #f8fafc;
+            --bg-dark: #1e293b;
+            --text-light: #0f172a;
+            --text-dark: #f1f5f9;
+            --code-bg: #1e1e1e;
+            --border: #e2e8f0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-light);
+            background: var(--bg-light);
+        }
+        
+        body.dark-mode { background: var(--bg-dark); color: var(--text-dark); }
+        body.dark-mode .container { background: #0f172a; }
+        body.dark-mode .nav { background: #0f172a; border-bottom-color: #334155; }
+        body.dark-mode .section { background: #1e293b; border-color: #334155; }
+        
+        .nav {
+            position: fixed; top: 0; width: 100%;
+            background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000; padding: 1rem 2rem;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .nav-content {
+            max-width: 1400px; margin: 0 auto;
+            display: flex; justify-content: space-between;
+            align-items: center; flex-wrap: wrap; gap: 1rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem; font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: inherit; text-decoration: none; font-weight: 500; }
+        .nav-links a:hover { color: var(--primary); }
+        
+        .theme-toggle {
+            background: var(--primary); color: white; border: none;
+            padding: 0.5rem 1rem; border-radius: 8px;
+            cursor: pointer; font-weight: 600;
+        }
+        
+        .container {
+            max-width: 1400px; margin: 0 auto;
+            padding: 100px 2rem 2rem 2rem;
+            background: white; min-height: 100vh;
+        }
+        
+        .hero {
+            text-align: center; padding: 3rem 0;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 16px; margin-bottom: 3rem; color: white;
+        }
+        
+        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.2rem; max-width: 800px; margin: 0 auto; opacity: 0.95; }
+        
+        .section {
+            background: white; border: 2px solid var(--border);
+            border-radius: 12px; padding: 2rem; margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .section h2 {
+            color: var(--primary); font-size: 2rem;
+            margin-bottom: 1.5rem; padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .section h3 { color: var(--primary-dark); font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; }
+        .section h4 { color: var(--primary); font-size: 1.2rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+        
+        .concept-box {
+            background: #d1fae5; border-left: 4px solid var(--primary);
+            padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px;
+        }
+        
+        .concept-box.warning { background: #fef3c7; border-left-color: var(--warning); }
+        .concept-box.danger { background: #fee2e2; border-left-color: var(--danger); }
+        .concept-box.purple { background: #f3e8ff; border-left-color: var(--purple); }
+        
+        .code-block {
+            background: var(--code-bg); color: #d4d4d4;
+            padding: 1.5rem; padding-top: 3rem;
+            border-radius: 8px; overflow-x: auto;
+            margin: 1rem 0; border: 1px solid #333;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem; line-height: 1.8;
+            white-space: pre; position: relative;
+        }
+        
+        .code-block::before {
+            content: 'JavaScript'; position: absolute;
+            top: 0.5rem; right: 0.5rem;
+            background: var(--primary); color: white;
+            padding: 0.25rem 0.75rem; border-radius: 4px;
+            font-size: 0.7rem; font-weight: 600;
+        }
+        
+        .code-block.typescript::before { content: 'TypeScript'; background: #3178c6; }
+        .code-block.output::before { content: 'Output'; background: #10b981; }
+        .code-block.error::before { content: 'Error'; background: #ef4444; }
+        
+        .copy-btn {
+            background: rgba(16, 185, 129, 0.2); color: var(--primary);
+            border: 1px solid var(--primary); padding: 0.5rem 1rem;
+            border-radius: 6px; cursor: pointer;
+            font-size: 0.85rem; font-weight: 600;
+            position: absolute; top: 0.5rem; left: 0.5rem;
+        }
+        
+        .copy-btn.copied { background: rgba(16, 185, 129, 0.3); }
+        
+        .interview-question {
+            background: #fef3c7; border: 2px solid var(--warning);
+            border-radius: 12px; padding: 1.5rem; margin: 2rem 0;
+        }
+        
+        .interview-question h4 {
+            color: var(--warning); margin-bottom: 1rem;
+            font-size: 1.2rem; margin-top: 0;
+        }
+        
+        .interview-answer { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--warning); }
+        .interview-answer.show { display: block; }
+        
+        .reveal-btn {
+            background: var(--warning); color: white; border: none;
+            padding: 0.5rem 1.5rem; border-radius: 6px;
+            cursor: pointer; font-weight: 600; margin-top: 1rem;
+        }
+        
+        .key-insight {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white; padding: 1.5rem;
+            border-radius: 12px; margin: 2rem 0; font-weight: 500;
+        }
+        
+        .analogy {
+            background: #fef3c7; padding: 1.5rem;
+            border-radius: 8px; border-left: 4px solid #f59e0b;
+            margin: 1.5rem 0; font-style: italic;
+        }
+        
+        .completion-tracker {
+            position: fixed; bottom: 2rem; right: 2rem;
+            background: white; border: 2px solid var(--primary);
+            border-radius: 12px; padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 200px; z-index: 999;
+        }
+        
+        body.dark-mode .completion-tracker { background: #1e293b; }
+        
+        .completion-tracker h4 { color: var(--primary); margin-bottom: 0.5rem; }
+        .completion-stat { display: flex; justify-content: space-between; margin: 0.5rem 0; font-weight: 600; }
+        
+        .timer-display {
+            font-size: 1.5rem; color: var(--primary);
+            font-weight: bold; text-align: center; margin: 0.5rem 0;
+        }
+        
+        .timer-controls { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+        .timer-btn {
+            flex: 1; padding: 0.5rem; border: none;
+            border-radius: 6px; cursor: pointer;
+            font-size: 0.85rem; font-weight: 600;
+        }
+        .timer-btn.start { background: var(--primary); color: white; }
+        .timer-btn.pause { background: var(--warning); color: white; }
+        .timer-btn.reset { background: var(--danger); color: white; }
+        
+        .checkbox-group { margin: 1.5rem 0; }
+        .checkbox-item {
+            display: flex; align-items: center;
+            gap: 0.5rem; margin: 0.5rem 0; cursor: pointer;
+        }
+        .checkbox-item input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.8rem; }
+            .nav-content { flex-direction: column; align-items: flex-start; }
+            .nav-links { flex-direction: column; width: 100%; gap: 0.5rem; }
+            .container { padding: 100px 1rem 1rem 1rem; }
+            .section { padding: 1.5rem; }
+            .completion-tracker { display: none; }
+            .code-block { font-size: 0.8rem; padding: 1rem; padding-top: 3rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="logo">🔒 Day 4: Closures</div>
+            <div class="nav-links">
+                <a href="#definition">Definition</a>
+                <a href="#patterns">Patterns</a>
+                <a href="#react">React</a>
+                <a href="#bugs">Common Bugs</a>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Day 4: Closures - The Superpower of JavaScript</h1>
+            <p>Master the concept that enables private variables, React hooks, memoization, and causes 40% of production bugs when misunderstood.</p>
+        </div>
+
+        <!-- INTRODUCTION -->
+        <div class="section">
+            <h2>🎯 Why Closures Matter</h2>
+            
+            <div class="concept-box danger">
+                <p><strong>Critical Reality:</strong> Closures are THE most important JavaScript concept for senior engineers. They power:</p>
+                <ul>
+                    <li><strong>React Hooks</strong> - useState, useEffect, useCallback all use closures</li>
+                    <li><strong>Event Handlers</strong> - Every click handler is a closure</li>
+                    <li><strong>Async Callbacks</strong> - setTimeout, promises, fetch</li>
+                    <li><strong>Module Patterns</strong> - Private variables and functions</li>
+                </ul>
+                <p><strong>But they also cause:</strong></p>
+                <ul>
+                    <li>Memory leaks (40% of production issues)</li>
+                    <li>Stale state bugs in React</li>
+                    <li>The classic loop bug (breaks 60% of candidates)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- DEFINITION -->
+        <div class="section" id="definition">
+            <h2>📦 Part 1: What Is A Closure?</h2>
+            
+            <div class="key-insight">
+                <strong>Formal Definition:</strong> A closure is a function that has access to variables from its outer (enclosing) scope, even after the outer function has returned.
+            </div>
+
+            <h3>The Simple Explanation</h3>
+            
+            <div class="analogy">
+                <strong>🎒 The Backpack Analogy:</strong><br><br>
+                Imagine a function is like a person going on a trip:<br>
+                • The function packs a backpack with all the variables it needs<br>
+                • When the function travels (gets called elsewhere), it carries that backpack<br>
+                • Even far from home, it can access what's in the backpack<br>
+                • The backpack = the closure<br>
+            </div>
+
+            <h3>Basic Example</h3>
+            
+            <div class="code-block">
+function outer() {
+    const message = "Hello";  // Variable in outer scope
+    
+    function inner() {
+        console.log(message);  // Inner accesses outer's variable
+    }
+    
+    return inner;
+}
+
+const myFunction = outer();  // outer() finishes, returns inner
+myFunction();                // Logs: "Hello"
+
+// Why does this work?
+// inner "closes over" the message variable
+// It remembers message even after outer() has finished!
+            </div>
+
+            <div class="concept-box">
+                <p><strong>Key Point:</strong> Normally when a function finishes, its variables are destroyed. But with closures, the inner function keeps those variables alive!</p>
+            </div>
+
+            <h3>How Closures Are Created</h3>
+            
+            <p>A closure is created whenever:</p>
+            <ol>
+                <li>A function is defined inside another function</li>
+                <li>The inner function references variables from the outer function</li>
+                <li>The inner function is accessible outside the outer function (returned, passed as callback, etc.)</li>
+            </ol>
+
+            <div class="code-block">
+// Example 1: Returning a function
+function makeAdder(x) {
+    return function(y) {  // Closure created here
+        return x + y;     // Accesses x from outer scope
+    };
+}
+
+const add5 = makeAdder(5);
+console.log(add5(3));  // 8 (5 + 3)
+console.log(add5(10)); // 15 (5 + 10)
+
+// Example 2: Callback
+function setupHandler() {
+    const name = "Button";
+    
+    button.addEventListener('click', function() {  // Closure
+        console.log(name + " clicked");  // Accesses name
+    });
+}
+
+// Example 3: setTimeout
+function delayedGreeting() {
+    const greeting = "Hello";
+    
+    setTimeout(function() {  // Closure
+        console.log(greeting);  // Accesses greeting
+    }, 1000);
+}
+            </div>
+        </div>
+
+        <!-- THE CLASSIC BUG -->
+        <div class="section">
+            <h2>🐛 The Classic Closure Bug (Interview Favorite)</h2>
+            
+            <div class="concept-box danger">
+                <p><strong>This breaks 60% of interview candidates!</strong></p>
+            </div>
+
+            <h3>The Bug</h3>
+            
+            <div class="code-block">
+// What gets logged when you click each button?
+for (var i = 0; i < 3; i++) {
+    document.getElementById('btn' + i).onclick = function() {
+        console.log(i);
+    };
+}
+
+// Click button 0: ???
+// Click button 1: ???
+// Click button 2: ???
+            </div>
+
+            <div class="interview-question">
+                <h4>❓ What's the output?</h4>
+                <button class="reveal-btn" onclick="revealAnswer('bug1')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="bug1">
+                    <h4>❌ All buttons log: 3</h4>
+                    
+                    <div class="code-block output">
+Click button 0: 3
+Click button 1: 3
+Click button 2: 3
+                    </div>
+                    
+                    <h4>Why?</h4>
+                    <ol>
+                        <li><code>var i</code> is function-scoped (or global), not block-scoped</li>
+                        <li>All three closures reference the SAME <code>i</code> variable</li>
+                        <li>By the time you click, the loop has finished and <code>i = 3</code></li>
+                        <li>All closures see the current value of <code>i</code>, which is 3</li>
+                    </ol>
+                    
+                    <h4>✅ Fix #1: Use let (Block Scope)</h4>
+                    <div class="code-block">
+for (let i = 0; i < 3; i++) {  // let creates new i per iteration
+    document.getElementById('btn' + i).onclick = function() {
+        console.log(i);  // Each closure gets its own i
+    };
+}
+// Logs: 0, 1, 2 correctly
+                    </div>
+                    
+                    <h4>✅ Fix #2: IIFE (Create New Scope)</h4>
+                    <div class="code-block">
+for (var i = 0; i < 3; i++) {
+    (function(index) {  // IIFE creates new scope
+        document.getElementById('btn' + index).onclick = function() {
+            console.log(index);  // Closure over index parameter
+        };
+    })(i);  // Pass current i as argument
+}
+// Logs: 0, 1, 2 correctly
+                    </div>
+                    
+                    <h4>✅ Fix #3: Function Factory</h4>
+                    <div class="code-block">
+function makeHandler(num) {
+    return function() {
+        console.log(num);
+    };
+}
+
+for (var i = 0; i < 3; i++) {
+    document.getElementById('btn' + i).onclick = makeHandler(i);
+}
+// Logs: 0, 1, 2 correctly
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRACTICAL PATTERNS -->
+        <div class="section" id="patterns">
+            <h2>🛠️ Practical Closure Patterns</h2>
+            
+            <h3>Pattern 1: Private Variables</h3>
+            
+            <div class="code-block">
+function createCounter() {
+    let count = 0;  // Private variable
+    
+    return {
+        increment: function() {
+            count++;
+            return count;
+        },
+        decrement: function() {
+            count--;
+            return count;
+        },
+        getValue: function() {
+            return count;
+        }
+    };
+}
+
+const counter = createCounter();
+console.log(counter.increment());  // 1
+console.log(counter.increment());  // 2
+console.log(counter.getValue());   // 2
+console.log(counter.count);        // undefined (private!)
+
+// You CANNOT access count directly - it's truly private
+            </div>
+
+            <h3>Pattern 2: Function Factories</h3>
+            
+            <div class="code-block">
+function multiplyBy(factor) {
+    return function(number) {
+        return number * factor;
+    };
+}
+
+const double = multiplyBy(2);
+const triple = multiplyBy(3);
+
+console.log(double(5));   // 10
+console.log(triple(5));   // 15
+
+// Each function has its own factor value
+            </div>
+
+            <h3>Pattern 3: The once() Function</h3>
+            
+            <div class="code-block">
+function once(fn) {
+    let called = false;
+    let result;
+    
+    return function(...args) {
+        if (!called) {
+            result = fn(...args);
+            called = true;
+        }
+        return result;
+    };
+}
+
+const initialize = once(() => {
+    console.log("Initializing...");
+    return "Initialized!";
+});
+
+console.log(initialize());  // Logs "Initializing...", returns "Initialized!"
+console.log(initialize());  // Returns "Initialized!" (doesn't log)
+console.log(initialize());  // Returns "Initialized!" (doesn't log)
+            </div>
+
+            <h3>Pattern 4: Module Pattern (IIFE)</h3>
+            
+            <div class="code-block">
+const Calculator = (function() {
+    // Private variables
+    let result = 0;
+    
+    // Private function
+    function log(operation, value) {
+        console.log(`${operation}: ${value}`);
+    }
+    
+    // Public API
+    return {
+        add: function(num) {
+            result += num;
+            log('add', num);
+            return this;
+        },
+        subtract: function(num) {
+            result -= num;
+            log('subtract', num);
+            return this;
+        },
+        getResult: function() {
+            return result;
+        }
+    };
+})();
+
+Calculator.add(5).add(3).subtract(2);
+console.log(Calculator.getResult());  // 6
+console.log(Calculator.result);       // undefined (private!)
+            </div>
+        </div>
+
+        <!-- REACT CLOSURES -->
+        <div class="section" id="react">
+            <h2>⚛️ Closures in React (Critical!)</h2>
+            
+            <div class="concept-box danger">
+                <p><strong>React Hook Bugs = Closure Bugs</strong></p>
+                <p>Most React bugs in production are caused by misunderstanding closures in hooks!</p>
+            </div>
+
+            <h3>The Stale Closure Problem</h3>
+            
+            <div class="code-block">
+function Counter() {
+    const [count, setCount] = useState(0);
+    
+    const handleClick = () => {
+        setTimeout(() => {
+            setCount(count + 1);  // ❌ BUG! Stale closure
+        }, 3000);
+    };
+    
+    return <button onClick={handleClick}>{count}</button>;
+}
+
+// If you click 3 times quickly, count only becomes 1 (not 3!)
+// Why? Each setTimeout closes over the initial count value (0)
+            </div>
+
+            <div class="interview-question">
+                <h4>❓ How to fix this?</h4>
+                <button class="reveal-btn" onclick="revealAnswer('react1')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="react1">
+                    <h4>✅ Solution: Functional Updates</h4>
+                    <div class="code-block">
+const handleClick = () => {
+    setTimeout(() => {
+        setCount(prevCount => prevCount + 1);  // ✅ Always uses latest
+    }, 3000);
+};
+                    </div>
+                    <p><strong>Why this works:</strong> The function passed to setCount receives the latest state value, avoiding the stale closure.</p>
+                </div>
+            </div>
+
+            <h3>useEffect Cleanup</h3>
+            
+            <div class="code-block">
+function Timer() {
+    const [count, setCount] = useState(0);
+    
+    useEffect(() => {
+        const id = setInterval(() => {
+            console.log(count);  // ❌ Always logs 0 (stale closure)
+            setCount(count + 1);  // ❌ Only increments once
+        }, 1000);
+        
+        return () => clearInterval(id);
+    }, []);  // Empty deps = closure over initial count (0)
+    
+    return <div>{count}</div>;
+}
+            </div>
+
+            <div class="interview-question">
+                <h4>❓ How to fix this?</h4>
+                <button class="reveal-btn" onclick="revealAnswer('react2')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="react2">
+                    <h4>✅ Solution 1: Add Dependency</h4>
+                    <div class="code-block">
+useEffect(() => {
+    const id = setInterval(() => {
+        console.log(count);
+        setCount(count + 1);
+    }, 1000);
+    
+    return () => clearInterval(id);
+}, [count]);  // ✅ Re-create interval when count changes
+                    </div>
+                    
+                    <h4>✅ Solution 2: Functional Update</h4>
+                    <div class="code-block">
+useEffect(() => {
+    const id = setInterval(() => {
+        setCount(c => c + 1);  // ✅ No closure over count
+    }, 1000);
+    
+    return () => clearInterval(id);
+}, []);  // Can keep empty deps
+                    </div>
+                    
+                    <h4>✅ Solution 3: useRef</h4>
+                    <div class="code-block">
+const countRef = useRef(0);
+
+useEffect(() => {
+    const id = setInterval(() => {
+        countRef.current++;
+        setCount(countRef.current);
+    }, 1000);
+    
+    return () => clearInterval(id);
+}, []);
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MEMORY -->
+        <div class="section">
+            <h2>🧠 Memory Implications</h2>
+            
+            <h3>Closures Keep Variables Alive</h3>
+            
+            <div class="code-block">
+function createHeavyObject() {
+    const bigData = new Array(1000000).fill("data");  // Big array
+    
+    return function() {
+        console.log(bigData[0]);  // Closure over bigData
+    };
+}
+
+const func = createHeavyObject();
+// bigData is still in memory because func references it!
+// Even though createHeavyObject has finished
+            </div>
+
+            <div class="concept-box warning">
+                <p><strong>Memory Leak Risk:</strong> If you don't need the outer variable anymore, the closure prevents garbage collection!</p>
+            </div>
+
+            <h3>How to Avoid Memory Leaks</h3>
+            
+            <div class="code-block">
+// ❌ Memory Leak
+function setupHandler() {
+    const bigData = loadHugeDataset();  // Huge object
+    
+    button.addEventListener('click', function() {
+        doSomething();  // Doesn't use bigData
+        // But bigData is kept in memory due to closure!
+    });
+}
+
+// ✅ Fixed - Don't Close Over Unnecessary Variables
+function setupHandler() {
+    const bigData = loadHugeDataset();
+    const result = processData(bigData);  // Process it
+    // bigData can be garbage collected here
+    
+    button.addEventListener('click', function() {
+        doSomething(result);  // Only close over what's needed
+    });
+}
+
+// ✅ Alternative - Clean Up
+function setupHandler() {
+    let bigData = loadHugeDataset();
+    
+    button.addEventListener('click', function() {
+        doSomething();
+        bigData = null;  // Allow garbage collection
+    });
+}
+            </div>
+        </div>
+
+        <!-- COMMON BUGS -->
+        <div class="section" id="bugs">
+            <h2>🐛 Common Closure Bugs</h2>
+            
+            <h3>Bug 1: Shared Variable</h3>
+            
+            <div class="code-block">
+const functions = [];
+
+for (var i = 0; i < 3; i++) {
+    functions.push(function() {
+        return i;
+    });
+}
+
+console.log(functions[0]());  // ???
+console.log(functions[1]());  // ???
+console.log(functions[2]());  // ???
+            </div>
+
+            <div class="interview-question">
+                <h4>❓ What's logged?</h4>
+                <button class="reveal-btn" onclick="revealAnswer('bug2')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="bug2">
+                    <div class="code-block output">
+3
+3
+3
+                    </div>
+                    <p>All closures share the same <code>i</code> variable. By the time functions run, <code>i = 3</code>.</p>
+                    
+                    <h4>✅ Fix with let:</h4>
+                    <div class="code-block">
+for (let i = 0; i < 3; i++) {  // Each iteration gets new i
+    functions.push(function() {
+        return i;
+    });
+}
+// Logs: 0, 1, 2
+                    </div>
+                </div>
+            </div>
+
+            <h3>Bug 2: Event Handler Memory Leak</h3>
+            
+            <div class="code-block">
+function Component() {
+    const [data, setData] = useState([]);
+    
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        // ❌ BUG: No cleanup! Memory leak
+    }, []);
+    
+    function handleResize() {
+        console.log(data);  // Closes over data
+    }
+}
+
+// Every time component remounts, adds a new listener
+// Old listeners are never removed
+// Each listener holds a reference to old data (memory leak!)
+            </div>
+
+            <div class="interview-question">
+                <h4>❓ How to fix?</h4>
+                <button class="reveal-btn" onclick="revealAnswer('bug3')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="bug3">
+                    <div class="code-block">
+useEffect(() => {
+    function handleResize() {
+        console.log(data);
+    }
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+        window.removeEventListener('resize', handleResize);  // ✅ Cleanup
+    };
+}, [data]);  // ✅ Include dependency
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TYPESCRIPT -->
+        <div class="section">
+            <h2>🔷 TypeScript with Closures</h2>
+            
+            <h3>Typing Function Factories</h3>
+            
+            <div class="code-block typescript">
+function createMultiplier(factor: number): (num: number) => number {
+    return function(num: number): number {
+        return num * factor;
+    };
+}
+
+const double = createMultiplier(2);
+console.log(double(5));  // 10
+            </div>
+
+            <h3>Generic Closures</h3>
+            
+            <div class="code-block typescript">
+function createGetter&lt;T&gt;(value: T): () => T {
+    return function(): T {
+        return value;
+    };
+}
+
+const getString = createGetter&lt;string&gt;("hello");
+const getNumber = createGetter&lt;number&gt;(42);
+
+console.log(getString());  // "hello"
+console.log(getNumber());  // 42
+            </div>
+
+            <h3>Typing Private Counter</h3>
+            
+            <div class="code-block typescript">
+interface Counter {
+    increment: () => number;
+    decrement: () => number;
+    getValue: () => number;
+}
+
+function createCounter(): Counter {
+    let count = 0;
+    
+    return {
+        increment: () => ++count,
+        decrement: () => --count,
+        getValue: () => count
+    };
+}
+            </div>
+        </div>
+
+        <!-- CHECKLIST -->
+        <div class="section">
+            <h2>✅ Day 4 Mastery Checklist</h2>
+            
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can explain what a closure is in simple terms</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can fix the classic loop + setTimeout bug 3 ways</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I understand memory implications of closures</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can implement private variables with closures</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I understand stale closures in React</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can identify closure-related memory leaks</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can type closures correctly in TypeScript</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="completion-tracker">
+        <h4>Day 4 Progress</h4>
+        <div class="completion-stat">
+            <span>Completed:</span>
+            <span id="completedCount">0/7</span>
+        </div>
+        <div class="completion-stat">
+            <span>Percentage:</span>
+            <span id="completedPercent">0%</span>
+        </div>
+        <hr style="margin: 0.75rem 0; border: none; border-top: 1px solid var(--border);">
+        <h4>Study Timer</h4>
+        <div class="timer-display" id="timerDisplay">00:00:00</div>
+        <div class="timer-controls">
+            <button class="timer-btn start" onclick="startTimer()">▶</button>
+            <button class="timer-btn pause" onclick="pauseTimer()">⏸</button>
+            <button class="timer-btn reset" onclick="resetTimer()">↻</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const btn = document.querySelector('.theme-toggle');
+            btn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light' : '🌙 Dark';
+            localStorage.setItem('theme-day4', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        if (localStorage.getItem('theme-day4') === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.theme-toggle').textContent = '☀️ Light';
+        }
+
+        function revealAnswer(id) {
+            const answer = document.getElementById(id);
+            const btn = answer.previousElementSibling;
+            answer.classList.toggle('show');
+            btn.textContent = answer.classList.contains('show') ? '🔒 Hide' : '🔓 Reveal';
+        }
+
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+            const count = checked.length;
+            const total = checkboxes.length;
+            const percent = Math.round((count / total) * 100);
+            
+            document.getElementById('completedCount').textContent = `${count}/${total}`;
+            document.getElementById('completedPercent').textContent = `${percent}%`;
+            
+            localStorage.setItem('day4-progress', JSON.stringify(Array.from(checkboxes).map(cb => cb.checked)));
+        }
+
+        const savedProgress = localStorage.getItem('day4-progress');
+        if (savedProgress) {
+            const states = JSON.parse(savedProgress);
+            document.querySelectorAll('input[type="checkbox"]').forEach((cb, i) => {
+                if (states[i]) cb.checked = true;
+            });
+            updateProgress();
+        }
+
+        document.querySelectorAll('.code-block').forEach(block => {
+            const button = document.createElement('button');
+            button.className = 'copy-btn';
+            button.innerHTML = '📋 Copy';
+            button.onclick = () => {
+                const code = block.textContent.replace('📋 Copy', '').replace('✓ Copied!', '').trim();
+                navigator.clipboard.writeText(code).then(() => {
+                    button.innerHTML = '✓ Copied!';
+                    button.classList.add('copied');
+                    setTimeout(() => {
+                        button.innerHTML = '📋 Copy';
+                        button.classList.remove('copied');
+                    }, 2000);
+                });
+            };
+            block.appendChild(button);
+        });
+
+        let timerInterval, timerSeconds = 0, timerRunning = false;
+
+        function startTimer() {
+            if (!timerRunning) {
+                timerRunning = true;
+                timerInterval = setInterval(() => {
+                    timerSeconds++;
+                    updateTimerDisplay();
+                    localStorage.setItem('day4-studyTime', timerSeconds);
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            timerRunning = false;
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timerSeconds = 0;
+            updateTimerDisplay();
+            localStorage.setItem('day4-studyTime', 0);
+        }
+
+        function updateTimerDisplay() {
+            const h = Math.floor(timerSeconds / 3600);
+            const m = Math.floor((timerSeconds % 3600) / 60);
+            const s = timerSeconds % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        const savedTime = localStorage.getItem('day4-studyTime');
+        if (savedTime) {
+            timerSeconds = parseInt(savedTime);
+            updateTimerDisplay();
+        }
+    </script>
+</body>
+</html>

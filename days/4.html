@@ -1,0 +1,2290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Master JavaScript Closures for senior frontend interviews. Learn closure patterns, memory implications, and React-specific closure bugs.">
+    <meta name="keywords" content="JavaScript Closures, Frontend Interview, React Closures, Memory Leaks, Private Variables, Function Factory">
+    <meta name="author" content="Frontend Interview Prep">
+    <meta property="og:title" content="Day 4: Closures Deep Dive | Frontend Interview Prep">
+    <meta property="og:description" content="Complete guide to mastering closures for senior frontend interviews">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#10b981">
+    <title>Day 4: Closures Deep Dive | Frontend Interview Prep</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --bg-light: #f8fafc;
+            --bg-dark: #1e293b;
+            --text-light: #0f172a;
+            --text-dark: #f1f5f9;
+            --code-bg: #1e1e1e;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            line-height: 1.6;
+            color: var(--text-light);
+            background: var(--bg-light);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .container {
+            background: #0f172a;
+        }
+
+        body.dark-mode .nav {
+            background: #0f172a;
+            border-bottom-color: #334155;
+        }
+
+        body.dark-mode .section {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        body.dark-mode .concept-box,
+        body.dark-mode .interview-question,
+        body.dark-mode .practice-problem,
+        body.dark-mode .cheat-sheet,
+        body.dark-mode .comparison-table {
+            background: #0f172a;
+            border-color: #334155;
+        }
+
+        body.dark-mode code {
+            background: #1e1e1e;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: inherit;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-dark);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 2rem 2rem 2rem;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, var(--primary), #34d399);
+            border-radius: 16px;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.95;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            height: 8px;
+            border-radius: 4px;
+            margin: 2rem auto;
+            max-width: 600px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .section {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .section h3 {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .section h4 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .concept-box {
+            background: #d1fae5;
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .concept-box.warning {
+            background: #fef3c7;
+            border-left-color: var(--warning);
+        }
+
+        .concept-box.danger {
+            background: #fee2e2;
+            border-left-color: var(--danger);
+        }
+
+        .concept-box.purple {
+            background: #f3e8ff;
+            border-left-color: var(--purple);
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            color: #d4d4d4;
+            padding: 1.5rem;
+            padding-top: 3rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #333;
+            font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            white-space: pre;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: 'JavaScript';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .code-block.typescript::before {
+            content: 'TypeScript';
+            background: #3178c6;
+        }
+
+        .code-block.output::before {
+            content: 'Output';
+            background: #10b981;
+        }
+
+        .code-block.error::before {
+            content: 'Error';
+            background: #ef4444;
+        }
+
+        .code-block.react::before {
+            content: 'React';
+            background: #61dafb;
+            color: #000;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        body.dark-mode code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+
+        .copy-btn {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+        }
+
+        .copy-btn:hover {
+            background: rgba(16, 185, 129, 0.3);
+        }
+
+        .copy-btn.copied {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border-color: #10b981;
+        }
+
+        .interview-question {
+            background: #fef3c7;
+            border: 2px solid var(--warning);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        body.dark-mode .interview-question {
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .interview-question h4 {
+            color: var(--warning);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            margin-top: 0;
+        }
+
+        .interview-answer {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--warning);
+        }
+
+        .interview-answer.show {
+            display: block;
+        }
+
+        .reveal-btn {
+            background: var(--warning);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+
+        .reveal-btn:hover {
+            background: #d97706;
+        }
+
+        .practice-problem {
+            background: #dbeafe;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        body.dark-mode .practice-problem {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .practice-problem h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+
+        .checkbox-group {
+            margin: 1.5rem 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .cheat-sheet {
+            background: #f0fdf4;
+            border: 3px solid var(--success);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        body.dark-mode .cheat-sheet {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .cheat-sheet h3 {
+            color: var(--success);
+            margin-top: 0;
+        }
+
+        .comparison-table {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        body.dark-mode .comparison-table {
+            background: #1e293b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        table th,
+        table td {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        body.dark-mode table tr:nth-child(even) {
+            background: #1e293b;
+        }
+
+        .analogy {
+            background: #fef3c7;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+            margin: 1.5rem 0;
+            font-style: italic;
+        }
+
+        body.dark-mode .analogy {
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .story-box {
+            background: #fef3c7;
+            border: 2px dashed #f59e0b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        body.dark-mode .story-box {
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .story-box h4 {
+            color: #f59e0b;
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+
+        .key-insight {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            font-weight: 500;
+        }
+
+        .memory-box {
+            background: #fee2e2;
+            border-left: 4px solid var(--danger);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        body.dark-mode .memory-box {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .memory-box h4 {
+            color: var(--danger);
+            margin-top: 0;
+        }
+
+        .pattern-box {
+            background: #f3e8ff;
+            border-left: 4px solid var(--purple);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        body.dark-mode .pattern-box {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .pattern-box h4 {
+            color: var(--purple);
+            margin-top: 0;
+        }
+
+        .completion-tracker {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 200px;
+            z-index: 999;
+        }
+
+        body.dark-mode .completion-tracker {
+            background: #1e293b;
+        }
+
+        .completion-tracker h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .completion-stat {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+            font-weight: 600;
+        }
+
+        .timer-display {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: bold;
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .timer-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .timer-btn.start {
+            background: var(--success);
+            color: white;
+        }
+
+        .timer-btn.pause {
+            background: var(--warning);
+            color: white;
+        }
+
+        .timer-btn.reset {
+            background: var(--danger);
+            color: white;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+        }
+
+        .highlight {
+            background: linear-gradient(180deg, transparent 60%, #fef08a 60%);
+            padding: 0.2rem 0;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero-stats {
+                gap: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .nav-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+                width: 100%;
+            }
+
+            .container {
+                padding: 100px 1rem 1rem 1rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .section h3 {
+                font-size: 1.2rem;
+            }
+
+            .completion-tracker {
+                display: none;
+            }
+
+            .code-block {
+                font-size: 0.8rem;
+                padding: 1rem;
+                padding-top: 3rem;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            table th,
+            table td {
+                padding: 0.5rem;
+            }
+
+            .back-to-top {
+                bottom: 1rem;
+                left: 1rem;
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .code-block {
+                font-size: 0.75rem;
+            }
+
+            .nav {
+                padding: 0.75rem 1rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Accessibility */
+        a:focus,
+        button:focus,
+        input:focus {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="logo">🔒 Day 4: Closures</div>
+            <div class="nav-links">
+                <a href="#definition">Definition</a>
+                <a href="#patterns">Patterns</a>
+                <a href="#react">React Closures</a>
+                <a href="#interview">Interview Q's</a>
+                <a href="#cheatsheet">Cheat Sheet</a>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Day 4: Closures - JavaScript's Superpower</h1>
+            <p>Master the concept that <span class="highlight">powers 80% of React patterns</span> and appears in every senior frontend interview. Closures are the foundation of modern JavaScript.</p>
+            <div class="hero-stats">
+                <div class="stat-box">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Interview Questions</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Real-World Patterns</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">React Examples</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- WHY CLOSURES MATTER -->
+        <div class="section">
+            <h2>🎯 Why Closures Are Critical</h2>
+            
+            <div class="concept-box">
+                <p><span class="icon">💡</span><strong>Reality Check:</strong> If you don't understand closures, you don't understand JavaScript. Closures power React hooks, event handlers, async patterns, and 90% of modern JavaScript patterns.</p>
+            </div>
+
+            <h3>What Happens in Real Interviews</h3>
+            <ul>
+                <li><strong>React useState bug:</strong> "Why does this always log 0?" (closure issue)</li>
+                <li><strong>Loop + setTimeout:</strong> "Why does it log 5, 5, 5?" (the classic)</li>
+                <li><strong>Private variables:</strong> "Implement a counter with private state" (closure pattern)</li>
+                <li><strong>Memory leaks:</strong> "Find the memory leak in this code" (closure + DOM)</li>
+            </ul>
+
+            <div class="story-box">
+                <h4>💼 Real Interview Story: Meta E5</h4>
+                <p>Candidate with 6 years experience interviewing at Meta. Interviewer shows this React code:</p>
+                <div class="code-block react">
+function Counter() {
+    const [count, setCount] = useState(0);
+    
+    useEffect(() => {
+        const timer = setInterval(() => {
+            console.log(count);  // Always logs 0!
+        }, 1000);
+        
+        return () => clearInterval(timer);
+    }, []);
+    
+    return &lt;button onClick={() => setCount(count + 1)}&gt;{count}&lt;/button&gt;;
+}
+                </div>
+                <p><strong>Question:</strong> "Why does it always log 0? How do you fix it?"</p>
+                <p><strong>Candidate's answer:</strong> "Uh... maybe React is broken?"</p>
+                <p><strong>Result:</strong> ❌ Rejected. Didn't understand closures.</p>
+                <p><strong>The real answer:</strong> The interval callback captured the initial <code>count</code> value (0) in a closure. It never sees the updated value.</p>
+                <p><strong>The lesson:</strong> <em>Without closure mastery, you cannot debug React bugs.</em></p>
+            </div>
+        </div>
+
+        <!-- PART 1: WHAT IS A CLOSURE -->
+        <div class="section" id="definition">
+            <h2>🔍 Part 1: What Is A Closure?</h2>
+
+            <div class="key-insight">
+                <span class="icon">🎯</span> <strong>FORMAL DEFINITION:</strong> A closure is a function that has access to variables from its outer (enclosing) lexical scope, even after the outer function has returned.
+            </div>
+
+            <h3>The Simple Explanation</h3>
+            
+            <div class="analogy">
+                <strong>🎒 The Backpack Analogy:</strong><br><br>
+                Imagine a function is a person going on a trip:<br>
+                • <strong>The function</strong> = The person<br>
+                • <strong>Variables in scope</strong> = Items in their backpack<br>
+                • <strong>Closure</strong> = The backpack goes with them wherever they go<br><br>
+                When the function (person) is created inside another function, it packs variables from that scope into its "backpack" (closure). Even when it travels far away (returned from outer function), it still has access to those variables.
+            </div>
+
+            <h3>Your First Closure</h3>
+
+            <div class="code-block">
+function outer() {
+    const message = "Hello";  // Variable in outer scope
+    
+    function inner() {
+        console.log(message);  // inner "closes over" message
+    }
+    
+    return inner;
+}
+
+const myFunc = outer();  // outer() returns inner
+myFunc();                // Logs "Hello"
+
+// WHY THIS WORKS:
+// 1. outer() created message variable
+// 2. inner() was defined inside outer()
+// 3. inner() "remembers" message (closure!)
+// 4. Even after outer() finished, inner() still has access to message
+            </div>
+
+            <div class="concept-box">
+                <p><span class="icon">💡</span><strong>Key Point:</strong> The inner function carries a reference to the outer function's variables. It doesn't copy them—it maintains a live link!</p>
+            </div>
+
+            <h3>Breaking It Down</h3>
+
+            <div class="code-block">
+function makeGreeter(name) {
+    // 'name' is in makeGreeter's scope
+    
+    return function() {
+        console.log(`Hello, ${name}!`);
+        // This function "closes over" the 'name' variable
+    };
+}
+
+const greetAlice = makeGreeter("Alice");
+const greetBob = makeGreeter("Bob");
+
+greetAlice();  // "Hello, Alice!"
+greetBob();    // "Hello, Bob!"
+
+// Each returned function has its OWN closure
+// greetAlice's closure contains name="Alice"
+// greetBob's closure contains name="Bob"
+            </div>
+
+            <div class="concept-box warning">
+                <p><span class="icon">⚠️</span><strong>Critical Understanding:</strong> Each function call creates a NEW closure with its OWN set of variables. They don't share!</p>
+            </div>
+
+            <h3>Closures Happen Automatically</h3>
+
+            <p>You don't need to do anything special. If an inner function references an outer variable, JavaScript automatically creates a closure.</p>
+
+            <div class="code-block">
+// Example 1: Simple closure
+function add(x) {
+    return function(y) {
+        return x + y;  // Closure over 'x'
+    };
+}
+
+const add5 = add(5);
+console.log(add5(3));  // 8 (5 + 3)
+
+// Example 2: Multiple variables
+function createPerson(name, age) {
+    return function() {
+        return `${name} is ${age} years old`;
+        // Closure over BOTH name and age
+    };
+}
+
+const describe = createPerson("Alice", 25);
+console.log(describe());  // "Alice is 25 years old"
+            </div>
+
+            <h3>🔥 Interview Question 1: Basic Closure</h3>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> What's the output?</h4>
+                <div class="code-block">
+function outer() {
+    let count = 0;
+    
+    return function inner() {
+        count++;
+        return count;
+    };
+}
+
+const counter = outer();
+console.log(counter());  // ?
+console.log(counter());  // ?
+console.log(counter());  // ?
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('closure1')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="closure1">
+                    <h4>✅ Answer:</h4>
+                    <div class="code-block output">
+1
+2
+3
+                    </div>
+                    <h4>📝 Explanation:</h4>
+                    <ol>
+                        <li><code>outer()</code> creates a variable <code>count = 0</code></li>
+                        <li>It returns <code>inner</code> function</li>
+                        <li><code>inner</code> closes over <code>count</code></li>
+                        <li>Each call to <code>counter()</code> increments the SAME <code>count</code> variable</li>
+                        <li>The closure maintains state across multiple calls!</li>
+                    </ol>
+                    <div class="key-insight">
+                        <span class="icon">🎯</span> <strong>CRITICAL:</strong> Closures can maintain STATE. The <code>count</code> variable persists between function calls. This is how private state works in JavaScript!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PART 2: THE CLASSIC LOOP BUG -->
+        <div class="section">
+            <h2>🐛 Part 2: The Classic Loop + setTimeout Bug</h2>
+
+            <div class="memory-box">
+                <h4><span class="icon">⚠️</span> This Bug Breaks 70% of Candidates</h4>
+                <p>This is THE most famous closure bug. If you master this, you understand closures.</p>
+            </div>
+
+            <h3>The Bug</h3>
+
+            <div class="code-block">
+for (var i = 0; i < 5; i++) {
+    setTimeout(function() {
+        console.log(i);
+    }, 1000);
+}
+
+// Expected: 0, 1, 2, 3, 4
+// Actual: 5, 5, 5, 5, 5
+            </div>
+
+            <h3>Why Does This Happen?</h3>
+
+            <div class="code-block">
+// What Actually Happens:
+
+// 1. Loop runs 5 times, i goes: 0, 1, 2, 3, 4, then 5
+// 2. Five setTimeout callbacks are queued
+// 3. All callbacks close over the SAME 'i' variable
+// 4. By the time callbacks run (after 1 second), loop is done
+// 5. All callbacks see i = 5
+
+// Visual representation:
+var i;  // ONE variable shared by all callbacks
+
+for (i = 0; i < 5; i++) {
+    setTimeout(function() {
+        console.log(i);  // All callbacks reference THE SAME 'i'
+    }, 1000);
+}
+// i is now 5
+
+// All 5 callbacks log the current value of 'i': 5
+            </div>
+
+            <div class="concept-box danger">
+                <p><span class="icon">❌</span><strong>The Problem:</strong> <code>var</code> is function-scoped, not block-scoped. There's only ONE <code>i</code> variable, and all callbacks share it!</p>
+            </div>
+
+            <h3>Fix #1: Use let (Block Scope)</h3>
+
+            <div class="code-block">
+for (let i = 0; i < 5; i++) {  // ← Changed var to let
+    setTimeout(function() {
+        console.log(i);
+    }, 1000);
+}
+
+// Output: 0, 1, 2, 3, 4 ✅
+
+// Why it works:
+// 'let' creates a NEW 'i' for each iteration
+// Each callback closes over its OWN 'i'
+// So callback 0 has i=0, callback 1 has i=1, etc.
+            </div>
+
+            <div class="concept-box">
+                <p><span class="icon">💡</span><strong>Block Scope Magic:</strong> <code>let</code> in a loop creates a new binding for each iteration. It's like having 5 different <code>i</code> variables!</p>
+            </div>
+
+            <h3>Fix #2: IIFE (Immediately Invoked Function Expression)</h3>
+
+            <div class="code-block">
+for (var i = 0; i < 5; i++) {
+    (function(j) {  // ← Create new scope with IIFE
+        setTimeout(function() {
+            console.log(j);  // j is unique for each iteration
+        }, 1000);
+    })(i);  // ← Pass current i as j
+}
+
+// Output: 0, 1, 2, 3, 4 ✅
+
+// Why it works:
+// 1. IIFE creates a NEW function scope each iteration
+// 2. Each IIFE gets the current 'i' value as parameter 'j'
+// 3. The setTimeout callback closes over that specific 'j'
+// 4. So each callback has its own 'j': 0, 1, 2, 3, 4
+            </div>
+
+            <div class="concept-box">
+                <p><span class="icon">💡</span><strong>IIFE Trick:</strong> By wrapping in a function and immediately calling it, you create a new scope that "captures" the current value.</p>
+            </div>
+
+            <h3>Fix #3: Use forEach</h3>
+
+            <div class="code-block">
+[0, 1, 2, 3, 4].forEach(function(i) {
+    setTimeout(function() {
+        console.log(i);
+    }, 1000);
+});
+
+// Output: 0, 1, 2, 3, 4 ✅
+
+// Why it works:
+// forEach creates a NEW function scope for each item
+// Each callback parameter 'i' is unique
+// No shared variable problem!
+            </div>
+
+            <h3>Fix #4: Create Closure Function</h3>
+
+            <div class="code-block">
+function createLogger(value) {
+    return function() {
+        console.log(value);
+    };
+}
+
+for (var i = 0; i < 5; i++) {
+    setTimeout(createLogger(i), 1000);
+}
+
+// Output: 0, 1, 2, 3, 4 ✅
+
+// Why it works:
+// createLogger is called 5 times with different values
+// Each call creates a NEW closure with its own 'value'
+// Clean and reusable!
+            </div>
+
+            <div class="key-insight">
+                <span class="icon">🎯</span> <strong>PATTERN TO REMEMBER:</strong> When you need to "capture" a value in a loop, create a NEW scope (either with <code>let</code>, IIFE, or function call).
+            </div>
+
+            <h3>🔥 Interview Question 2: The Loop Bug Variation</h3>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> What's the output and how do you fix it?</h4>
+                <div class="code-block">
+const funcs = [];
+
+for (var i = 0; i < 3; i++) {
+    funcs.push(function() {
+        console.log(i);
+    });
+}
+
+funcs[0]();  // ?
+funcs[1]();  // ?
+funcs[2]();  // ?
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('closure2')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="closure2">
+                    <h4>✅ Answer:</h4>
+                    <div class="code-block output">
+3
+3
+3
+                    </div>
+                    <h4>📝 Why:</h4>
+                    <p>Same problem! All three functions close over the SAME <code>i</code> variable. By the time they're called, <code>i = 3</code>.</p>
+                    
+                    <h4>✅ Fix #1: Use let</h4>
+                    <div class="code-block">
+const funcs = [];
+
+for (let i = 0; i < 3; i++) {  // ← let instead of var
+    funcs.push(function() {
+        console.log(i);
+    });
+}
+
+funcs[0]();  // 0
+funcs[1]();  // 1
+funcs[2]();  // 2
+                    </div>
+
+                    <h4>✅ Fix #2: Capture with parameter</h4>
+                    <div class="code-block">
+const funcs = [];
+
+for (var i = 0; i < 3; i++) {
+    funcs.push((function(j) {
+        return function() {
+            console.log(j);
+        };
+    })(i));
+}
+
+funcs[0]();  // 0
+funcs[1]();  // 1
+funcs[2]();  // 2
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PART 3: REAL-WORLD PATTERNS -->
+        <div class="section" id="patterns">
+            <h2>🎨 Part 3: Real-World Closure Patterns</h2>
+
+            <h3>Pattern 1: Private Variables</h3>
+
+            <div class="pattern-box">
+                <h4>💡 Use Case:</h4>
+                <p>Create variables that can only be accessed through specific functions. This is how you do encapsulation in JavaScript!</p>
+            </div>
+
+            <div class="code-block">
+function createCounter() {
+    let count = 0;  // Private variable!
+    
+    return {
+        increment: function() {
+            count++;
+            return count;
+        },
+        decrement: function() {
+            count--;
+            return count;
+        },
+        getCount: function() {
+            return count;
+        }
+    };
+}
+
+const counter = createCounter();
+console.log(counter.increment());  // 1
+console.log(counter.increment());  // 2
+console.log(counter.decrement());  // 1
+console.log(counter.getCount());   // 1
+
+// Try to access count directly:
+console.log(counter.count);  // undefined
+
+// count is PRIVATE - no way to access it directly!
+// Can only interact through increment/decrement/getCount
+            </div>
+
+            <div class="concept-box">
+                <p><span class="icon">💡</span><strong>Why This Matters:</strong> Before ES6 classes with private fields (<code>#field</code>), closures were THE way to create private data. This pattern is still used heavily in production code!</p>
+            </div>
+
+            <h3>Pattern 2: Function Factory</h3>
+
+            <div class="code-block">
+function createMultiplier(multiplier) {
+    return function(number) {
+        return number * multiplier;
+    };
+}
+
+const double = createMultiplier(2);
+const triple = createMultiplier(3);
+const quadruple = createMultiplier(4);
+
+console.log(double(5));      // 10
+console.log(triple(5));      // 15
+console.log(quadruple(5));   // 20
+
+// Each function has its own 'multiplier' value in closure
+            </div>
+
+            <h3>Pattern 3: Once Function</h3>
+
+            <div class="pattern-box">
+                <h4>💡 Use Case:</h4>
+                <p>Ensure a function can only be called once. Useful for initialization, event handlers, API calls.</p>
+            </div>
+
+            <div class="code-block">
+function once(fn) {
+    let called = false;  // Private state
+    let result;
+    
+    return function(...args) {
+        if (!called) {
+            called = true;
+            result = fn.apply(this, args);
+        }
+        return result;
+    };
+}
+
+// Usage:
+const initialize = once(function() {
+    console.log("Initializing...");
+    return "Initialized!";
+});
+
+console.log(initialize());  // "Initializing..." → "Initialized!"
+console.log(initialize());  // "Initialized!" (no log!)
+console.log(initialize());  // "Initialized!" (no log!)
+
+// The function only runs ONCE, even if called multiple times
+            </div>
+
+            <div class="concept-box">
+                <p><span class="icon">💡</span><strong>Real Usage:</strong> This pattern is used in libraries like Lodash (<code>_.once()</code>) and for things like ensuring initialization code runs only once.</p>
+            </div>
+
+            <h3>Pattern 4: Memoization (Caching)</h3>
+
+            <div class="code-block">
+function memoize(fn) {
+    const cache = {};  // Private cache
+    
+    return function(...args) {
+        const key = JSON.stringify(args);
+        
+        if (key in cache) {
+            console.log("Cached!");
+            return cache[key];
+        }
+        
+        console.log("Computing...");
+        const result = fn.apply(this, args);
+        cache[key] = result;
+        return result;
+    };
+}
+
+// Example: Expensive fibonacci calculation
+function fibonacci(n) {
+    if (n <= 1) return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+const memoFib = memoize(fibonacci);
+
+console.log(memoFib(10));  // "Computing..." → 55
+console.log(memoFib(10));  // "Cached!" → 55 (instant!)
+            </div>
+
+            <h3>Pattern 5: Module Pattern</h3>
+
+            <div class="code-block">
+const Calculator = (function() {
+    // Private variables and functions
+    let result = 0;
+    
+    function log(operation, value) {
+        console.log(`${operation}: ${value}`);
+    }
+    
+    // Public API
+    return {
+        add: function(x) {
+            result += x;
+            log("Added", x);
+            return this;  // For chaining
+        },
+        subtract: function(x) {
+            result -= x;
+            log("Subtracted", x);
+            return this;
+        },
+        multiply: function(x) {
+            result *= x;
+            log("Multiplied", x);
+            return this;
+        },
+        getResult: function() {
+            return result;
+        },
+        reset: function() {
+            result = 0;
+            return this;
+        }
+    };
+})();
+
+// Usage:
+Calculator
+    .add(10)       // "Added: 10"
+    .multiply(2)   // "Multiplied: 2"
+    .subtract(5);  // "Subtracted: 5"
+
+console.log(Calculator.getResult());  // 15
+
+// Can't access private variables:
+console.log(Calculator.result);  // undefined
+console.log(Calculator.log);     // undefined
+            </div>
+
+            <div class="key-insight">
+                <span class="icon">🎯</span> <strong>PATTERN SUMMARY:</strong> Closures let you create private state and expose only what you want through a public API. This is fundamental to module patterns!
+            </div>
+
+            <h3>🔥 Interview Question 3: Implement Private Counter</h3>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Create a counter with private state</h4>
+                <p>Requirements:</p>
+                <ul>
+                    <li>Should have <code>increment()</code>, <code>decrement()</code>, and <code>getValue()</code> methods</li>
+                    <li>The internal count should be private (not accessible from outside)</li>
+                    <li>Starting value should be customizable</li>
+                </ul>
+                <button class="reveal-btn" onclick="revealAnswer('closure3')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="closure3">
+                    <h4>✅ Solution:</h4>
+                    <div class="code-block">
+function createCounter(initialValue = 0) {
+    let count = initialValue;  // Private!
+    
+    return {
+        increment() {
+            count++;
+            return count;
+        },
+        decrement() {
+            count--;
+            return count;
+        },
+        getValue() {
+            return count;
+        }
+    };
+}
+
+// Test:
+const counter = createCounter(10);
+console.log(counter.getValue());   // 10
+console.log(counter.increment());  // 11
+console.log(counter.increment());  // 12
+console.log(counter.decrement());  // 11
+console.log(counter.count);        // undefined (private!)
+                    </div>
+                    <h4>📝 Key Points:</h4>
+                    <ul>
+                        <li><code>count</code> is trapped in the closure</li>
+                        <li>No way to access or modify it directly</li>
+                        <li>Can only interact through the public methods</li>
+                        <li>Each call to <code>createCounter()</code> creates independent counters</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- PART 4: MEMORY & PERFORMANCE -->
+        <div class="section">
+            <h2>💾 Part 4: Memory Implications</h2>
+
+            <div class="memory-box">
+                <h4><span class="icon">⚠️</span> Closures Keep Variables Alive</h4>
+                <p>When a function closes over variables, those variables CANNOT be garbage collected as long as the function exists. This can cause memory leaks if you're not careful!</p>
+            </div>
+
+            <h3>How Closures Affect Memory</h3>
+
+            <div class="code-block">
+function createHeavyObject() {
+    const hugeArray = new Array(1000000).fill("data");  // 1 million items!
+    
+    return function() {
+        // This function closes over hugeArray
+        console.log(hugeArray[0]);
+    };
+}
+
+const myFunc = createHeavyObject();
+
+// Problem: hugeArray is kept in memory as long as myFunc exists
+// Even though we only use the first element!
+// The ENTIRE array stays in memory
+            </div>
+
+            <h3>Memory Leak Example</h3>
+
+            <div class="code-block">
+function addClickHandler() {
+    const bigData = new Array(100000).fill("x");
+    
+    document.getElementById("button").addEventListener("click", function() {
+        console.log("Clicked!");
+        // This callback closes over bigData
+        // Even though it doesn't use it!
+    });
+}
+
+// Every time addClickHandler is called, bigData stays in memory
+// If you call this 100 times, you have 100 bigData arrays in memory!
+            </div>
+
+            <div class="concept-box danger">
+                <p><span class="icon">❌</span><strong>Memory Leak Pattern:</strong> Event listeners + closures over large data = memory leak. The event listener keeps the closure alive, which keeps the data alive!</p>
+            </div>
+
+            <h3>How to Avoid Memory Leaks</h3>
+
+            <div class="code-block">
+// ❌ Bad: Closure over unnecessary data
+function setupHandler() {
+    const hugeData = fetchLargeDataset();
+    const importantValue = hugeData.summary;
+    
+    button.onclick = function() {
+        console.log(importantValue);
+        // Closes over BOTH hugeData AND importantValue!
+    };
+}
+
+// ✅ Good: Only close over what you need
+function setupHandler() {
+    const hugeData = fetchLargeDataset();
+    const importantValue = hugeData.summary;
+    
+    // Let hugeData be garbage collected:
+    button.onclick = function() {
+        console.log(importantValue);
+        // Only closes over importantValue
+    };
+    
+    // hugeData can now be garbage collected!
+}
+
+// ✅ Better: Nullify after use
+function setupHandler() {
+    let hugeData = fetchLargeDataset();
+    const importantValue = hugeData.summary;
+    hugeData = null;  // Explicitly allow garbage collection
+    
+    button.onclick = function() {
+        console.log(importantValue);
+    };
+}
+            </div>
+
+            <h3>React-Specific Memory Issue</h3>
+
+            <div class="code-block react">
+// ❌ Memory leak in React
+function Component() {
+    const [data, setData] = useState([]);
+    
+    useEffect(() => {
+        // Load huge dataset
+        const hugeData = loadDataset();
+        setData(hugeData);
+        
+        // Event listener closes over hugeData
+        window.addEventListener('resize', function() {
+            console.log("Resized");
+            // Doesn't use hugeData, but it's in the closure!
+        });
+        
+        // No cleanup! Listener stays forever!
+    }, []);
+    
+    return <div>{data.length} items</div>;
+}
+
+// ✅ Fixed version
+function Component() {
+    const [data, setData] = useState([]);
+    
+    useEffect(() => {
+        const hugeData = loadDataset();
+        setData(hugeData);
+        
+        // Don't close over hugeData in the listener
+        const handleResize = function() {
+            console.log("Resized");
+        };
+        
+        window.addEventListener('resize', handleResize);
+        
+        // Cleanup!
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+    
+    return <div>{data.length} items</div>;
+}
+            </div>
+
+            <div class="key-insight">
+                <span class="icon">🎯</span> <strong>GOLDEN RULE:</strong> In event listeners and useEffect, only close over the data you actually need. Remove event listeners in cleanup functions!
+            </div>
+        </div>
+
+        <!-- PART 5: REACT CLOSURES -->
+        <div class="section" id="react">
+            <h2>⚛️ Part 5: Closures in React</h2>
+
+            <div class="concept-box warning">
+                <p><span class="icon">⚠️</span><strong>Critical:</strong> 90% of React bugs are closure bugs. If you don't understand closures, you WILL write buggy React code.</p>
+            </div>
+
+            <h3>The Stale Closure Problem</h3>
+
+            <div class="code-block react">
+// ❌ BUG: Stale closure
+function Counter() {
+    const [count, setCount] = useState(0);
+    
+    const handleClick = () => {
+        setTimeout(() => {
+            setCount(count + 1);  // ❌ Uses stale 'count'
+        }, 3000);
+    };
+    
+    return (
+        &lt;div&gt;
+            &lt;p&gt;Count: {count}&lt;/p&gt;
+            &lt;button onClick={handleClick}&gt;+1 (after 3s)&lt;/button&gt;
+        &lt;/div&gt;
+    );
+}
+
+// Problem:
+// 1. Click button → count is 0
+// 2. setTimeout captures count = 0 in closure
+// 3. Click button again → count is still 0 (haven't waited 3s yet)
+// 4. After 3s, BOTH timeouts run
+// 5. Both call setCount(0 + 1)
+// 6. Result: count becomes 1, not 2!
+            </div>
+
+            <h3>✅ Fix #1: Functional Update</h3>
+
+            <div class="code-block react">
+function Counter() {
+    const [count, setCount] = useState(0);
+    
+    const handleClick = () => {
+        setTimeout(() => {
+            setCount(prevCount => prevCount + 1);  // ✅ Use function
+        }, 3000);
+    };
+    
+    return (
+        &lt;div&gt;
+            &lt;p&gt;Count: {count}&lt;/p&gt;
+            &lt;button onClick={handleClick}&gt;+1 (after 3s)&lt;/button&gt;
+        &lt;/div&gt;
+    );
+}
+
+// Why it works:
+// setCount receives a function that gets the LATEST state
+// No closure over stale 'count' value!
+            </div>
+
+            <h3>✅ Fix #2: useRef for Latest Value</h3>
+
+            <div class="code-block react">
+function Counter() {
+    const [count, setCount] = useState(0);
+    const countRef = useRef(count);
+    
+    // Keep ref in sync
+    useEffect(() => {
+        countRef.current = count;
+    }, [count]);
+    
+    const handleClick = () => {
+        setTimeout(() => {
+            setCount(countRef.current + 1);  // ✅ Always latest
+        }, 3000);
+    };
+    
+    return (
+        &lt;div&gt;
+            &lt;p&gt;Count: {count}&lt;/p&gt;
+            &lt;button onClick={handleClick}&gt;+1 (after 3s)&lt;/button&gt;
+        &lt;/div&gt;
+    );
+}
+            </div>
+
+            <h3>The useEffect Closure Trap</h3>
+
+            <div class="code-block react">
+// ❌ BUG: Logs stale count
+function Counter() {
+    const [count, setCount] = useState(0);
+    
+    useEffect(() => {
+        const timer = setInterval(() => {
+            console.log(count);  // ❌ Always logs 0!
+        }, 1000);
+        
+        return () => clearInterval(timer);
+    }, []);  // Empty deps = runs once = captures count = 0
+    
+    return (
+        &lt;button onClick={() => setCount(count + 1)}&gt;
+            Count: {count}
+        &lt;/button&gt;
+    );
+}
+
+// ✅ Fix: Include count in dependencies
+function Counter() {
+    const [count, setCount] = useState(0);
+    
+    useEffect(() => {
+        const timer = setInterval(() => {
+            console.log(count);  // ✅ Logs current count
+        }, 1000);
+        
+        return () => clearInterval(timer);
+    }, [count]);  // Re-run effect when count changes
+    
+    return (
+        &lt;button onClick={() => setCount(count + 1)}&gt;
+            Count: {count}
+        &lt;/button&gt;
+    );
+}
+            </div>
+
+            <div class="key-insight">
+                <span class="icon">🎯</span> <strong>REACT RULE:</strong> If your effect/callback uses a state variable, either include it in dependencies OR use the functional update pattern!
+            </div>
+
+            <h3>🔥 Interview Question 4: React Closure Bug</h3>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Fix this React bug</h4>
+                <div class="code-block react">
+function TodoList() {
+    const [todos, setTodos] = useState([]);
+    
+    useEffect(() => {
+        const socket = connectToSocket();
+        
+        socket.on('newTodo', (todo) => {
+            setTodos([...todos, todo]);  // ❌ Bug!
+        });
+        
+        return () => socket.disconnect();
+    }, []);
+    
+    return &lt;ul&gt;{todos.map(t => &lt;li&gt;{t}&lt;/li&gt;)}&lt;/ul&gt;;
+}
+
+// Problem: When socket event fires, todos is always []
+// Why? The socket listener closes over the initial empty todos array
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('closure4')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="closure4">
+                    <h4>✅ Solution #1: Functional Update</h4>
+                    <div class="code-block react">
+function TodoList() {
+    const [todos, setTodos] = useState([]);
+    
+    useEffect(() => {
+        const socket = connectToSocket();
+        
+        socket.on('newTodo', (todo) => {
+            setTodos(prevTodos => [...prevTodos, todo]);  // ✅ Fixed!
+        });
+        
+        return () => socket.disconnect();
+    }, []);
+    
+    return &lt;ul&gt;{todos.map(t => &lt;li key={t.id}&gt;{t}&lt;/li&gt;)}&lt;/ul&gt;;
+}
+                    </div>
+
+                    <h4>✅ Solution #2: useRef</h4>
+                    <div class="code-block react">
+function TodoList() {
+    const [todos, setTodos] = useState([]);
+    const todosRef = useRef(todos);
+    
+    useEffect(() => {
+        todosRef.current = todos;
+    }, [todos]);
+    
+    useEffect(() => {
+        const socket = connectToSocket();
+        
+        socket.on('newTodo', (todo) => {
+            setTodos([...todosRef.current, todo]);  // ✅ Always latest
+        });
+        
+        return () => socket.disconnect();
+    }, []);
+    
+    return &lt;ul&gt;{todos.map(t => &lt;li key={t.id}&gt;{t}&lt;/li&gt;)}&lt;/ul&gt;;
+}
+                    </div>
+
+                    <h4>📝 Key Lesson:</h4>
+                    <p>When setting state based on previous state, ALWAYS use the functional update pattern: <code>setState(prev => newValue)</code></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TYPESCRIPT SECTION -->
+        <div class="section">
+            <h2>📘 TypeScript & Closures</h2>
+
+            <h3>Typing Function Factories</h3>
+
+            <div class="code-block typescript">
+// Basic factory
+function createMultiplier(factor: number): (x: number) => number {
+    return (x: number) => x * factor;
+}
+
+const double = createMultiplier(2);
+const result: number = double(5);  // 10
+
+// Generic factory
+function createGetter&lt;T&gt;(value: T): () => T {
+    return () => value;
+}
+
+const getName = createGetter&lt;string&gt;("Alice");
+const getAge = createGetter&lt;number&gt;(25);
+
+console.log(getName());  // "Alice"
+console.log(getAge());   // 25
+            </div>
+
+            <h3>Typing Private Counter</h3>
+
+            <div class="code-block typescript">
+interface Counter {
+    increment(): number;
+    decrement(): number;
+    getValue(): number;
+}
+
+function createCounter(initialValue: number = 0): Counter {
+    let count: number = initialValue;
+    
+    return {
+        increment(): number {
+            return ++count;
+        },
+        decrement(): number {
+            return --count;
+        },
+        getValue(): number {
+            return count;
+        }
+    };
+}
+
+const counter: Counter = createCounter(10);
+console.log(counter.increment());  // 11
+            </div>
+
+            <h3>Typing React Closures</h3>
+
+            <div class="code-block typescript">
+import { useState, useCallback } from 'react';
+
+function useCounter(initialValue: number = 0) {
+    const [count, setCount] = useState&lt;number&gt;(initialValue);
+    
+    const increment = useCallback(() => {
+        setCount(prev => prev + 1);
+    }, []);
+    
+    const decrement = useCallback(() => {
+        setCount(prev => prev - 1);
+    }, []);
+    
+    const reset = useCallback(() => {
+        setCount(initialValue);
+    }, [initialValue]);
+    
+    return { count, increment, decrement, reset };
+}
+
+// Usage:
+function Counter() {
+    const { count, increment, decrement, reset } = useCounter(0);
+    
+    return (
+        &lt;div&gt;
+            &lt;p&gt;{count}&lt;/p&gt;
+            &lt;button onClick={increment}&gt;+&lt;/button&gt;
+            &lt;button onClick={decrement}&gt;-&lt;/button&gt;
+            &lt;button onClick={reset}&gt;Reset&lt;/button&gt;
+        &lt;/div&gt;
+    );
+}
+            </div>
+        </div>
+
+        <!-- MORE INTERVIEW QUESTIONS -->
+        <div class="section" id="interview">
+            <h2>🎯 More Interview Questions</h2>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Question 5: What's the output?</h4>
+                <div class="code-block">
+function makeAdder(x) {
+    return function(y) {
+        return x + y;
+    };
+}
+
+const add5 = makeAdder(5);
+const add10 = makeAdder(10);
+
+console.log(add5(2));   // ?
+console.log(add10(2));  // ?
+console.log(add5(add10(2)));  // ?
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('q5')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="q5">
+                    <div class="code-block output">
+7
+12
+17
+                    </div>
+                    <p><strong>Explanation:</strong></p>
+                    <ul>
+                        <li><code>add5(2)</code> = 5 + 2 = 7</li>
+                        <li><code>add10(2)</code> = 10 + 2 = 12</li>
+                        <li><code>add5(add10(2))</code> = add5(12) = 5 + 12 = 17</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Question 6: Implement debounce</h4>
+                <p>Create a <code>debounce(fn, delay)</code> function that delays calling <code>fn</code> until after <code>delay</code> milliseconds have passed since the last call.</p>
+                <button class="reveal-btn" onclick="revealAnswer('q6')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="q6">
+                    <div class="code-block">
+function debounce(fn, delay) {
+    let timeoutId;  // Closed over by returned function
+    
+    return function(...args) {
+        // Clear previous timeout
+        clearTimeout(timeoutId);
+        
+        // Set new timeout
+        timeoutId = setTimeout(() => {
+            fn.apply(this, args);
+        }, delay);
+    };
+}
+
+// Usage:
+const expensiveOperation = () => {
+    console.log("Expensive operation");
+};
+
+const debouncedOp = debounce(expensiveOperation, 1000);
+
+// Call multiple times quickly:
+debouncedOp();
+debouncedOp();
+debouncedOp();
+// Only logs once, 1 second after the last call
+                    </div>
+                    <p><strong>Key closure:</strong> The <code>timeoutId</code> variable persists across multiple calls, allowing us to clear the previous timeout!</p>
+                </div>
+            </div>
+
+            <div class="interview-question">
+                <h4><span class="icon">❓</span> Question 7: What's wrong here?</h4>
+                <div class="code-block">
+for (var i = 1; i <= 3; i++) {
+    setTimeout(function() {
+        console.log(i);
+    }, i * 1000);
+}
+                </div>
+                <button class="reveal-btn" onclick="revealAnswer('q7')">🔓 Reveal Answer</button>
+                <div class="interview-answer" id="q7">
+                    <p><strong>Output:</strong> 4, 4, 4 (after 1s, 2s, 3s)</p>
+                    <p><strong>Problem:</strong> All callbacks close over the same <code>i</code>, which ends up being 4.</p>
+                    <p><strong>Fix:</strong></p>
+                    <div class="code-block">
+// Option 1: Use let
+for (let i = 1; i <= 3; i++) {
+    setTimeout(function() {
+        console.log(i);  // 1, 2, 3
+    }, i * 1000);
+}
+
+// Option 2: IIFE
+for (var i = 1; i <= 3; i++) {
+    (function(j) {
+        setTimeout(function() {
+            console.log(j);  // 1, 2, 3
+        }, j * 1000);
+    })(i);
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHEAT SHEET -->
+        <div class="cheat-sheet" id="cheatsheet">
+            <h2>📋 Closures Quick Reference</h2>
+            
+            <h3>What Is A Closure?</h3>
+            <p>A function that has access to variables from its outer scope, even after the outer function has returned.</p>
+
+            <h3>When Closures Are Created</h3>
+            <ul>
+                <li>✅ Function defined inside another function</li>
+                <li>✅ Inner function references outer function's variables</li>
+                <li>✅ Inner function is returned or passed somewhere</li>
+            </ul>
+
+            <h3>Common Patterns</h3>
+            <ul>
+                <li><strong>Private variables:</strong> Hide data behind a public API</li>
+                <li><strong>Function factories:</strong> Create customized functions</li>
+                <li><strong>Callbacks:</strong> Preserve context for async operations</li>
+                <li><strong>Event handlers:</strong> Remember state when event fires</li>
+                <li><strong>Module pattern:</strong> Organize code with private/public parts</li>
+            </ul>
+
+            <h3>Common Bugs</h3>
+            <ul>
+                <li>❌ <strong>Loop + var:</strong> All callbacks share same variable</li>
+                <li>❌ <strong>Stale closure in React:</strong> useState captures old value</li>
+                <li>❌ <strong>Memory leak:</strong> Event listener closes over huge data</li>
+                <li>❌ <strong>Missing cleanup:</strong> Event listener never removed</li>
+            </ul>
+
+            <h3>Quick Fixes</h3>
+            <div class="code-block">
+// Loop bug fix:
+for (let i = 0; i < 5; i++) {  // ← let, not var
+    setTimeout(() => console.log(i), 1000);
+}
+
+// React stale closure fix:
+setCount(prevCount => prevCount + 1);  // ← Functional update
+
+// Memory leak fix:
+useEffect(() => {
+    const handler = () => console.log("event");
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);  // ← Cleanup!
+}, []);
+            </div>
+
+            <h3>Decision Tree: Do I Have A Closure?</h3>
+            <div class="code-block">
+Is there a function defined inside another function? NO → Not a closure
+                                                     ↓
+                                                    YES
+                                                     ↓
+Does the inner function reference outer variables?  NO → Not using closure
+                                                     ↓
+                                                    YES
+                                                     ↓
+                                     You have a closure!
+            </div>
+        </div>
+
+        <!-- COMPLETION -->
+        <div class="section">
+            <h2>✅ Day 4 Mastery Checklist</h2>
+            
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can define what a closure is</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I understand the loop + setTimeout bug and can fix it 3 ways</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can implement private variables with closures</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can create function factories</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I understand memory implications of closures</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can identify and fix React closure bugs</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I know when to use functional updates in React</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can implement debounce using closures</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I answered all interview questions correctly</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span>I can explain closures to someone else</span>
+                </label>
+            </div>
+
+            <div class="key-insight" style="margin-top: 2rem;">
+                <span class="icon">🎯</span> <strong>You're ready for Day 5 when:</strong> You can implement private variables from memory, fix the loop bug instantly, and debug React closure bugs without hesitation.
+            </div>
+
+            <h3>Tomorrow: Closures Part 2</h3>
+            <p>We'll dive even deeper into:</p>
+            <ul>
+                <li>Advanced closure patterns (currying, partial application)</li>
+                <li>Performance optimization techniques</li>
+                <li>More React patterns (custom hooks with closures)</li>
+                <li>Real production debugging scenarios</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="completion-tracker">
+        <h4>Progress Tracker</h4>
+        <div class="completion-stat">
+            <span>Completed:</span>
+            <span id="completedCount">0/10</span>
+        </div>
+        <div class="completion-stat">
+            <span>Percentage:</span>
+            <span id="completedPercent">0%</span>
+        </div>
+        <hr style="margin: 0.75rem 0; border: none; border-top: 1px solid var(--border);">
+        <h4>Study Timer</h4>
+        <div class="timer-display" id="timerDisplay">00:00:00</div>
+        <div class="timer-controls">
+            <button class="timer-btn start" onclick="startTimer()">▶</button>
+            <button class="timer-btn pause" onclick="pauseTimer()">⏸</button>
+            <button class="timer-btn reset" onclick="resetTimer()">↻</button>
+        </div>
+    </div>
+
+    <div class="back-to-top" onclick="scrollToTop()">↑</div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const btn = document.querySelector('.theme-toggle');
+            btn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
+            localStorage.setItem('theme-day4', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        if (localStorage.getItem('theme-day4') === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.theme-toggle').textContent = '☀️ Light Mode';
+        }
+
+        function revealAnswer(id) {
+            const answer = document.getElementById(id);
+            const btn = answer.previousElementSibling;
+            
+            if (answer.classList.contains('show')) {
+                answer.classList.remove('show');
+                btn.textContent = '🔓 Reveal Answer';
+            } else {
+                answer.classList.add('show');
+                btn.textContent = '🔒 Hide Answer';
+            }
+        }
+
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+            const count = checked.length;
+            const total = checkboxes.length;
+            const percent = Math.round((count / total) * 100);
+            
+            document.getElementById('completedCount').textContent = `${count}/${total}`;
+            document.getElementById('completedPercent').textContent = `${percent}%`;
+            document.getElementById('progressBar').style.width = `${percent}%`;
+            
+            const checkboxStates = Array.from(checkboxes).map(cb => cb.checked);
+            localStorage.setItem('day4-progress', JSON.stringify(checkboxStates));
+        }
+
+        const savedProgress = localStorage.getItem('day4-progress');
+        if (savedProgress) {
+            const states = JSON.parse(savedProgress);
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach((cb, index) => {
+                if (states[index]) {
+                    cb.checked = true;
+                }
+            });
+            updateProgress();
+        }
+
+        window.addEventListener('scroll', () => {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.code-block').forEach((block) => {
+                const button = document.createElement('button');
+                button.className = 'copy-btn';
+                button.innerHTML = '📋 Copy';
+                button.onclick = () => copyCode(block, button);
+                block.appendChild(button);
+            });
+        });
+
+        function copyCode(block, button) {
+            const code = block.textContent.replace('📋 Copy', '').replace('✓ Copied!', '').trim();
+            navigator.clipboard.writeText(code).then(() => {
+                button.innerHTML = '✓ Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.innerHTML = '📋 Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        let timerInterval;
+        let timerSeconds = 0;
+        let timerRunning = false;
+
+        function startTimer() {
+            if (!timerRunning) {
+                timerRunning = true;
+                timerInterval = setInterval(() => {
+                    timerSeconds++;
+                    updateTimerDisplay();
+                    localStorage.setItem('day4-studyTime', timerSeconds);
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            timerRunning = false;
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timerSeconds = 0;
+            updateTimerDisplay();
+            localStorage.setItem('day4-studyTime', 0);
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timerSeconds / 3600);
+            const minutes = Math.floor((timerSeconds % 3600) / 60);
+            const seconds = timerSeconds % 60;
+            
+            const display = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = display;
+        }
+
+        const savedTime = localStorage.getItem('day4-studyTime');
+        if (savedTime) {
+            timerSeconds = parseInt(savedTime);
+            updateTimerDisplay();
+        }
+
+        window.addEventListener('beforeunload', () => {
+            if (timerRunning) {
+                localStorage.setItem('day4-studyTime', timerSeconds);
+            }
+        });
+    </script>
+</body>
+</html>
